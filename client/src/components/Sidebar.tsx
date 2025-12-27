@@ -5,9 +5,10 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Input } from '@/components/ui/input';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 
-export function Sidebar({ onClose }: { onClose?: () => void } = {}) {
+export function Sidebar({ onClose, onSelectItem }: { onClose?: () => void; onSelectItem?: (item: any) => void } = {}) {
   const { data: items, isLoading } = useItems();
   const [searchTerm, setSearchTerm] = React.useState('');
+  const [selectedId, setSelectedId] = React.useState<number | null>(null);
 
   const onDragStart = (event: React.DragEvent, nodeType: string, itemData: any) => {
     event.dataTransfer.setData('application/reactflow', nodeType);
@@ -48,15 +49,25 @@ export function Sidebar({ onClose }: { onClose?: () => void } = {}) {
     );
   }
 
-  const DraggableItem = ({ item }: { item: any }) => (
+  const DraggableItem = ({ item }: { item: any }) => {
+    const isSelected = selectedId === item.id;
+    return (
     <div
-      className="group flex items-center gap-3 p-3 rounded-lg border border-border bg-background hover:border-primary/50 hover:bg-muted/50 cursor-grab active:cursor-grabbing transition-all mb-2"
+      className={`group flex items-center gap-3 p-3 rounded-lg border transition-all mb-2 cursor-grab active:cursor-grabbing ${
+        isSelected 
+          ? 'border-primary bg-primary/10 shadow-lg shadow-primary/20' 
+          : 'border-border bg-background hover:border-primary/50 hover:bg-muted/50'
+      }`}
       onDragStart={(event) => {
         onDragStart(event, 'equipment', item);
         onClose?.();
       }}
       onTouchStart={(event) => {
         onTouchStart(event, 'equipment', item);
+      }}
+      onClick={() => {
+        setSelectedId(isSelected ? null : item.id);
+        onSelectItem?.(isSelected ? null : item);
       }}
       draggable
     >
@@ -69,7 +80,8 @@ export function Sidebar({ onClose }: { onClose?: () => void } = {}) {
         </div>
       </div>
     </div>
-  );
+    );
+  };
 
   return (
     <aside className="w-full h-full flex flex-col bg-card border-r border-border shadow-2xl z-10">

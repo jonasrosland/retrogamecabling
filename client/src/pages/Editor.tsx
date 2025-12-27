@@ -45,6 +45,7 @@ function EditorContent({ diagramId }: { diagramId?: string }) {
   const [reactFlowInstance, setReactFlowInstance] = useState<any>(null);
   const [diagramName, setDiagramName] = useState('Untitled Setup');
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState<any>(null);
   const isMobile = useIsMobile();
 
   const { toast } = useToast();
@@ -219,9 +220,9 @@ function EditorContent({ diagramId }: { diagramId?: string }) {
 
   return (
     <div className="flex h-screen w-screen overflow-hidden bg-background text-foreground font-sans">
-      {!isMobile && <Sidebar />}
+      {!isMobile && <Sidebar onSelectItem={isMobile ? setSelectedItem : undefined} />}
       
-      <div className="flex-1 h-full flex flex-col relative" ref={reactFlowWrapper}>
+      <div className="flex-1 h-full flex flex-col relative" ref={reactFlowWrapper} onClick={handleCanvasClick}>
         {/* Top Bar Overlay */}
         <div className="absolute top-4 left-4 right-4 z-10 flex items-center justify-between pointer-events-none px-2 md:px-0">
           <div className="bg-card/90 backdrop-blur-md border border-border p-2 rounded-lg shadow-lg pointer-events-auto flex items-center gap-2 md:gap-3 flex-1 md:flex-none">
@@ -233,7 +234,7 @@ function EditorContent({ diagramId }: { diagramId?: string }) {
                   </Button>
                 </SheetTrigger>
                 <SheetContent side="left" className="w-80 p-0">
-                  <Sidebar onClose={() => setSidebarOpen(false)} />
+                  <Sidebar onClose={() => setSidebarOpen(false)} onSelectItem={setSelectedItem} />
                 </SheetContent>
               </Sheet>
             )}
@@ -293,10 +294,21 @@ function EditorContent({ diagramId }: { diagramId?: string }) {
           <Panel position="bottom-right" className="bg-card/90 backdrop-blur border border-border p-2 md:p-3 rounded-lg shadow-xl mb-4 md:mb-6 mr-4 md:mr-6 max-w-xs text-[10px] md:text-[11px]">
             <h4 className="text-[10px] md:text-xs font-bold uppercase text-muted-foreground mb-2">Instructions</h4>
             <ul className="text-[9px] md:text-[11px] text-foreground space-y-0.5 md:space-y-1 list-disc pl-3 opacity-80">
-              <li>Drag components from the sidebar</li>
-              <li>Connect inputs (left) to outputs (right)</li>
-              <li>Double click nodes to edit (coming soon)</li>
-              <li>Scroll to zoom, drag to pan</li>
+              {isMobile ? (
+                <>
+                  <li>Tap menu icon to open components</li>
+                  <li>Tap an item to select it</li>
+                  <li>Tap canvas to place it</li>
+                  <li>Drag connections between nodes</li>
+                </>
+              ) : (
+                <>
+                  <li>Drag components from the sidebar</li>
+                  <li>Connect inputs (left) to outputs (right)</li>
+                  <li>Double click nodes to edit (coming soon)</li>
+                  <li>Scroll to zoom, drag to pan</li>
+                </>
+              )}
             </ul>
           </Panel>
         </ReactFlow>
