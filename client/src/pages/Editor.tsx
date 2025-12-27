@@ -62,11 +62,30 @@ function EditorContent({ diagramId }: { diagramId?: string }) {
       // @ts-ignore - DB stores JSON, ReactFlow expects typed objects
       const flow = existingDiagram.data;
       if (flow) {
-        setNodes(flow.nodes || []);
+        const nodesWithDelete = (flow.nodes || []).map((node: any) => ({
+          ...node,
+          data: { ...node.data, onDelete: handleDeleteNode },
+        }));
+        setNodes(nodesWithDelete);
         setEdges(flow.edges || []);
       }
     }
-  }, [existingDiagram, setNodes, setEdges]);
+  }, [existingDiagram, setNodes, setEdges, handleDeleteNode]);
+
+  // Handle keyboard delete
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.key === 'Delete' || e.key === 'Backspace') && nodes.some(n => n.selected)) {
+        const selectedNode = nodes.find(n => n.selected);
+        if (selectedNode) {
+          handleDeleteNode(selectedNode.id);
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [nodes, handleDeleteNode]);
 
   const onConnect = useCallback((params: Connection) => {
     // Add neon styling to edges
@@ -87,6 +106,16 @@ function EditorContent({ diagramId }: { diagramId?: string }) {
     event.dataTransfer.dropEffect = 'move';
   }, []);
 
+  const handleDeleteNode = useCallback((nodeId: string) => {
+    setNodes((nds) => nds.filter((n) => n.id !== nodeId));
+    setEdges((eds) => eds.filter((e) => e.source !== nodeId && e.target !== nodeId));
+    toast({
+      title: "Component Removed",
+      description: "Node and connected edges deleted.",
+      duration: 1500,
+    });
+  }, [setNodes, setEdges, toast]);
+
   const addNodeAtPosition = useCallback((itemData: any, x: number, y: number) => {
     if (!reactFlowInstance) return;
     const position = reactFlowInstance.screenToFlowPosition({ x, y });
@@ -98,6 +127,7 @@ function EditorContent({ diagramId }: { diagramId?: string }) {
         label: itemData.name, 
         category: itemData.category,
         specs: itemData.specs,
+        onDelete: handleDeleteNode,
       },
     };
     setNodes((nds) => nds.concat(newNode));
@@ -106,7 +136,7 @@ function EditorContent({ diagramId }: { diagramId?: string }) {
       description: `Added ${itemData.name} to the canvas.`,
       duration: 1500,
     });
-  }, [reactFlowInstance, setNodes, toast]);
+  }, [reactFlowInstance, setNodes, toast, handleDeleteNode]);
 
   const handleCanvasClick = useCallback((e: React.MouseEvent) => {
     if (isMobile && selectedItem) {

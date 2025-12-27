@@ -1,7 +1,8 @@
 import { memo } from 'react';
 import { Handle, Position, NodeProps } from 'reactflow';
-import { Gamepad2, Monitor, Route, Tv } from 'lucide-react';
+import { Gamepad2, Monitor, Route, Tv, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
 
 // Icon mapping based on category
 const CategoryIcon = ({ category, className }: { category: string, className?: string }) => {
@@ -13,15 +14,29 @@ const CategoryIcon = ({ category, className }: { category: string, className?: s
   }
 };
 
-const CustomNode = ({ data, selected }: NodeProps) => {
+const CustomNode = ({ data, selected, id }: NodeProps) => {
   const inputs = data.specs?.inputs || [];
   const outputs = data.specs?.outputs || [];
+  const onDelete = data.onDelete;
 
   return (
     <div className={cn(
-      "min-w-[180px] rounded-lg border-2 bg-card p-3 shadow-md transition-all duration-200",
+      "min-w-[180px] rounded-lg border-2 bg-card p-3 shadow-md transition-all duration-200 relative",
       selected ? "border-primary shadow-lg shadow-primary/20" : "border-border hover:border-border/80"
     )}>
+      {/* Delete Button */}
+      {selected && (
+        <Button
+          variant="ghost"
+          size="icon"
+          className="absolute -top-2 -right-2 h-6 w-6 text-destructive hover:bg-destructive/10 hover:text-destructive"
+          onClick={() => onDelete?.(id)}
+          data-testid="button-delete-node"
+        >
+          <X className="w-4 h-4" />
+        </Button>
+      )}
+
       {/* Header with Icon and Name */}
       <div className="flex items-center gap-2 border-b border-border pb-2 mb-2">
         <div className={cn(
