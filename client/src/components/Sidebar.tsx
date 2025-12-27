@@ -15,6 +15,14 @@ export function Sidebar({ onClose }: { onClose?: () => void } = {}) {
     event.dataTransfer.effectAllowed = 'move';
   };
 
+  const onTouchStart = (event: React.TouchEvent, nodeType: string, itemData: any) => {
+    // Store touch data globally for drop handling
+    (window as any).touchDragData = {
+      type: nodeType,
+      itemData: itemData,
+    };
+  };
+
   const filteredItems = useMemo(() => {
     if (!items) return { consoles: [], switchers: [], displays: [] };
     
@@ -46,6 +54,9 @@ export function Sidebar({ onClose }: { onClose?: () => void } = {}) {
       onDragStart={(event) => {
         onDragStart(event, 'equipment', item);
         onClose?.();
+      }}
+      onTouchStart={(event) => {
+        onTouchStart(event, 'equipment', item);
       }}
       draggable
     >

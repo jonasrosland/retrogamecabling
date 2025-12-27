@@ -86,18 +86,68 @@ function EditorContent({ diagramId }: { diagramId?: string }) {
     event.dataTransfer.dropEffect = 'move';
   }, []);
 
+  const onTouchEnd = useCallback(
+    (event: React.TouchEvent) => {
+      // Check if touch drag data exists (from sidebar)
+      if (!(window as any).touchDragData) return;
+
+      if (!reactFlowWrapper.current || !reactFlowInstance) return;
+
+      const touch = event.changedTouches[0];
+      const itemData = (window as any).touchDragData.itemData;
+      const type = (window as any).touchDragData.type;
+
+      // Clear the touch data
+      (window as any).touchDragData = null;
+
+      const position = reactFlowInstance.screenToFlowPosition({
+        x: touch.clientX,
+        y: touch.clientY,
+      });
+
+      const newNode = {
+        id: getId(),
+        type,
+        position,
+        data: { 
+          label: itemData.name, 
+          category: itemData.category,
+          specs: itemData.specs,
+        },
+      };
+
+      setNodes((nds) => nds.concat(newNode));
+      
+      toast({
+        title: "Added Component",
+        description: `Added ${itemData.name} to the canvas.`,
+        duration: 1500,
+      });
+    },
+    [reactFlowInstance, setNodes, toast]
+  );
+
   const onDrop = useCallback(
     (event: React.DragEvent) => {
       event.preventDefault();
 
       if (!reactFlowWrapper.current || !reactFlowInstance) return;
 
-      const type = event.dataTransfer.getData('application/reactflow');
-      const itemDataString = event.dataTransfer.getData('application/itemData');
-      
-      if (!type || !itemDataString) return;
+      let type = event.dataTransfer.getData('application/reactflow');
+      let itemDataString = event.dataTransfer.getData('application/itemData');
+      let itemData;
 
-      const itemData = JSON.parse(itemDataString);
+      // Fallback to touch data if drag data is empty (for mobile touch support)
+      if (!type && (window as any).touchDragData) {
+        type = (window as any).touchDragData.type;
+        itemData = (window as any).touchDragData.itemData;
+        // Clear the touch data
+        (window as any).touchDragData = null;
+      } else if (itemDataString) {
+        itemData = JSON.parse(itemDataString);
+      }
+
+      if (!type || !itemData) return;
 
       const position = reactFlowInstance.screenToFlowPosition({
         x: event.clientX,
@@ -232,6 +282,7 @@ function EditorContent({ diagramId }: { diagramId?: string }) {
           onInit={setReactFlowInstance}
           onDrop={onDrop}
           onDragOver={onDragOver}
+          onTouchEnd={onTouchEnd}
           nodeTypes={nodeTypes}
           fitView
           className="bg-background"
