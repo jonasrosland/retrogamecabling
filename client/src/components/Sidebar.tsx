@@ -52,34 +52,34 @@ export function Sidebar({ onClose, onSelectItem }: { onClose?: () => void; onSel
   const DraggableItem = ({ item }: { item: any }) => {
     const isSelected = selectedId === item.id;
     return (
-    <div
-      className={`group flex items-center gap-3 p-3 rounded-lg border transition-all mb-2 cursor-grab active:cursor-grabbing ${
-        isSelected 
-          ? 'border-primary bg-primary/10 shadow-lg shadow-primary/20' 
-          : 'border-border bg-background hover:border-primary/50 hover:bg-muted/50'
-      }`}
-      onDragStart={(event) => {
-        onDragStart(event, 'equipment', item);
-        onClose?.();
-      }}
-      onTouchStart={(event) => {
-        onTouchStart(event, 'equipment', item);
-      }}
-      onClick={() => {
-        setSelectedId(isSelected ? null : item.id);
-        onSelectItem?.(isSelected ? null : item);
-      }}
-      draggable
-    >
-      <GripVertical className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
-      <div>
-        <div className="font-semibold text-sm">{item.name}</div>
-        <div className="text-[10px] text-muted-foreground font-mono flex gap-1">
-          {item.specs.inputs && <span>IN:{item.specs.inputs.length}</span>}
-          {item.specs.outputs && <span>OUT:{item.specs.outputs.length}</span>}
+      <div
+        className={`group flex items-center gap-3 p-3 rounded-lg border transition-all mb-2 cursor-grab active:cursor-grabbing ${
+          isSelected 
+            ? 'border-primary bg-primary/10 shadow-lg shadow-primary/20' 
+            : 'border-border bg-background hover:border-primary/50 hover:bg-muted/50'
+        }`}
+        onDragStart={(event) => {
+          onDragStart(event, 'equipment', item);
+          onClose?.();
+        }}
+        onTouchStart={(event) => {
+          onTouchStart(event, 'equipment', item);
+        }}
+        onClick={() => {
+          setSelectedId(isSelected ? null : item.id);
+          onSelectItem?.(isSelected ? null : item);
+        }}
+        draggable
+      >
+        <GripVertical className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
+        <div>
+          <div className="font-semibold text-sm">{item.name}</div>
+          <div className="text-[10px] text-muted-foreground font-mono flex gap-1">
+            {item.specs.inputs && <span>IN:{item.specs.inputs.length}</span>}
+            {item.specs.outputs && <span>OUT:{item.specs.outputs.length}</span>}
+          </div>
         </div>
       </div>
-    </div>
     );
   };
 

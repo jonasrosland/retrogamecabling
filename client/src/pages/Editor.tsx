@@ -87,6 +87,34 @@ function EditorContent({ diagramId }: { diagramId?: string }) {
     event.dataTransfer.dropEffect = 'move';
   }, []);
 
+  const addNodeAtPosition = useCallback((itemData: any, x: number, y: number) => {
+    if (!reactFlowInstance) return;
+    const position = reactFlowInstance.screenToFlowPosition({ x, y });
+    const newNode = {
+      id: getId(),
+      type: 'equipment',
+      position,
+      data: { 
+        label: itemData.name, 
+        category: itemData.category,
+        specs: itemData.specs,
+      },
+    };
+    setNodes((nds) => nds.concat(newNode));
+    toast({
+      title: "Added Component",
+      description: `Added ${itemData.name} to the canvas.`,
+      duration: 1500,
+    });
+  }, [reactFlowInstance, setNodes, toast]);
+
+  const handleCanvasClick = useCallback((e: React.MouseEvent) => {
+    if (isMobile && selectedItem) {
+      addNodeAtPosition(selectedItem, e.clientX, e.clientY);
+      setSelectedItem(null);
+    }
+  }, [selectedItem, isMobile, addNodeAtPosition]);
+
   const onTouchEnd = useCallback(
     (event: React.TouchEvent) => {
       // Check if touch drag data exists (from sidebar)
