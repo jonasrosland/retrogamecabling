@@ -1,38 +1,61 @@
-import { type User, type InsertUser } from "@shared/schema";
-import { randomUUID } from "crypto";
-
-// modify the interface with any CRUD methods
-// you might need
+import { db } from "./db";
+import {
+  items,
+  diagrams,
+  type InsertItem,
+  type InsertDiagram,
+  type UpdateDiagramRequest,
+  type Item,
+  type Diagram
+} from "@shared/schema";
+import { eq } from "drizzle-orm";
 
 export interface IStorage {
-  getUser(id: string): Promise<User | undefined>;
-  getUserByUsername(username: string): Promise<User | undefined>;
-  createUser(user: InsertUser): Promise<User>;
+  getItems(): Promise<Item[]>;
+  createItem(item: InsertItem): Promise<Item>;
+  
+  getDiagrams(): Promise<Diagram[]>;
+  getDiagram(id: number): Promise<Diagram | undefined>;
+  createDiagram(diagram: InsertDiagram): Promise<Diagram>;
+  updateDiagram(id: number, updates: UpdateDiagramRequest): Promise<Diagram>;
+  deleteDiagram(id: number): Promise<void>;
 }
 
-export class MemStorage implements IStorage {
-  private users: Map<string, User>;
-
-  constructor() {
-    this.users = new Map();
+export class DatabaseStorage implements IStorage {
+  async getItems(): Promise<Item[]> {
+    return await db.select().from(items);
   }
 
-  async getUser(id: string): Promise<User | undefined> {
-    return this.users.get(id);
+  async createItem(insertItem: InsertItem): Promise<Item> {
+    const [item] = await db.insert(items).values(insertItem).returning();
+    return item;
   }
 
-  async getUserByUsername(username: string): Promise<User | undefined> {
-    return Array.from(this.users.values()).find(
-      (user) => user.username === username,
-    );
+  async getDiagrams(): Promise<Diagram[]> {
+    return await db.select().from(diagrams);
   }
 
-  async createUser(insertUser: InsertUser): Promise<User> {
-    const id = randomUUID();
-    const user: User = { ...insertUser, id };
-    this.users.set(id, user);
-    return user;
+  async getDiagram(id: number): Promise<Diagram | undefined> {
+    const [diagram] = await db.select().from(diagrams).where(eq(diagrams.id, id));
+    return diagram;
+  }
+
+  async createDiagram(insertDiagram: InsertDiagram): Promise<Diagram> {
+    const [diagram] = await db.insert(diagrams).values(insertDiagram).returning();
+    return diagram;
+  }
+
+  async updateDiagram(id: number, updates: UpdateDiagramRequest): Promise<Diagram> {
+    const [updated] = await db.update(diagrams)
+      .set(updates)
+      .where(eq(diagrams.id, id))
+      .returning();
+    return updated;
+  }
+
+  async deleteDiagram(id: number): Promise<void> {
+    await db.delete(diagrams).where(eq(diagrams.id, id));
   }
 }
 
-export const storage = new MemStorage();
+export const storage = new DatabaseStorage();
