@@ -5,7 +5,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Input } from '@/components/ui/input';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 
-export function Sidebar() {
+export function Sidebar({ onClose }: { onClose?: () => void } = {}) {
   const { data: items, isLoading } = useItems();
   const [searchTerm, setSearchTerm] = React.useState('');
 
@@ -43,7 +43,10 @@ export function Sidebar() {
   const DraggableItem = ({ item }: { item: any }) => (
     <div
       className="group flex items-center gap-3 p-3 rounded-lg border border-border bg-background hover:border-primary/50 hover:bg-muted/50 cursor-grab active:cursor-grabbing transition-all mb-2"
-      onDragStart={(event) => onDragStart(event, 'equipment', item)}
+      onDragStart={(event) => {
+        onDragStart(event, 'equipment', item);
+        onClose?.();
+      }}
       draggable
     >
       <GripVertical className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
@@ -58,7 +61,7 @@ export function Sidebar() {
   );
 
   return (
-    <aside className="w-80 h-full flex flex-col bg-card border-r border-border shadow-2xl z-10">
+    <aside className="w-full h-full flex flex-col bg-card border-r border-border shadow-2xl z-10">
       <div className="p-4 border-b border-border bg-card/50 backdrop-blur-sm">
         <div className="flex items-center gap-2 mb-4">
           <div className="w-8 h-8 rounded bg-gradient-to-br from-primary to-blue-600 flex items-center justify-center text-primary-foreground font-display font-bold text-lg shadow-lg shadow-primary/20">
