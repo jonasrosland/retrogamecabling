@@ -315,7 +315,7 @@
     "category": "switcher",
     "specs": {
       "inputs": ["component", "component", "component", "component", "component", "component", "component", "component"],
-      "outputs": ["component", "component", "composite"]
+      "outputs": ["component", "component"]
     },
     "imageUrl": null
   },
