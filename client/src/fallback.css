@@ -1,0 +1,80 @@
+/* Fallback color utilities - Tailwind v4 should generate these from @theme, but adding fallbacks */
+/* Comment out the import in index.css to test without fallbacks */
+
+@layer utilities {
+  .bg-background { background-color: hsl(var(--background)) !important; }
+  .bg-card { background-color: hsl(var(--card)) !important; }
+  .bg-card\/50 { background-color: hsl(var(--card) / 0.5) !important; }
+  .bg-card\/95 { background-color: hsl(var(--card) / 0.95) !important; }
+  .bg-popover { background-color: hsl(var(--popover)) !important; }
+  .bg-primary { background-color: hsl(var(--primary)) !important; }
+  .bg-primary\/10 { background-color: hsl(var(--primary) / 0.1) !important; }
+  .bg-primary\/20 { background-color: hsl(var(--primary) / 0.2) !important; }
+  .bg-primary\/30 { background-color: hsl(var(--primary) / 0.3) !important; }
+  .bg-secondary { background-color: hsl(var(--secondary)) !important; }
+  .bg-muted { background-color: hsl(var(--muted)) !important; }
+  .bg-muted\/30 { background-color: hsl(var(--muted) / 0.3) !important; }
+  .bg-muted\/50 { background-color: hsl(var(--muted) / 0.5) !important; }
+  .bg-accent { background-color: hsl(var(--accent)) !important; }
+  .bg-destructive { background-color: hsl(var(--destructive)) !important; }
+  .bg-destructive\/10 { background-color: hsl(var(--destructive) / 0.1) !important; }
+  
+  .text-foreground { color: hsl(var(--foreground)) !important; }
+  .text-card-foreground { color: hsl(var(--card-foreground)) !important; }
+  .text-popover-foreground { color: hsl(var(--popover-foreground)) !important; }
+  .text-primary { color: hsl(var(--primary)) !important; }
+  .text-primary\/80 { color: hsl(var(--primary) / 0.8) !important; }
+  .text-primary-foreground { color: hsl(var(--primary-foreground)) !important; }
+  .text-secondary { color: hsl(var(--secondary)) !important; }
+  .text-secondary-foreground { color: hsl(var(--secondary-foreground)) !important; }
+  .text-muted-foreground { color: hsl(var(--muted-foreground)) !important; }
+  .text-accent { color: hsl(var(--accent)) !important; }
+  .text-accent-foreground { color: hsl(var(--accent-foreground)) !important; }
+  .text-destructive { color: hsl(var(--destructive)) !important; }
+  .text-destructive-foreground { color: hsl(var(--destructive-foreground)) !important; }
+  
+  .border-border { border-color: hsl(var(--border)) !important; }
+  .border-card-border { border-color: hsl(var(--card-border)) !important; }
+  .border-popover-border { border-color: hsl(var(--popover-border)) !important; }
+  .border-primary { border-color: hsl(var(--primary)) !important; }
+  .border-primary\/30 { border-color: hsl(var(--primary) / 0.3) !important; }
+  .border-primary\/50 { border-color: hsl(var(--primary) / 0.5) !important; }
+  .border-primary-border { border-color: hsl(var(--primary-border)) !important; }
+  .border-secondary { border-color: hsl(var(--secondary)) !important; }
+  .border-secondary\/30 { border-color: hsl(var(--secondary) / 0.3) !important; }
+  .border-secondary-border { border-color: hsl(var(--secondary-border)) !important; }
+  .border-muted { border-color: hsl(var(--muted)) !important; }
+  .border-muted\/40 { border-color: hsl(var(--muted) / 0.4) !important; }
+  .border-muted-border { border-color: hsl(var(--muted-border)) !important; }
+  .border-accent { border-color: hsl(var(--accent)) !important; }
+  .border-accent\/30 { border-color: hsl(var(--accent) / 0.3) !important; }
+  .border-accent-border { border-color: hsl(var(--accent-border)) !important; }
+  .border-destructive { border-color: hsl(var(--destructive)) !important; }
+  .border-destructive\/30 { border-color: hsl(var(--destructive) / 0.3) !important; }
+  .border-input { border-color: hsl(var(--input)) !important; }
+  
+  .ring-ring { --tw-ring-color: hsl(var(--ring)) !important; }
+  .ring-primary { --tw-ring-color: hsl(var(--primary)) !important; }
+  .ring-destructive { --tw-ring-color: hsl(var(--destructive)) !important; }
+  .ring-offset-background { --tw-ring-offset-color: hsl(var(--background)) !important; }
+  
+  /* Gradient utilities */
+  .bg-gradient-to-r { 
+    background-image: linear-gradient(to right, hsl(var(--foreground)), hsl(var(--muted-foreground))) !important; 
+  }
+  .from-foreground { 
+    --tw-gradient-from: hsl(var(--foreground)) var(--tw-gradient-from-position, 0%) !important; 
+    --tw-gradient-to: hsl(var(--foreground) / 0) var(--tw-gradient-to-position, 0%) !important; 
+    --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to) !important; 
+  }
+  .to-muted-foreground { 
+    --tw-gradient-to: hsl(var(--muted-foreground)) var(--tw-gradient-to-position, 100%) !important; 
+  }
+  .bg-clip-text { 
+    -webkit-background-clip: text !important; 
+    background-clip: text !important; 
+  }
+  .text-transparent { 
+    color: transparent !important; 
+  }
+}

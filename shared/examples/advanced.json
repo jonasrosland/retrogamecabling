@@ -1,0 +1,229 @@
+{
+  "name": "Advanced Setup - Professional Routing",
+  "data": {
+    "nodes": [
+      {
+        "id": "dndnode_0",
+        "type": "equipment",
+        "position": { "x": 50, "y": 80 },
+        "data": {
+          "label": "SNES",
+          "category": "console",
+          "specs": {
+            "outputs": ["rf", "composite", "s-video", "rgb", "hdmi"],
+            "inputs": []
+          }
+        }
+      },
+      {
+        "id": "dndnode_1",
+        "type": "equipment",
+        "position": { "x": 50, "y": 200 },
+        "data": {
+          "label": "N64",
+          "category": "console",
+          "specs": {
+            "outputs": ["composite", "s-video", "rgb", "hdmi"],
+            "inputs": []
+          }
+        }
+      },
+      {
+        "id": "dndnode_2",
+        "type": "equipment",
+        "position": { "x": 50, "y": 320 },
+        "data": {
+          "label": "PlayStation 1",
+          "category": "console",
+          "specs": {
+            "outputs": ["composite", "s-video", "rgb", "hdmi"],
+            "inputs": []
+          }
+        }
+      },
+      {
+        "id": "dndnode_3",
+        "type": "equipment",
+        "position": { "x": 50, "y": 440 },
+        "data": {
+          "label": "NES",
+          "category": "console",
+          "specs": {
+            "outputs": ["rf", "composite", "hdmi"],
+            "inputs": []
+          }
+        }
+      },
+      {
+        "id": "dndnode_4",
+        "type": "equipment",
+        "position": { "x": 350, "y": 140 },
+        "data": {
+          "label": "Otaku SCART Switch",
+          "category": "switcher",
+          "specs": {
+            "inputs": ["scart", "scart", "scart", "scart", "scart", "scart"],
+            "outputs": ["scart", "rca"]
+          }
+        }
+      },
+      {
+        "id": "dndnode_5",
+        "type": "equipment",
+        "position": { "x": 350, "y": 380 },
+        "data": {
+          "label": "Extron Crosspoint",
+          "category": "switcher",
+          "specs": {
+            "inputs": ["bnc", "bnc", "bnc", "bnc"],
+            "outputs": ["bnc", "bnc"]
+          }
+        }
+      },
+      {
+        "id": "dndnode_6",
+        "type": "equipment",
+        "position": { "x": 750, "y": 80 },
+        "data": {
+          "label": "Sony PVM 14L5",
+          "category": "display",
+          "specs": {
+            "inputs": ["composite", "s-video", "rgb", "component"]
+          }
+        }
+      },
+      {
+        "id": "dndnode_7",
+        "type": "equipment",
+        "position": { "x": 750, "y": 240 },
+        "data": {
+          "label": "Consumer CRT",
+          "category": "display",
+          "specs": {
+            "inputs": ["rf", "composite"]
+          }
+        }
+      },
+      {
+        "id": "dndnode_8",
+        "type": "equipment",
+        "position": { "x": 750, "y": 400 },
+        "data": {
+          "label": "Modern OLED",
+          "category": "display",
+          "specs": {
+            "inputs": ["hdmi", "hdmi", "hdmi"]
+          }
+        }
+      }
+    ],
+    "edges": [
+      {
+        "id": "edge-0",
+        "source": "dndnode_0",
+        "target": "dndnode_4",
+        "sourceHandle": "out-3",
+        "targetHandle": "in-0",
+        "animated": true,
+        "style": { "stroke": "hsl(var(--primary))", "strokeWidth": 2 },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "color": "hsl(var(--primary))"
+        }
+      },
+      {
+        "id": "edge-1",
+        "source": "dndnode_1",
+        "target": "dndnode_4",
+        "sourceHandle": "out-1",
+        "targetHandle": "in-1",
+        "animated": true,
+        "style": { "stroke": "hsl(var(--primary))", "strokeWidth": 2 },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "color": "hsl(var(--primary))"
+        }
+      },
+      {
+        "id": "edge-2",
+        "source": "dndnode_2",
+        "target": "dndnode_4",
+        "sourceHandle": "out-2",
+        "targetHandle": "in-2",
+        "animated": true,
+        "style": { "stroke": "hsl(var(--primary))", "strokeWidth": 2 },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "color": "hsl(var(--primary))"
+        }
+      },
+      {
+        "id": "edge-3",
+        "source": "dndnode_3",
+        "target": "dndnode_5",
+        "sourceHandle": "out-1",
+        "targetHandle": "in-0",
+        "animated": true,
+        "style": { "stroke": "hsl(var(--primary))", "strokeWidth": 2 },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "color": "hsl(var(--primary))"
+        }
+      },
+      {
+        "id": "edge-4",
+        "source": "dndnode_4",
+        "target": "dndnode_6",
+        "sourceHandle": "out-0",
+        "targetHandle": "in-2",
+        "animated": true,
+        "style": { "stroke": "hsl(var(--primary))", "strokeWidth": 2 },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "color": "hsl(var(--primary))"
+        }
+      },
+      {
+        "id": "edge-5",
+        "source": "dndnode_4",
+        "target": "dndnode_7",
+        "sourceHandle": "out-1",
+        "targetHandle": "in-1",
+        "animated": true,
+        "style": { "stroke": "hsl(var(--primary))", "strokeWidth": 2 },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "color": "hsl(var(--primary))"
+        }
+      },
+      {
+        "id": "edge-6",
+        "source": "dndnode_5",
+        "target": "dndnode_8",
+        "sourceHandle": "out-0",
+        "targetHandle": "in-0",
+        "animated": true,
+        "style": { "stroke": "hsl(var(--primary))", "strokeWidth": 2 },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "color": "hsl(var(--primary))"
+        }
+      },
+      {
+        "id": "edge-7",
+        "source": "dndnode_5",
+        "target": "dndnode_6",
+        "sourceHandle": "out-1",
+        "targetHandle": "in-3",
+        "animated": true,
+        "style": { "stroke": "hsl(var(--primary))", "strokeWidth": 2 },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "color": "hsl(var(--primary))"
+        }
+      }
+    ],
+    "viewport": { "x": 0, "y": 0, "zoom": 1.0 }
+  }
+}
+

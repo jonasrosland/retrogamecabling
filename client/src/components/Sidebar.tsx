@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { useItems } from '@/hooks/use-items';
-import { Gamepad2, Tv, Route, Search, GripVertical } from 'lucide-react';
+import { Gamepad2, Tv, Route, Search, GripVertical, Cable, Maximize2 } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Input } from '@/components/ui/input';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
@@ -16,16 +16,9 @@ export function Sidebar({ onClose, onSelectItem }: { onClose?: () => void; onSel
     event.dataTransfer.effectAllowed = 'move';
   };
 
-  const onTouchStart = (event: React.TouchEvent, nodeType: string, itemData: any) => {
-    // Store touch data globally for drop handling
-    (window as any).touchDragData = {
-      type: nodeType,
-      itemData: itemData,
-    };
-  };
 
   const filteredItems = useMemo(() => {
-    if (!items) return { consoles: [], switchers: [], displays: [] };
+    if (!items) return { consoles: [], switchers: [], displays: [], adapters: [], upscalers: [] };
     
     const filtered = items.filter(item => 
       item.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -35,12 +28,14 @@ export function Sidebar({ onClose, onSelectItem }: { onClose?: () => void; onSel
       consoles: filtered.filter(i => i.category === 'console'),
       switchers: filtered.filter(i => i.category === 'switcher'),
       displays: filtered.filter(i => i.category === 'display'),
+      adapters: filtered.filter(i => i.category === 'adapter'),
+      upscalers: filtered.filter(i => i.category === 'upscaler'),
     };
   }, [items, searchTerm]);
 
   if (isLoading) {
     return (
-      <div className="w-full h-full flex items-center justify-center bg-card border-r border-border">
+      <div className="w-80 h-full flex items-center justify-center bg-card border-r border-border flex-shrink-0">
         <div className="animate-pulse flex flex-col items-center gap-2">
           <div className="h-4 w-4 bg-primary rounded-full animate-bounce" />
           <span className="text-xs text-muted-foreground font-mono">LOADING_ASSETS...</span>
@@ -62,9 +57,6 @@ export function Sidebar({ onClose, onSelectItem }: { onClose?: () => void; onSel
           onDragStart(event, 'equipment', item);
           onClose?.();
         }}
-        onTouchStart={(event) => {
-          onTouchStart(event, 'equipment', item);
-        }}
         onClick={() => {
           setSelectedId(isSelected ? null : item.id);
           onSelectItem?.(isSelected ? null : item);
@@ -84,15 +76,15 @@ export function Sidebar({ onClose, onSelectItem }: { onClose?: () => void; onSel
   };
 
   return (
-    <aside className="w-full h-full flex flex-col bg-card border-r border-border shadow-2xl z-10">
+    <aside className="w-80 h-full flex flex-col bg-card border-r border-border shadow-2xl z-10 flex-shrink-0">
       <div className="p-4 border-b border-border bg-card/50 backdrop-blur-sm">
         <div className="flex items-center gap-2 mb-4">
           <div className="w-8 h-8 rounded bg-gradient-to-br from-primary to-blue-600 flex items-center justify-center text-primary-foreground font-display font-bold text-lg shadow-lg shadow-primary/20">
             R
           </div>
           <div>
-            <h1 className="font-display font-bold text-lg leading-none">RetroGraph</h1>
-            <span className="text-[10px] text-muted-foreground font-mono">SYSTEM_BUILDER_V1.0</span>
+            <h1 className="font-display font-bold text-lg leading-none">RetroGameCabling</h1>
+            <span className="text-[10px] text-muted-foreground font-mono">v1.0.0</span>
           </div>
         </div>
         
@@ -108,7 +100,7 @@ export function Sidebar({ onClose, onSelectItem }: { onClose?: () => void; onSel
       </div>
 
       <ScrollArea className="flex-1 px-4">
-        <Accordion type="multiple" defaultValue={['consoles', 'switchers', 'displays']} className="w-full py-4 space-y-4">
+        <Accordion type="multiple" defaultValue={['consoles', 'switchers', 'displays', 'adapters', 'upscalers']} className="w-full py-4 space-y-4">
           
           <AccordionItem value="consoles" className="border-none">
             <AccordionTrigger className="hover:no-underline py-2 bg-muted/30 px-3 rounded-lg hover:bg-muted/50 transition-colors group">
@@ -131,7 +123,7 @@ export function Sidebar({ onClose, onSelectItem }: { onClose?: () => void; onSel
             <AccordionTrigger className="hover:no-underline py-2 bg-muted/30 px-3 rounded-lg hover:bg-muted/50 transition-colors group">
               <div className="flex items-center gap-2 text-sm font-display text-secondary uppercase tracking-wide">
                 <Route className="w-4 h-4" />
-                Switchers
+                Switches
                 <span className="ml-auto text-xs text-muted-foreground font-mono bg-background px-1.5 py-0.5 rounded border border-border group-hover:border-secondary/30">
                   {filteredItems.switchers.length}
                 </span>
@@ -156,6 +148,40 @@ export function Sidebar({ onClose, onSelectItem }: { onClose?: () => void; onSel
             </AccordionTrigger>
             <AccordionContent className="pt-3 pb-0 px-1">
               {filteredItems.displays.map(item => (
+                <DraggableItem key={item.id} item={item} />
+              ))}
+            </AccordionContent>
+          </AccordionItem>
+
+          <AccordionItem value="adapters" className="border-none">
+            <AccordionTrigger className="hover:no-underline py-2 bg-muted/30 px-3 rounded-lg hover:bg-muted/50 transition-colors group">
+              <div className="flex items-center gap-2 text-sm font-display text-muted-foreground uppercase tracking-wide">
+                <Cable className="w-4 h-4" />
+                Adapters
+                <span className="ml-auto text-xs text-muted-foreground font-mono bg-background px-1.5 py-0.5 rounded border border-border group-hover:border-primary/30">
+                  {filteredItems.adapters.length}
+                </span>
+              </div>
+            </AccordionTrigger>
+            <AccordionContent className="pt-3 pb-0 px-1">
+              {filteredItems.adapters.map(item => (
+                <DraggableItem key={item.id} item={item} />
+              ))}
+            </AccordionContent>
+          </AccordionItem>
+
+          <AccordionItem value="upscalers" className="border-none">
+            <AccordionTrigger className="hover:no-underline py-2 bg-muted/30 px-3 rounded-lg hover:bg-muted/50 transition-colors group">
+              <div className="flex items-center gap-2 text-sm font-display text-muted-foreground uppercase tracking-wide">
+                <Maximize2 className="w-4 h-4" />
+                Upscalers
+                <span className="ml-auto text-xs text-muted-foreground font-mono bg-background px-1.5 py-0.5 rounded border border-border group-hover:border-primary/30">
+                  {filteredItems.upscalers.length}
+                </span>
+              </div>
+            </AccordionTrigger>
+            <AccordionContent className="pt-3 pb-0 px-1">
+              {filteredItems.upscalers.map(item => (
                 <DraggableItem key={item.id} item={item} />
               ))}
             </AccordionContent>

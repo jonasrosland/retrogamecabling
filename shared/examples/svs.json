@@ -1,0 +1,461 @@
+{
+  "name": "SVS Setup - Scalable Video Switch",
+  "data": {
+    "nodes": [
+      {
+        "id": "dndnode_0",
+        "type": "equipment",
+        "position": { "x": 50, "y": 50 },
+        "data": {
+          "label": "Atari 2600",
+          "category": "console",
+          "specs": {
+            "outputs": ["rf", "composite"],
+            "inputs": []
+          },
+          "selectedOutput": "composite"
+        }
+      },
+      {
+        "id": "dndnode_1",
+        "type": "equipment",
+        "position": { "x": 50, "y": 120 },
+        "data": {
+          "label": "NES",
+          "category": "console",
+          "specs": {
+            "outputs": ["rf", "composite", "hdmi"],
+            "inputs": []
+          },
+          "selectedOutput": "composite"
+        }
+      },
+      {
+        "id": "dndnode_2",
+        "type": "equipment",
+        "position": { "x": 50, "y": 190 },
+        "data": {
+          "label": "SNES",
+          "category": "console",
+          "specs": {
+            "outputs": ["rf", "composite", "s-video", "rgb", "hdmi"],
+            "inputs": []
+          },
+          "selectedOutput": "rgb"
+        }
+      },
+      {
+        "id": "dndnode_3",
+        "type": "equipment",
+        "position": { "x": 50, "y": 260 },
+        "data": {
+          "label": "N64",
+          "category": "console",
+          "specs": {
+            "outputs": ["composite", "s-video", "rgb", "hdmi"],
+            "inputs": []
+          },
+          "selectedOutput": "s-video"
+        }
+      },
+      {
+        "id": "dndnode_4",
+        "type": "equipment",
+        "position": { "x": 50, "y": 330 },
+        "data": {
+          "label": "GameCube",
+          "category": "console",
+          "specs": {
+            "outputs": ["composite", "s-video", "component", "hdmi"],
+            "inputs": []
+          },
+          "selectedOutput": "component"
+        }
+      },
+      {
+        "id": "dndnode_5",
+        "type": "equipment",
+        "position": { "x": 50, "y": 400 },
+        "data": {
+          "label": "PlayStation 1",
+          "category": "console",
+          "specs": {
+            "outputs": ["composite", "s-video", "rgb", "hdmi"],
+            "inputs": []
+          },
+          "selectedOutput": "s-video"
+        }
+      },
+      {
+        "id": "dndnode_6",
+        "type": "equipment",
+        "position": { "x": 50, "y": 470 },
+        "data": {
+          "label": "PlayStation 2",
+          "category": "console",
+          "specs": {
+            "outputs": ["composite", "s-video", "component", "hdmi"],
+            "inputs": []
+          },
+          "selectedOutput": "component"
+        }
+      },
+      {
+        "id": "dndnode_7",
+        "type": "equipment",
+        "position": { "x": 50, "y": 540 },
+        "data": {
+          "label": "Xbox",
+          "category": "console",
+          "specs": {
+            "outputs": ["composite", "s-video", "component", "hdmi"],
+            "inputs": []
+          },
+          "selectedOutput": "component"
+        }
+      },
+      {
+        "id": "dndnode_8",
+        "type": "equipment",
+        "position": { "x": 50, "y": 610 },
+        "data": {
+          "label": "PlayStation 3",
+          "category": "console",
+          "specs": {
+            "outputs": ["composite", "component", "hdmi"],
+            "inputs": []
+          },
+          "selectedOutput": "component"
+        }
+      },
+      {
+        "id": "dndnode_9",
+        "type": "equipment",
+        "position": { "x": 50, "y": 680 },
+        "data": {
+          "label": "Xbox 360",
+          "category": "console",
+          "specs": {
+            "outputs": ["composite", "component", "hdmi"],
+            "inputs": []
+          },
+          "selectedOutput": "component"
+        }
+      },
+      {
+        "id": "dndnode_10",
+        "type": "equipment",
+        "position": { "x": 50, "y": 750 },
+        "data": {
+          "label": "Wii",
+          "category": "console",
+          "specs": {
+            "outputs": ["composite", "s-video", "component"],
+            "inputs": []
+          },
+          "selectedOutput": "component"
+        }
+      },
+      {
+        "id": "dndnode_11",
+        "type": "equipment",
+        "position": { "x": 50, "y": 820 },
+        "data": {
+          "label": "Sega Genesis",
+          "category": "console",
+          "specs": {
+            "outputs": ["rf", "composite", "rgb"],
+            "inputs": []
+          },
+          "selectedOutput": "rgb"
+        }
+      },
+      {
+        "id": "dndnode_12",
+        "type": "equipment",
+        "position": { "x": 50, "y": 890 },
+        "data": {
+          "label": "Sega Saturn",
+          "category": "console",
+          "specs": {
+            "outputs": ["composite", "s-video", "rgb"],
+            "inputs": []
+          },
+          "selectedOutput": "rgb"
+        }
+      },
+      {
+        "id": "dndnode_13",
+        "type": "equipment",
+        "position": { "x": 500, "y": 400 },
+        "data": {
+          "label": "Scalable Video Switch (SVS)",
+          "category": "switcher",
+          "specs": {
+            "inputs": [],
+            "outputs": [],
+            "isSVS": true,
+            "maxInputs": 32,
+            "maxOutputs": 6
+          },
+          "svsNumInputs": 14,
+          "svsNumOutputs": 3,
+          "svsInputs": ["composite", "composite", "rgb", "rgb", "component", "component", "rgb", "component", "component", "component", "component", "rgb", "s-video", "s-video"],
+          "svsOutputs": ["component", "rgb", "s-video"]
+        }
+      },
+      {
+        "id": "dndnode_14",
+        "type": "equipment",
+        "position": { "x": 950, "y": 200 },
+        "data": {
+          "label": "Sony PVM 14L5",
+          "category": "display",
+          "specs": {
+            "inputs": ["composite", "s-video", "rgb", "component"]
+          }
+        }
+      },
+      {
+        "id": "dndnode_15",
+        "type": "equipment",
+        "position": { "x": 950, "y": 400 },
+        "data": {
+          "label": "Consumer CRT",
+          "category": "display",
+          "specs": {
+            "inputs": ["rf", "composite", "s-video", "component"]
+          }
+        }
+      }
+    ],
+    "edges": [
+      {
+        "id": "edge-0",
+        "source": "dndnode_0",
+        "target": "dndnode_13",
+        "sourceHandle": "out-0",
+        "targetHandle": "in-0",
+        "animated": true,
+        "data": { "outputType": "composite" },
+        "style": { "stroke": "#FF69B4", "strokeWidth": 2 },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "color": "#FF69B4"
+        }
+      },
+      {
+        "id": "edge-1",
+        "source": "dndnode_1",
+        "target": "dndnode_13",
+        "sourceHandle": "out-0",
+        "targetHandle": "in-1",
+        "animated": true,
+        "data": { "outputType": "composite" },
+        "style": { "stroke": "#FF69B4", "strokeWidth": 2 },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "color": "#FF69B4"
+        }
+      },
+      {
+        "id": "edge-2",
+        "source": "dndnode_2",
+        "target": "dndnode_13",
+        "sourceHandle": "out-0",
+        "targetHandle": "in-2",
+        "animated": true,
+        "data": { "outputType": "rgb" },
+        "style": { "stroke": "#FF0000", "strokeWidth": 2 },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "color": "#FF0000"
+        }
+      },
+      {
+        "id": "edge-3",
+        "source": "dndnode_3",
+        "target": "dndnode_13",
+        "sourceHandle": "out-0",
+        "targetHandle": "in-12",
+        "animated": true,
+        "data": { "outputType": "s-video" },
+        "style": { "stroke": "#00FF00", "strokeWidth": 2 },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "color": "#00FF00"
+        }
+      },
+      {
+        "id": "edge-4",
+        "source": "dndnode_4",
+        "target": "dndnode_13",
+        "sourceHandle": "out-0",
+        "targetHandle": "in-4",
+        "animated": true,
+        "data": { "outputType": "component" },
+        "style": { "stroke": "#00BFFF", "strokeWidth": 2 },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "color": "#00BFFF"
+        }
+      },
+      {
+        "id": "edge-5",
+        "source": "dndnode_5",
+        "target": "dndnode_13",
+        "sourceHandle": "out-0",
+        "targetHandle": "in-13",
+        "animated": true,
+        "data": { "outputType": "s-video" },
+        "style": { "stroke": "#00FF00", "strokeWidth": 2 },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "color": "#00FF00"
+        }
+      },
+      {
+        "id": "edge-6",
+        "source": "dndnode_6",
+        "target": "dndnode_13",
+        "sourceHandle": "out-0",
+        "targetHandle": "in-6",
+        "animated": true,
+        "data": { "outputType": "component" },
+        "style": { "stroke": "#00BFFF", "strokeWidth": 2 },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "color": "#00BFFF"
+        }
+      },
+      {
+        "id": "edge-7",
+        "source": "dndnode_7",
+        "target": "dndnode_13",
+        "sourceHandle": "out-0",
+        "targetHandle": "in-7",
+        "animated": true,
+        "data": { "outputType": "component" },
+        "style": { "stroke": "#00BFFF", "strokeWidth": 2 },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "color": "#00BFFF"
+        }
+      },
+      {
+        "id": "edge-8",
+        "source": "dndnode_8",
+        "target": "dndnode_13",
+        "sourceHandle": "out-0",
+        "targetHandle": "in-8",
+        "animated": true,
+        "data": { "outputType": "component" },
+        "style": { "stroke": "#00BFFF", "strokeWidth": 2 },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "color": "#00BFFF"
+        }
+      },
+      {
+        "id": "edge-9",
+        "source": "dndnode_9",
+        "target": "dndnode_13",
+        "sourceHandle": "out-0",
+        "targetHandle": "in-9",
+        "animated": true,
+        "data": { "outputType": "component" },
+        "style": { "stroke": "#00BFFF", "strokeWidth": 2 },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "color": "#00BFFF"
+        }
+      },
+      {
+        "id": "edge-10",
+        "source": "dndnode_10",
+        "target": "dndnode_13",
+        "sourceHandle": "out-0",
+        "targetHandle": "in-10",
+        "animated": true,
+        "data": { "outputType": "component" },
+        "style": { "stroke": "#00BFFF", "strokeWidth": 2 },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "color": "#00BFFF"
+        }
+      },
+      {
+        "id": "edge-11",
+        "source": "dndnode_11",
+        "target": "dndnode_13",
+        "sourceHandle": "out-0",
+        "targetHandle": "in-11",
+        "animated": true,
+        "data": { "outputType": "rgb" },
+        "style": { "stroke": "#FF0000", "strokeWidth": 2 },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "color": "#FF0000"
+        }
+      },
+      {
+        "id": "edge-12",
+        "source": "dndnode_12",
+        "target": "dndnode_13",
+        "sourceHandle": "out-0",
+        "targetHandle": "in-3",
+        "animated": true,
+        "data": { "outputType": "rgb" },
+        "style": { "stroke": "#FF0000", "strokeWidth": 2 },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "color": "#FF0000"
+        }
+      },
+      {
+        "id": "edge-13",
+        "source": "dndnode_13",
+        "target": "dndnode_14",
+        "sourceHandle": "out-1",
+        "targetHandle": "in-2",
+        "animated": true,
+        "data": { "outputType": "rgb" },
+        "style": { "stroke": "#FF0000", "strokeWidth": 2 },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "color": "#FF0000"
+        }
+      },
+      {
+        "id": "edge-14",
+        "source": "dndnode_13",
+        "target": "dndnode_15",
+        "sourceHandle": "out-0",
+        "targetHandle": "in-3",
+        "animated": true,
+        "data": { "outputType": "component" },
+        "style": { "stroke": "#00BFFF", "strokeWidth": 2 },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "color": "#00BFFF"
+        }
+      },
+      {
+        "id": "edge-15",
+        "source": "dndnode_13",
+        "target": "dndnode_14",
+        "sourceHandle": "out-2",
+        "targetHandle": "in-1",
+        "animated": true,
+        "data": { "outputType": "s-video" },
+        "style": { "stroke": "#00FF00", "strokeWidth": 2 },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "color": "#00FF00"
+        }
+      }
+    ],
+    "viewport": { "x": 0, "y": 0, "zoom": 0.6 }
+  }
+}
+

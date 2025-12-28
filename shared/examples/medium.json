@@ -1,0 +1,152 @@
+{
+  "name": "Medium Setup - Multi-Console Switcher",
+  "data": {
+    "nodes": [
+      {
+        "id": "dndnode_0",
+        "type": "equipment",
+        "position": { "x": 50, "y": 100 },
+        "data": {
+          "label": "SNES",
+          "category": "console",
+          "specs": {
+            "outputs": ["rf", "composite", "s-video", "rgb", "hdmi"],
+            "inputs": []
+          }
+        }
+      },
+      {
+        "id": "dndnode_1",
+        "type": "equipment",
+        "position": { "x": 50, "y": 250 },
+        "data": {
+          "label": "N64",
+          "category": "console",
+          "specs": {
+            "outputs": ["composite", "s-video", "rgb", "hdmi"],
+            "inputs": []
+          }
+        }
+      },
+      {
+        "id": "dndnode_2",
+        "type": "equipment",
+        "position": { "x": 50, "y": 400 },
+        "data": {
+          "label": "PlayStation 1",
+          "category": "console",
+          "specs": {
+            "outputs": ["composite", "s-video", "rgb", "hdmi"],
+            "inputs": []
+          }
+        }
+      },
+      {
+        "id": "dndnode_3",
+        "type": "equipment",
+        "position": { "x": 350, "y": 200 },
+        "data": {
+          "label": "Otaku SCART Switch",
+          "category": "switcher",
+          "specs": {
+            "inputs": ["scart", "scart", "scart", "scart", "scart", "scart"],
+            "outputs": ["scart", "rca"]
+          }
+        }
+      },
+      {
+        "id": "dndnode_4",
+        "type": "equipment",
+        "position": { "x": 700, "y": 150 },
+        "data": {
+          "label": "Sony PVM 14L5",
+          "category": "display",
+          "specs": {
+            "inputs": ["composite", "s-video", "rgb", "component"]
+          }
+        }
+      },
+      {
+        "id": "dndnode_5",
+        "type": "equipment",
+        "position": { "x": 700, "y": 350 },
+        "data": {
+          "label": "Consumer CRT",
+          "category": "display",
+          "specs": {
+            "inputs": ["rf", "composite"]
+          }
+        }
+      }
+    ],
+    "edges": [
+      {
+        "id": "edge-0",
+        "source": "dndnode_0",
+        "target": "dndnode_3",
+        "sourceHandle": "out-2",
+        "targetHandle": "in-0",
+        "animated": true,
+        "style": { "stroke": "hsl(var(--primary))", "strokeWidth": 2 },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "color": "hsl(var(--primary))"
+        }
+      },
+      {
+        "id": "edge-1",
+        "source": "dndnode_1",
+        "target": "dndnode_3",
+        "sourceHandle": "out-1",
+        "targetHandle": "in-1",
+        "animated": true,
+        "style": { "stroke": "hsl(var(--primary))", "strokeWidth": 2 },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "color": "hsl(var(--primary))"
+        }
+      },
+      {
+        "id": "edge-2",
+        "source": "dndnode_2",
+        "target": "dndnode_3",
+        "sourceHandle": "out-2",
+        "targetHandle": "in-2",
+        "animated": true,
+        "style": { "stroke": "hsl(var(--primary))", "strokeWidth": 2 },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "color": "hsl(var(--primary))"
+        }
+      },
+      {
+        "id": "edge-3",
+        "source": "dndnode_3",
+        "target": "dndnode_4",
+        "sourceHandle": "out-0",
+        "targetHandle": "in-2",
+        "animated": true,
+        "style": { "stroke": "hsl(var(--primary))", "strokeWidth": 2 },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "color": "hsl(var(--primary))"
+        }
+      },
+      {
+        "id": "edge-4",
+        "source": "dndnode_3",
+        "target": "dndnode_5",
+        "sourceHandle": "out-1",
+        "targetHandle": "in-1",
+        "animated": true,
+        "style": { "stroke": "hsl(var(--primary))", "strokeWidth": 2 },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "color": "hsl(var(--primary))"
+        }
+      }
+    ],
+    "viewport": { "x": 0, "y": 0, "zoom": 0.8 }
+  }
+}
+

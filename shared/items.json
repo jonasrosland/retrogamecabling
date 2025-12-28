@@ -1,0 +1,543 @@
+[
+  {
+    "id": 1,
+    "name": "Atari 2600",
+    "category": "console",
+    "specs": {
+      "outputs": ["rf", "composite"],
+      "inputs": []
+    },
+    "imageUrl": null
+  },
+  {
+    "id": 2,
+    "name": "Atari 7800",
+    "category": "console",
+    "specs": {
+      "outputs": ["rf", "composite"],
+      "inputs": []
+    },
+    "imageUrl": null
+  },
+  {
+    "id": 3,
+    "name": "NES",
+    "category": "console",
+    "specs": {
+      "outputs": ["rf", "composite", "hdmi"],
+      "inputs": []
+    },
+    "imageUrl": null
+  },
+  {
+    "id": 4,
+    "name": "Sega Master System",
+    "category": "console",
+    "specs": {
+      "outputs": ["rf", "composite", "rgb"],
+      "inputs": []
+    },
+    "imageUrl": null
+  },
+  {
+    "id": 5,
+    "name": "TurboGrafx-16",
+    "category": "console",
+    "specs": {
+      "outputs": ["rf", "composite", "rgb"],
+      "inputs": []
+    },
+    "imageUrl": null
+  },
+  {
+    "id": 6,
+    "name": "Sega Genesis",
+    "category": "console",
+    "specs": {
+      "outputs": ["rf", "composite", "rgb"],
+      "inputs": []
+    },
+    "imageUrl": null
+  },
+  {
+    "id": 7,
+    "name": "SNES",
+    "category": "console",
+    "specs": {
+      "outputs": ["rf", "composite", "s-video", "rgb", "hdmi"],
+      "inputs": []
+    },
+    "imageUrl": null
+  },
+  {
+    "id": 8,
+    "name": "Neo Geo AES",
+    "category": "console",
+    "specs": {
+      "outputs": ["composite", "rgb", "component"],
+      "inputs": []
+    },
+    "imageUrl": null
+  },
+  {
+    "id": 9,
+    "name": "Sega CD",
+    "category": "console",
+    "specs": {
+      "outputs": ["composite", "rgb"],
+      "inputs": []
+    },
+    "imageUrl": null
+  },
+  {
+    "id": 10,
+    "name": "Sega 32X",
+    "category": "console",
+    "specs": {
+      "outputs": ["composite", "rgb"],
+      "inputs": []
+    },
+    "imageUrl": null
+  },
+  {
+    "id": 11,
+    "name": "Sega Saturn",
+    "category": "console",
+    "specs": {
+      "outputs": ["composite", "s-video", "rgb", "component"],
+      "inputs": []
+    },
+    "imageUrl": null
+  },
+  {
+    "id": 12,
+    "name": "PlayStation 1",
+    "category": "console",
+    "specs": {
+      "outputs": ["composite", "s-video", "rgb", "hdmi"],
+      "inputs": []
+    },
+    "imageUrl": null
+  },
+  {
+    "id": 13,
+    "name": "N64",
+    "category": "console",
+    "specs": {
+      "outputs": ["composite", "s-video", "rgb", "hdmi"],
+      "inputs": []
+    },
+    "imageUrl": null
+  },
+  {
+    "id": 14,
+    "name": "Sega Dreamcast",
+    "category": "console",
+    "specs": {
+      "outputs": ["composite", "s-video", "rgb", "component", "vga", "hdmi"],
+      "inputs": []
+    },
+    "imageUrl": null
+  },
+  {
+    "id": 15,
+    "name": "PlayStation 2",
+    "category": "console",
+    "specs": {
+      "outputs": ["composite", "s-video", "rgb", "component", "hdmi"],
+      "inputs": []
+    },
+    "imageUrl": null
+  },
+  {
+    "id": 16,
+    "name": "GameCube",
+    "category": "console",
+    "specs": {
+      "outputs": ["composite", "s-video", "rgb", "component", "hdmi"],
+      "inputs": []
+    },
+    "imageUrl": null
+  },
+  {
+    "id": 17,
+    "name": "Xbox",
+    "category": "console",
+    "specs": {
+      "outputs": ["composite", "component", "hdmi"],
+      "inputs": []
+    },
+    "imageUrl": null
+  },
+  {
+    "id": 18,
+    "name": "Xbox 360",
+    "category": "console",
+    "specs": {
+      "outputs": ["component", "hdmi"],
+      "inputs": []
+    },
+    "imageUrl": null
+  },
+  {
+    "id": 19,
+    "name": "PlayStation 3",
+    "category": "console",
+    "specs": {
+      "outputs": ["composite", "component", "hdmi"],
+      "inputs": []
+    },
+    "imageUrl": null
+  },
+  {
+    "id": 20,
+    "name": "Wii",
+    "category": "console",
+    "specs": {
+      "outputs": ["composite", "component", "rgb", "hdmi"],
+      "inputs": []
+    },
+    "imageUrl": null
+  },
+  {
+    "id": 21,
+    "name": "Xbox One",
+    "category": "console",
+    "specs": {
+      "outputs": ["hdmi"],
+      "inputs": []
+    },
+    "imageUrl": null
+  },
+  {
+    "id": 22,
+    "name": "PlayStation 4",
+    "category": "console",
+    "specs": {
+      "outputs": ["hdmi"],
+      "inputs": []
+    },
+    "imageUrl": null
+  },
+  {
+    "id": 23,
+    "name": "Wii U",
+    "category": "console",
+    "specs": {
+      "outputs": ["component", "hdmi"],
+      "inputs": []
+    },
+    "imageUrl": null
+  },
+  {
+    "id": 24,
+    "name": "Xbox Series X",
+    "category": "console",
+    "specs": {
+      "outputs": ["hdmi"],
+      "inputs": []
+    },
+    "imageUrl": null
+  },
+  {
+    "id": 25,
+    "name": "PlayStation 5",
+    "category": "console",
+    "specs": {
+      "outputs": ["hdmi"],
+      "inputs": []
+    },
+    "imageUrl": null
+  },
+  {
+    "id": 26,
+    "name": "Nintendo Switch",
+    "category": "console",
+    "specs": {
+      "outputs": ["hdmi"],
+      "inputs": []
+    },
+    "imageUrl": null
+  },
+  {
+    "id": 27,
+    "name": "Otaku SCART Switch",
+    "category": "switcher",
+    "specs": {
+      "inputs": ["scart", "scart", "scart", "scart", "scart", "scart"],
+      "outputs": ["scart", "rca"]
+    },
+    "imageUrl": null
+  },
+  {
+    "id": 28,
+    "name": "Extron Crosspoint",
+    "category": "switcher",
+    "specs": {
+      "inputs": ["bnc", "bnc", "bnc", "bnc"],
+      "outputs": ["bnc", "bnc"]
+    },
+    "imageUrl": null
+  },
+  {
+    "id": 32,
+    "name": "4-Way AV/S-Video Switch",
+    "category": "switcher",
+    "specs": {
+      "inputs": ["composite", "composite", "composite", "composite", "s-video", "s-video", "s-video", "s-video"],
+      "outputs": ["composite", "s-video"]
+    },
+    "imageUrl": null
+  },
+  {
+    "id": 33,
+    "name": "5-Way Composite Switch",
+    "category": "switcher",
+    "specs": {
+      "inputs": ["composite", "composite", "composite", "composite", "composite"],
+      "outputs": ["composite"]
+    },
+    "imageUrl": null
+  },
+  {
+    "id": 34,
+    "name": "3-Way Component Switch",
+    "category": "switcher",
+    "specs": {
+      "inputs": ["component", "component", "component"],
+      "outputs": ["component"]
+    },
+    "imageUrl": null
+  },
+  {
+    "id": 35,
+    "name": "gcomp Automatic 8:2",
+    "category": "switcher",
+    "specs": {
+      "inputs": ["component", "component", "component", "component", "component", "component", "component", "component"],
+      "outputs": ["component", "component", "composite"]
+    },
+    "imageUrl": null
+  },
+  {
+    "id": 36,
+    "name": "gscartsw Automatic",
+    "category": "switcher",
+    "specs": {
+      "inputs": ["scart", "scart", "scart", "scart", "scart", "scart", "scart", "scart"],
+      "outputs": ["scart", "scart"]
+    },
+    "imageUrl": null
+  },
+  {
+    "id": 54,
+    "name": "Scalable Video Switch (SVS)",
+    "category": "switcher",
+    "specs": {
+      "inputs": [],
+      "outputs": [],
+      "isSVS": true,
+      "maxInputs": 32,
+      "maxOutputs": 6
+    },
+    "imageUrl": null
+  },
+  {
+    "id": 29,
+    "name": "Sony PVM 14L5",
+    "category": "display",
+    "specs": {
+      "inputs": ["composite", "s-video", "rgb", "component"]
+    },
+    "imageUrl": null
+  },
+  {
+    "id": 30,
+    "name": "Consumer CRT",
+    "category": "display",
+    "specs": {
+      "inputs": ["rf", "composite"]
+    },
+    "imageUrl": null
+  },
+  {
+    "id": 31,
+    "name": "Modern OLED",
+    "category": "display",
+    "specs": {
+      "inputs": ["hdmi", "hdmi", "hdmi"]
+    },
+    "imageUrl": null
+  },
+  {
+    "id": 37,
+    "name": "RGBS to YPbPr Converter",
+    "category": "adapter",
+    "specs": {
+      "inputs": ["rgb"],
+      "outputs": ["component"]
+    },
+    "imageUrl": null
+  },
+  {
+    "id": 38,
+    "name": "SCART to YPbPr Converter",
+    "category": "adapter",
+    "specs": {
+      "inputs": ["scart"],
+      "outputs": ["component"]
+    },
+    "imageUrl": null
+  },
+  {
+    "id": 39,
+    "name": "SCART to HDMI Converter",
+    "category": "adapter",
+    "specs": {
+      "inputs": ["scart"],
+      "outputs": ["hdmi"]
+    },
+    "imageUrl": null
+  },
+  {
+    "id": 40,
+    "name": "Component to HDMI Converter",
+    "category": "adapter",
+    "specs": {
+      "inputs": ["component"],
+      "outputs": ["hdmi"]
+    },
+    "imageUrl": null
+  },
+  {
+    "id": 41,
+    "name": "Composite to HDMI Converter",
+    "category": "adapter",
+    "specs": {
+      "inputs": ["composite"],
+      "outputs": ["hdmi"]
+    },
+    "imageUrl": null
+  },
+  {
+    "id": 42,
+    "name": "S-Video to HDMI Converter",
+    "category": "adapter",
+    "specs": {
+      "inputs": ["s-video"],
+      "outputs": ["hdmi"]
+    },
+    "imageUrl": null
+  },
+  {
+    "id": 43,
+    "name": "RGBS/VGA to YPbPr Converter",
+    "category": "adapter",
+    "specs": {
+      "inputs": ["rgb", "vga"],
+      "outputs": ["component"]
+    },
+    "imageUrl": null
+  },
+  {
+    "id": 44,
+    "name": "RetroTINK-2X",
+    "category": "adapter",
+    "specs": {
+      "inputs": ["composite", "s-video", "component"],
+      "outputs": ["hdmi"]
+    },
+    "imageUrl": null
+  },
+  {
+    "id": 45,
+    "name": "OSSC (Open Source Scan Converter)",
+    "category": "adapter",
+    "specs": {
+      "inputs": ["scart", "component", "vga"],
+      "outputs": ["hdmi"]
+    },
+    "imageUrl": null
+  },
+  {
+    "id": 46,
+    "name": "GARO (SCART to Component)",
+    "category": "adapter",
+    "specs": {
+      "inputs": ["scart"],
+      "outputs": ["component"]
+    },
+    "imageUrl": null
+  },
+  {
+    "id": 47,
+    "name": "SCART to Component (Rondo)",
+    "category": "adapter",
+    "specs": {
+      "inputs": ["scart"],
+      "outputs": ["component"]
+    },
+    "imageUrl": null
+  },
+  {
+    "id": 48,
+    "name": "COMP2RGB",
+    "category": "adapter",
+    "specs": {
+      "inputs": ["component"],
+      "outputs": ["scart"]
+    },
+    "imageUrl": null
+  },
+  {
+    "id": 49,
+    "name": "RGB2COMP",
+    "category": "adapter",
+    "specs": {
+      "inputs": ["scart"],
+      "outputs": ["component"]
+    },
+    "imageUrl": null
+  },
+  {
+    "id": 50,
+    "name": "RetroTINK-2X Mini",
+    "category": "upscaler",
+    "specs": {
+      "inputs": ["composite", "s-video"],
+      "outputs": ["hdmi"]
+    },
+    "imageUrl": null
+  },
+  {
+    "id": 51,
+    "name": "RetroTINK-2X Pro",
+    "category": "upscaler",
+    "specs": {
+      "inputs": ["composite", "s-video", "component"],
+      "outputs": ["hdmi"]
+    },
+    "imageUrl": null
+  },
+  {
+    "id": 52,
+    "name": "RetroTINK-5X Pro",
+    "category": "upscaler",
+    "specs": {
+      "inputs": ["composite", "s-video", "component", "scart", "vga"],
+      "outputs": ["hdmi"]
+    },
+    "imageUrl": null
+  },
+  {
+    "id": 53,
+    "name": "RetroTINK-4K",
+    "category": "upscaler",
+    "specs": {
+      "inputs": ["composite", "s-video", "component", "scart", "vga", "hdmi"],
+      "outputs": ["hdmi"]
+    },
+    "imageUrl": null
+  }
+]
+

@@ -1,0 +1,49 @@
+{
+  "name": "Simple Setup - NES to CRT",
+  "data": {
+    "nodes": [
+      {
+        "id": "dndnode_0",
+        "type": "equipment",
+        "position": { "x": 100, "y": 200 },
+        "data": {
+          "label": "NES",
+          "category": "console",
+          "specs": {
+            "outputs": ["rf", "composite", "hdmi"],
+            "inputs": []
+          }
+        }
+      },
+      {
+        "id": "dndnode_1",
+        "type": "equipment",
+        "position": { "x": 400, "y": 200 },
+        "data": {
+          "label": "Consumer CRT",
+          "category": "display",
+          "specs": {
+            "inputs": ["rf", "composite"]
+          }
+        }
+      }
+    ],
+    "edges": [
+      {
+        "id": "edge-0",
+        "source": "dndnode_0",
+        "target": "dndnode_1",
+        "sourceHandle": "out-0",
+        "targetHandle": "in-0",
+        "animated": true,
+        "style": { "stroke": "hsl(var(--primary))", "strokeWidth": 2 },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "color": "hsl(var(--primary))"
+        }
+      }
+    ],
+    "viewport": { "x": 0, "y": 0, "zoom": 1 }
+  }
+}
+

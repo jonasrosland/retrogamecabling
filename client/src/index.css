@@ -1,43 +1,148 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Oxanium:wght@500;600;700;800&display=swap');
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@source "./**/*.{html,js,jsx,ts,tsx}";
+@source "../index.html";
+
+@theme {
+  /* Base colors - will generate utilities when used */
+  --color-background: 222 47% 11%;
+  --color-foreground: 210 40% 98%;
+  --color-border: 217 33% 22%;
+  --color-input: 217 33% 22%;
+  --color-ring: 190 100% 50%;
+  
+  --color-card: 222 47% 14%;
+  --color-card-foreground: 210 40% 98%;
+  --color-card-border: 217 33% 22%;
+  
+  --color-popover: 222 47% 14%;
+  --color-popover-foreground: 210 40% 98%;
+  --color-popover-border: 217 33% 22%;
+  
+  --color-primary: 190 100% 50%;
+  --color-primary-foreground: 222 47% 11%;
+  --color-primary-border: 190 100% 50%;
+  
+  --color-secondary: 262 80% 50%;
+  --color-secondary-foreground: 210 40% 98%;
+  --color-secondary-border: 262 80% 50%;
+  
+  --color-muted: 217 33% 22%;
+  --color-muted-foreground: 215 20% 65%;
+  --color-muted-border: 217 33% 22%;
+  
+  --color-accent: 310 100% 50%;
+  --color-accent-foreground: 210 40% 98%;
+  --color-accent-border: 310 100% 50%;
+  
+  --color-destructive: 0 84% 60%;
+  --color-destructive-foreground: 210 40% 98%;
+  --color-destructive-border: 0 84% 60%;
+  
+  --color-chart-1: 222 47% 11%;
+  --color-chart-2: 222 47% 11%;
+  --color-chart-3: 222 47% 11%;
+  --color-chart-4: 222 47% 11%;
+  --color-chart-5: 222 47% 11%;
+  
+  --color-sidebar: 222 47% 11%;
+  --color-sidebar-foreground: 210 40% 98%;
+  --color-sidebar-border: 217 33% 22%;
+  --color-sidebar-ring: 190 100% 50%;
+  --color-sidebar-primary: 190 100% 50%;
+  --color-sidebar-primary-foreground: 222 47% 11%;
+  --color-sidebar-primary-border: 190 100% 50%;
+  --color-sidebar-accent: 310 100% 50%;
+  --color-sidebar-accent-foreground: 210 40% 98%;
+  --color-sidebar-accent-border: 310 100% 50%;
+  
+  --color-status-online: rgb(34 197 94);
+  --color-status-away: rgb(245 158 11);
+  --color-status-busy: rgb(239 68 68);
+  --color-status-offline: rgb(156 163 175);
+  
+  --radius-lg: 0.5625rem;
+  --radius-md: 0.375rem;
+  --radius-sm: 0.1875rem;
+  
+  --font-family-sans: 'Inter', sans-serif;
+  --font-family-serif: serif;
+  --font-family-mono: monospace;
+  --font-family-display: 'Oxanium', display;
+  
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
+}
+
+/* Uncomment to enable fallback CSS utilities if Tailwind v4 isn't generating them */
+/* Currently required - I suck at css and tailwind */
+@import "./fallback.css";
+
+@keyframes accordion-down {
+  from { height: 0; }
+  to { height: var(--radix-accordion-content-height); }
+}
+
+@keyframes accordion-up {
+  from { height: var(--radix-accordion-content-height); }
+  to { height: 0; }
+}
 
 :root {
-  /* HSL Space Separated - Retro Tech Dark Theme */
-  --background: 222 47% 11%;     /* Deep dark blue/slate */
-  --foreground: 210 40% 98%;     /* Off-white */
-  
-  --card: 222 47% 14%;           /* Slightly lighter than bg */
+  /* CSS Variables for Tailwind utilities */
+  --background: 222 47% 11%;
+  --foreground: 210 40% 98%;
+  --card: 222 47% 14%;
   --card-foreground: 210 40% 98%;
-  
+  --card-border: 217 33% 22%;
   --popover: 222 47% 14%;
   --popover-foreground: 210 40% 98%;
-  
-  --primary: 190 100% 50%;       /* Cyan Neon */
+  --popover-border: 217 33% 22%;
+  --primary: 190 100% 50%;
   --primary-foreground: 222 47% 11%;
-  
-  --secondary: 262 80% 50%;      /* Purple Neon */
+  --primary-border: 190 100% 50%;
+  --secondary: 262 80% 50%;
   --secondary-foreground: 210 40% 98%;
-  
+  --secondary-border: 262 80% 50%;
   --muted: 217 33% 22%;
   --muted-foreground: 215 20% 65%;
-  
-  --accent: 310 100% 50%;        /* Magenta Neon */
+  --muted-border: 217 33% 22%;
+  --accent: 310 100% 50%;
   --accent-foreground: 210 40% 98%;
-  
+  --accent-border: 310 100% 50%;
   --destructive: 0 84% 60%;
   --destructive-foreground: 210 40% 98%;
-
+  --destructive-border: 0 84% 60%;
   --border: 217 33% 22%;
   --input: 217 33% 22%;
-  --ring: 190 100% 50%;          /* Matches Primary */
-
+  --ring: 190 100% 50%;
   --radius: 0.5rem;
-
-  /* Custom Tech Fonts */
+  
+  /* Chart Colors */
+  --chart-1: 222 47% 11%;
+  --chart-2: 222 47% 11%;
+  --chart-3: 222 47% 11%;
+  --chart-4: 222 47% 11%;
+  --chart-5: 222 47% 11%;
+  
+  /* Sidebar Colors */
+  --sidebar: 222 47% 11%;
+  --sidebar-foreground: 210 40% 98%;
+  --sidebar-border: 217 33% 22%;
+  --sidebar-ring: 190 100% 50%;
+  --sidebar-primary: 190 100% 50%;
+  --sidebar-primary-foreground: 222 47% 11%;
+  --sidebar-primary-border: 190 100% 50%;
+  --sidebar-accent: 310 100% 50%;
+  --sidebar-accent-foreground: 210 40% 98%;
+  --sidebar-accent-border: 310 100% 50%;
+  
+  /* Fonts */
   --font-sans: 'Inter', sans-serif;
+  --font-serif: serif;
+  --font-mono: monospace;
   --font-display: 'Oxanium', display;
 }
 
@@ -67,12 +172,50 @@
   height: 10px;
   background: hsl(var(--muted-foreground));
   border: 2px solid hsl(var(--background));
-  transition: all 0.2s;
+  transition: background-color 0.2s;
 }
 
 .react-flow__handle:hover {
   background: hsl(var(--primary));
-  transform: scale(1.2);
+}
+
+.react-flow__handle.connected {
+  background: hsl(var(--primary));
+  transform: none !important;
+}
+
+/* Handle container and handle sizing */
+.handle-container {
+  width: 58px;
+  height: 20px;
+}
+
+.handle-container .react-flow__handle {
+  width: 58px;
+  height: 20px;
+  border-radius: 0.375rem;
+}
+
+.handle-label {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  font-size: 8px;
+  font-family: monospace;
+  font-weight: bold;
+  color: #000;
+  white-space: nowrap;
+  line-height: 1;
+  pointer-events: none;
+  z-index: 50;
+}
+
+.handle-label-left {
+  transform: translate(-65%, -50%);
+}
+
+.handle-label-right {
+  transform: translate(-35%, -50%);
 }
 
 .react-flow__edge-path {
@@ -105,6 +248,35 @@
 
 .react-flow__background circle {
   fill: hsl(var(--muted) / 0.3);
+}
+
+/* Ensure ReactFlow container has proper dimensions */
+.react-flow {
+  width: 100%;
+  height: 100%;
+}
+
+.react-flow__viewport {
+  width: 100%;
+  height: 100%;
+}
+
+/* ReactFlow Attribution - Make it more visible */
+.react-flow__attribution {
+  @apply bg-card/95 backdrop-blur-sm border border-border rounded-lg px-3 py-1.5 shadow-lg;
+  @apply text-foreground text-xs font-medium;
+  @apply opacity-90 hover:opacity-100 transition-opacity;
+}
+
+.react-flow__attribution a {
+  @apply text-primary hover:text-primary/80 font-semibold underline-offset-2;
+  transition: color 0.2s;
+}
+
+/* Allow pointer events on nodrag elements */
+.react-flow__node .nodrag {
+  pointer-events: auto !important;
+  cursor: pointer;
 }
 
 /* Scrollbar styling */
