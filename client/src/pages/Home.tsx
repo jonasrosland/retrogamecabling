@@ -38,7 +38,7 @@ export default function Home() {
             </h1>
             <p className="text-xl text-muted-foreground mb-10 leading-relaxed max-w-xl">
               Fun and interactive wiring diagrams for retro gaming enthusiasts. 
-              Plan your RGB SCART, S-Video, Composite, S-Video, VGA, and HDMI routing with precision.
+              Plan your RGB SCART, Component, Composite, S-Video, VGA, and HDMI routing with precision.
             </p>
             <div className="flex flex-wrap gap-4">
               <Button 
@@ -51,8 +51,9 @@ export default function Home() {
               </Button>
               <Button 
                 size="lg" 
+                onClick={() => window.open('https://github.com/jonasrosland/retrogamecabling', '_blank', 'noopener,noreferrer')}
                 variant="outline"
-                className="border-border bg-background/50 hover:bg-muted text-lg px-8 py-6 h-auto"
+                className="border-border bg-background/50 hover:bg-muted text-lg px-8 py-6 h-auto shadow-[0_0_20px_rgba(6,182,212,0.3)] hover:shadow-[0_0_30px_rgba(6,182,212,0.4)] transition-all"
               >
                 Documentation
               </Button>
