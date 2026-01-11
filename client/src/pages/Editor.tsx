@@ -249,6 +249,12 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
     });
   }, [setEdges, toast]);
 
+  // Deselect all nodes and edges when user focuses on search input
+  const handleDeselectAll = useCallback(() => {
+    setNodes((nds: Node[]) => nds.map((n: Node) => ({ ...n, selected: false })));
+    setEdges((eds: Edge[]) => eds.map((e: Edge) => ({ ...e, selected: false })));
+  }, [setNodes, setEdges]);
+
   const handleUpdateNode = useCallback((nodeId: string, updates: any) => {
     // If console output changed, validate all existing connections first
     if (updates.selectedOutput) {
@@ -432,6 +438,25 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Delete' || e.key === 'Backspace') {
+        // Don't handle delete/backspace if user is typing in an input field
+        const activeElement = document.activeElement;
+        const isInputFocused = activeElement && (
+          activeElement.tagName === 'INPUT' ||
+          activeElement.tagName === 'TEXTAREA' ||
+          activeElement.isContentEditable
+        );
+        
+        if (isInputFocused) {
+          return; // Let the input handle the keypress
+        }
+        
+        // Don't handle delete/backspace if focus is within the sidebar
+        // Check if the active element is within an <aside> element (the sidebar)
+        const sidebarElement = activeElement?.closest('aside');
+        if (sidebarElement) {
+          return; // User is interacting with sidebar, don't delete workspace items
+        }
+        
         // Check if any edges are selected
         const selectedEdges = edges.filter((e: any) => e.selected);
         if (selectedEdges.length > 0) {
@@ -852,7 +877,7 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
 
   return (
     <div className="flex h-screen w-screen overflow-hidden bg-background text-foreground font-sans">
-      <Sidebar />
+      <Sidebar onDeselectAll={handleDeselectAll} />
       
       <div className="flex-1 h-full flex flex-col relative" ref={reactFlowWrapper} style={{ minHeight: 0 }}>
         {/* Top Bar Overlay */}

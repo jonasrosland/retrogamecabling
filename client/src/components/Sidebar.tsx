@@ -5,7 +5,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Input } from '@/components/ui/input';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 
-export function Sidebar({ onClose, onSelectItem }: { onClose?: () => void; onSelectItem?: (item: any) => void } = {}) {
+export function Sidebar({ onClose, onSelectItem, onDeselectAll }: { onClose?: () => void; onSelectItem?: (item: any) => void; onDeselectAll?: () => void } = {}) {
   const { data: items, isLoading } = useItems();
   const [searchTerm, setSearchTerm] = React.useState('');
   const [selectedId, setSelectedId] = React.useState<number | null>(null);
@@ -60,6 +60,8 @@ export function Sidebar({ onClose, onSelectItem }: { onClose?: () => void; onSel
         onClick={() => {
           setSelectedId(isSelected ? null : item.id);
           onSelectItem?.(isSelected ? null : item);
+          // Deselect all nodes and edges in the work area when sidebar item is clicked
+          onDeselectAll?.();
         }}
         draggable
       >
@@ -95,6 +97,10 @@ export function Sidebar({ onClose, onSelectItem }: { onClose?: () => void; onSel
             className="pl-9 bg-background/50 border-border focus:border-primary font-mono text-sm"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
+            onFocus={() => {
+              // Deselect all nodes and edges in the work area when search input is focused
+              onDeselectAll?.();
+            }}
           />
         </div>
       </div>
