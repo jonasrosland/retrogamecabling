@@ -64,7 +64,7 @@
     "name": "SNES",
     "category": "console",
     "specs": {
-      "outputs": ["rf", "composite", "s-video", "rgb", "hdmi"],
+      "outputs": ["rf", "composite", "s-video", "rgb", "component", "hdmi"],
       "inputs": []
     },
     "imageUrl": null
