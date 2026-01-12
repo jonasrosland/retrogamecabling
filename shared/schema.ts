@@ -6,14 +6,22 @@ export const itemSpecsSchema = z.object({
   outputs: z.array(z.string()).optional(),
   signals: z.array(z.string()).optional(),
   isSVS: z.boolean().optional(),
+  isCustomSwitch: z.boolean().optional(),
+  isHDMISwitch: z.boolean().optional(),
   maxInputs: z.number().optional(),
   maxOutputs: z.number().optional(),
 }).passthrough(); // Allow additional fields to pass through
 
+export const variantSchema = z.object({
+  name: z.string(),
+  region: z.string(),
+});
+
 export const itemSchema = z.object({
   id: z.number(),
   name: z.string(),
-  category: z.string(), // 'console', 'switcher', 'display', 'cable'
+  category: z.string(), // 'console', 'switch', 'display', 'cable'
   specs: itemSpecsSchema,
+  variants: z.array(variantSchema).optional(),
   imageUrl: z.string().nullable().optional(),
 });

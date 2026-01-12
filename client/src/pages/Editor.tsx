@@ -256,13 +256,13 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
   }, [setNodes, setEdges]);
 
   const handleUpdateNode = useCallback((nodeId: string, updates: any) => {
-    // If console output changed, validate all existing connections first
+    // If console or custom item output changed, validate all existing connections first
     if (updates.selectedOutput) {
       const sourceNode = nodes.find(n => n.id === nodeId);
-      if (sourceNode?.data?.category === 'console') {
+      if (sourceNode?.data?.category === 'console' || sourceNode?.data?.category === 'custom') {
         const newOutputType = updates.selectedOutput;
         
-        // Check all existing connections from this console
+        // Check all existing connections from this console/custom item
         const connectedEdges = edges.filter((e: any) => e.source === nodeId);
         
         for (const edge of connectedEdges) {
@@ -315,8 +315,8 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
         return node;
       });
       
-      // If console output changed, update connected edges and target nodes
-      if (updates.selectedOutput && sourceNode?.data?.category === 'console') {
+      // If console or custom item output changed, update connected edges and target nodes
+      if (updates.selectedOutput && (sourceNode?.data?.category === 'console' || sourceNode?.data?.category === 'custom')) {
         const newOutputType = updates.selectedOutput;
         const edgeColor = getOutputColor(newOutputType);
         
@@ -324,8 +324,8 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
         const targetNodeIds: string[] = [];
         setEdges((eds) => {
           const updatedEdges = eds.map((edge) => {
-            // Check if this edge is from our console node
-            // For consoles, update ALL edges from this node (consoles only have one output)
+            // Check if this edge is from our console/custom node
+            // For consoles and custom items, update ALL edges from this node (they only have one output)
             if (edge.source === nodeId) {
               if (!targetNodeIds.includes(edge.target)) {
                 targetNodeIds.push(edge.target);
@@ -523,9 +523,9 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
       }
     }
     
-    // For consoles, use selected output or first available
+    // For consoles and custom items, use selected output or first available
     let outputType = '';
-    if (sourceNode.data.category === 'console') {
+    if (sourceNode.data.category === 'console' || sourceNode.data.category === 'custom') {
       outputType = sourceNode.data.selectedOutput || sourceOutputs[0] || '';
     } else {
       outputType = sourceOutputs[outputIndex] || '';
@@ -604,9 +604,9 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
       }
     }
     
-    // For consoles, use selected output or first available
+    // For consoles and custom items, use selected output or first available
     let outputType = '';
-    if (sourceNode.data.category === 'console') {
+    if (sourceNode.data.category === 'console' || sourceNode.data.category === 'custom') {
       outputType = sourceNode.data.selectedOutput || sourceOutputs[0] || '';
     } else {
       outputType = sourceOutputs[outputIndex] || '';
@@ -619,12 +619,12 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
     
     // Remove existing connections and add new one in a single state update
     setEdges((eds) => {
-      // Remove existing connection on source handle (especially for consoles)
-      // For consoles, remove any connection from the console regardless of sourceHandle
+      // Remove existing connection on source handle (especially for consoles and custom items)
+      // For consoles and custom items, remove any connection from the node regardless of sourceHandle
       let filtered = eds;
       
-      if (sourceNode.data.category === 'console') {
-        // Consoles can only have one output, so remove ALL connections from this console
+      if (sourceNode.data.category === 'console' || sourceNode.data.category === 'custom') {
+        // Consoles and custom items can only have one output, so remove ALL connections from this node
         filtered = filtered.filter((e) => e.source !== params.source);
       } else {
         // For other nodes, only remove connection from the specific source handle
@@ -665,20 +665,35 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
     if (!reactFlowInstance) return;
     const position = reactFlowInstance.screenToFlowPosition({ x, y });
       setNodes((nds) => {
+        // Determine initial label: use first variant if available, otherwise use base name
+        let initialLabel = itemData.name;
+        let variantIndex = 0;
+        if (itemData.variants && itemData.variants.length > 0) {
+          initialLabel = itemData.variants[0].name;
+          variantIndex = 0;
+        }
+        
         const newNodeData: any = { 
-          label: itemData.name, 
+          label: initialLabel, 
           category: itemData.category,
           specs: itemData.specs,
           onDelete: handleDeleteNode,
           onUpdate: handleUpdateNode,
         };
         
-        // Initialize SVS configuration if it's an SVS
-        if (itemData.specs?.isSVS === true) {
+        // Store variants data if available
+        if (itemData.variants && itemData.variants.length > 0) {
+          newNodeData.variants = itemData.variants;
+          newNodeData.variantIndex = variantIndex;
+        }
+        
+        // Initialize SVS/Custom Switch/HDMI Switch configuration if it's scalable
+        if (itemData.specs?.isSVS === true || itemData.specs?.isCustomSwitch === true || itemData.specs?.isHDMISwitch === true) {
+          const defaultSignalType = itemData.specs?.isHDMISwitch === true ? 'hdmi' : 'component';
           newNodeData.svsNumInputs = 1;
           newNodeData.svsNumOutputs = 1;
-          newNodeData.svsInputs = ['component'];
-          newNodeData.svsOutputs = ['component'];
+          newNodeData.svsInputs = [defaultSignalType];
+          newNodeData.svsOutputs = [defaultSignalType];
         }
         
         const newNode = {
@@ -719,20 +734,35 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
       });
 
       setNodes((nds) => {
+        // Determine initial label: use first variant if available, otherwise use base name
+        let initialLabel = itemData.name;
+        let variantIndex = 0;
+        if (itemData.variants && itemData.variants.length > 0) {
+          initialLabel = itemData.variants[0].name;
+          variantIndex = 0;
+        }
+        
         const newNodeData: any = { 
-          label: itemData.name, 
+          label: initialLabel, 
           category: itemData.category,
           specs: itemData.specs,
           onDelete: handleDeleteNode,
           onUpdate: handleUpdateNode,
         };
         
-        // Initialize SVS configuration if it's an SVS
-        if (itemData.specs?.isSVS === true) {
+        // Store variants data if available
+        if (itemData.variants && itemData.variants.length > 0) {
+          newNodeData.variants = itemData.variants;
+          newNodeData.variantIndex = variantIndex;
+        }
+        
+        // Initialize SVS/Custom Switch/HDMI Switch configuration if it's scalable
+        if (itemData.specs?.isSVS === true || itemData.specs?.isCustomSwitch === true || itemData.specs?.isHDMISwitch === true) {
+          const defaultSignalType = itemData.specs?.isHDMISwitch === true ? 'hdmi' : 'component';
           newNodeData.svsNumInputs = 1;
           newNodeData.svsNumOutputs = 1;
-          newNodeData.svsInputs = ['component'];
-          newNodeData.svsOutputs = ['component'];
+          newNodeData.svsInputs = [defaultSignalType];
+          newNodeData.svsOutputs = [defaultSignalType];
         }
         
         const newNode = {

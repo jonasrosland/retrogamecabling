@@ -23,6 +23,10 @@
     "id": 3,
     "name": "NES",
     "category": "console",
+    "variants": [
+      { "name": "NES", "region": "North America" },
+      { "name": "Famicom", "region": "Japan" }
+    ],
     "specs": {
       "outputs": ["rf", "composite", "hdmi"],
       "inputs": []
@@ -43,6 +47,10 @@
     "id": 5,
     "name": "TurboGrafx-16",
     "category": "console",
+    "variants": [
+      { "name": "TurboGrafx-16", "region": "North America" },
+      { "name": "PC Engine", "region": "Japan" }
+    ],
     "specs": {
       "outputs": ["rf", "composite", "rgb"],
       "inputs": []
@@ -53,6 +61,10 @@
     "id": 6,
     "name": "Sega Genesis",
     "category": "console",
+    "variants": [
+      { "name": "Sega Genesis", "region": "North America" },
+      { "name": "Mega Drive", "region": "Europe/Japan" }
+    ],
     "specs": {
       "outputs": ["rf", "composite", "rgb"],
       "inputs": []
@@ -63,6 +75,11 @@
     "id": 7,
     "name": "SNES",
     "category": "console",
+    "variants": [
+      { "name": "SNES", "region": "North America" },
+      { "name": "Super Famicom", "region": "Japan" },
+      { "name": "Super Nintendo", "region": "Europe" }
+    ],
     "specs": {
       "outputs": ["rf", "composite", "s-video", "rgb", "component", "hdmi"],
       "inputs": []
@@ -262,7 +279,7 @@
   {
     "id": 27,
     "name": "Otaku SCART Switch",
-    "category": "switcher",
+    "category": "switch",
     "specs": {
       "inputs": ["scart", "scart", "scart", "scart", "scart", "scart"],
       "outputs": ["scart", "rca"]
@@ -272,7 +289,7 @@
   {
     "id": 28,
     "name": "Extron Crosspoint",
-    "category": "switcher",
+    "category": "switch",
     "specs": {
       "inputs": ["bnc", "bnc", "bnc", "bnc"],
       "outputs": ["bnc", "bnc"]
@@ -282,7 +299,7 @@
   {
     "id": 32,
     "name": "4-Way AV/S-Video Switch",
-    "category": "switcher",
+    "category": "switch",
     "specs": {
       "inputs": ["composite", "composite", "composite", "composite", "s-video", "s-video", "s-video", "s-video"],
       "outputs": ["composite", "s-video"]
@@ -292,7 +309,7 @@
   {
     "id": 33,
     "name": "5-Way Composite Switch",
-    "category": "switcher",
+    "category": "switch",
     "specs": {
       "inputs": ["composite", "composite", "composite", "composite", "composite"],
       "outputs": ["composite"]
@@ -302,7 +319,7 @@
   {
     "id": 34,
     "name": "3-Way Component Switch",
-    "category": "switcher",
+    "category": "switch",
     "specs": {
       "inputs": ["component", "component", "component"],
       "outputs": ["component"]
@@ -312,7 +329,7 @@
   {
     "id": 35,
     "name": "gcomp Automatic 8:2",
-    "category": "switcher",
+    "category": "switch",
     "specs": {
       "inputs": ["component", "component", "component", "component", "component", "component", "component", "component"],
       "outputs": ["component", "component"]
@@ -322,7 +339,7 @@
   {
     "id": 36,
     "name": "gscartsw Automatic",
-    "category": "switcher",
+    "category": "switch",
     "specs": {
       "inputs": ["scart", "scart", "scart", "scart", "scart", "scart", "scart", "scart"],
       "outputs": ["scart", "scart"]
@@ -332,7 +349,7 @@
   {
     "id": 54,
     "name": "Scalable Video Switch (SVS)",
-    "category": "switcher",
+    "category": "switch",
     "specs": {
       "inputs": [],
       "outputs": [],
@@ -536,6 +553,42 @@
     "specs": {
       "inputs": ["composite", "s-video", "component", "scart", "vga", "hdmi"],
       "outputs": ["hdmi"]
+    },
+    "imageUrl": null
+  },
+  {
+    "id": 54,
+    "name": "Custom Game Machine",
+    "category": "custom",
+    "specs": {
+      "outputs": ["rf", "composite", "s-video", "rgb", "component", "hdmi", "scart", "bnc", "rca", "vga"],
+      "inputs": []
+    },
+    "imageUrl": null
+  },
+  {
+    "id": 55,
+    "name": "Custom Switch",
+    "category": "custom",
+    "specs": {
+      "inputs": [],
+      "outputs": [],
+      "isCustomSwitch": true,
+      "maxInputs": 32,
+      "maxOutputs": 32
+    },
+    "imageUrl": null
+  },
+  {
+    "id": 56,
+    "name": "Custom HDMI Switch",
+    "category": "custom",
+    "specs": {
+      "inputs": [],
+      "outputs": [],
+      "isHDMISwitch": true,
+      "maxInputs": 32,
+      "maxOutputs": 32
     },
     "imageUrl": null
   }

@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { useItems } from '@/hooks/use-items';
-import { Gamepad2, Tv, Route, Search, GripVertical, Cable, Maximize2 } from 'lucide-react';
+import { Gamepad2, Tv, Route, Search, GripVertical, Cable, Maximize2, Settings } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Input } from '@/components/ui/input';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
@@ -18,7 +18,7 @@ export function Sidebar({ onClose, onSelectItem, onDeselectAll }: { onClose?: ()
 
 
   const filteredItems = useMemo(() => {
-    if (!items) return { consoles: [], switchers: [], displays: [], adapters: [], upscalers: [] };
+    if (!items) return { consoles: [], switches: [], displays: [], adapters: [], upscalers: [], custom: [] };
     
     const filtered = items.filter(item => 
       item.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -26,10 +26,11 @@ export function Sidebar({ onClose, onSelectItem, onDeselectAll }: { onClose?: ()
 
     return {
       consoles: filtered.filter(i => i.category === 'console'),
-      switchers: filtered.filter(i => i.category === 'switcher'),
+      switches: filtered.filter(i => i.category === 'switch'),
       displays: filtered.filter(i => i.category === 'display'),
       adapters: filtered.filter(i => i.category === 'adapter'),
       upscalers: filtered.filter(i => i.category === 'upscaler'),
+      custom: filtered.filter(i => i.category === 'custom'),
     };
   }, [items, searchTerm]);
 
@@ -106,7 +107,7 @@ export function Sidebar({ onClose, onSelectItem, onDeselectAll }: { onClose?: ()
       </div>
 
       <ScrollArea className="flex-1 px-4">
-        <Accordion type="multiple" defaultValue={['consoles', 'switchers', 'displays', 'adapters', 'upscalers']} className="w-full py-4 space-y-4">
+        <Accordion type="multiple" defaultValue={['consoles', 'switches', 'displays', 'adapters', 'upscalers', 'custom']} className="w-full py-4 space-y-4">
           
           <AccordionItem value="consoles" className="border-none">
             <AccordionTrigger className="hover:no-underline py-2 bg-muted/30 px-3 rounded-lg hover:bg-muted/50 transition-colors group">
@@ -125,18 +126,18 @@ export function Sidebar({ onClose, onSelectItem, onDeselectAll }: { onClose?: ()
             </AccordionContent>
           </AccordionItem>
 
-          <AccordionItem value="switchers" className="border-none">
+          <AccordionItem value="switches" className="border-none">
             <AccordionTrigger className="hover:no-underline py-2 bg-muted/30 px-3 rounded-lg hover:bg-muted/50 transition-colors group">
               <div className="flex items-center gap-2 text-sm font-display text-secondary uppercase tracking-wide">
                 <Route className="w-4 h-4" />
                 Switches
                 <span className="ml-auto text-xs text-muted-foreground font-mono bg-background px-1.5 py-0.5 rounded border border-border group-hover:border-secondary/30">
-                  {filteredItems.switchers.length}
+                  {filteredItems.switches.length}
                 </span>
               </div>
             </AccordionTrigger>
             <AccordionContent className="pt-3 pb-0 px-1">
-              {filteredItems.switchers.map(item => (
+              {filteredItems.switches.map(item => (
                 <DraggableItem key={item.id} item={item} />
               ))}
             </AccordionContent>
@@ -188,6 +189,23 @@ export function Sidebar({ onClose, onSelectItem, onDeselectAll }: { onClose?: ()
             </AccordionTrigger>
             <AccordionContent className="pt-3 pb-0 px-1">
               {filteredItems.upscalers.map(item => (
+                <DraggableItem key={item.id} item={item} />
+              ))}
+            </AccordionContent>
+          </AccordionItem>
+
+          <AccordionItem value="custom" className="border-none">
+            <AccordionTrigger className="hover:no-underline py-2 bg-muted/30 px-3 rounded-lg hover:bg-muted/50 transition-colors group">
+              <div className="flex items-center gap-2 text-sm font-display text-muted-foreground uppercase tracking-wide">
+                <Settings className="w-4 h-4" />
+                Custom
+                <span className="ml-auto text-xs text-muted-foreground font-mono bg-background px-1.5 py-0.5 rounded border border-border group-hover:border-primary/30">
+                  {filteredItems.custom.length}
+                </span>
+              </div>
+            </AccordionTrigger>
+            <AccordionContent className="pt-3 pb-0 px-1">
+              {filteredItems.custom.map(item => (
                 <DraggableItem key={item.id} item={item} />
               ))}
             </AccordionContent>

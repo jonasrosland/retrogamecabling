@@ -1,18 +1,20 @@
 import { memo, useRef, useEffect, useState, useMemo } from 'react';
 import { Handle, Position, NodeProps, useUpdateNodeInternals } from 'reactflow';
-import { Gamepad2, Monitor, Route, Tv, X, Cable, Maximize2 } from 'lucide-react';
+import { Gamepad2, Monitor, Route, Tv, X, Cable, Maximize2, Settings } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Input } from '@/components/ui/input';
 
 // Icon mapping based on category
 const CategoryIcon = ({ category, className }: { category: string, className?: string }) => {
   switch (category) {
     case 'console': return <Gamepad2 className={className} />;
     case 'display': return <Tv className={className} />;
-    case 'switcher': return <Route className={className} />;
+    case 'switch': return <Route className={className} />;
     case 'adapter': return <Cable className={className} />;
     case 'upscaler': return <Maximize2 className={className} />;
+    case 'custom': return <Settings className={className} />;
     default: return <Monitor className={className} />;
   }
 };
@@ -58,54 +60,60 @@ const CustomNode = ({ data, selected, id, connectedEdges, allNodes, areSignalsCo
   const [nodeHeight, setNodeHeight] = useState(0);
   const updateNodeInternals = useUpdateNodeInternals();
   
-  // Check if this is an SVS (Scalable Video Switch)
+  // Check if this is an SVS (Scalable Video Switch), Custom Switch, or HDMI Switch
   const isSVS = data.specs?.isSVS === true;
+  const isCustomSwitch = data.specs?.isCustomSwitch === true;
+  const isHDMISwitch = data.specs?.isHDMISwitch === true;
+  const isScalableSwitch = isSVS || isCustomSwitch || isHDMISwitch;
   const maxInputs = data.specs?.maxInputs || 32;
-  const maxOutputs = data.specs?.maxOutputs || 6;
+  const maxOutputs = data.specs?.maxOutputs || (isSVS ? 6 : 32);
   
-  // SVS configuration
+  // SVS/Custom Switch/HDMI Switch configuration
   const svsNumInputs = data.svsNumInputs ?? 1;
   const svsNumOutputs = data.svsNumOutputs ?? 1;
   
-  // Initialize SVS arrays - ensure they always have the correct length
+  // Determine default signal type based on switch type
+  const defaultSignalType = isHDMISwitch ? 'hdmi' : 'component';
+  
+  // Initialize SVS/Custom Switch/HDMI Switch arrays - ensure they always have the correct length
   let svsInputs: string[] = [];
   let svsOutputs: string[] = [];
   
-  if (isSVS) {
+  if (isScalableSwitch) {
     if (data.svsInputs && Array.isArray(data.svsInputs) && data.svsInputs.length === svsNumInputs) {
       svsInputs = data.svsInputs;
     } else {
-      // Create array with correct length
-      svsInputs = Array(svsNumInputs).fill('component');
+      // Create array with correct length and default signal type
+      svsInputs = Array(svsNumInputs).fill(defaultSignalType);
     }
     
     if (data.svsOutputs && Array.isArray(data.svsOutputs) && data.svsOutputs.length === svsNumOutputs) {
       svsOutputs = data.svsOutputs;
     } else {
-      // Create array with correct length
-      svsOutputs = Array(svsNumOutputs).fill('component');
+      // Create array with correct length and default signal type
+      svsOutputs = Array(svsNumOutputs).fill(defaultSignalType);
     }
   }
   
-  // Use SVS configuration if it's an SVS, otherwise use specs
-  // Always ensure arrays have at least one element for SVS
-  let inputs = isSVS ? svsInputs : (data.specs?.inputs || []);
-  let outputs = isSVS ? svsOutputs : (data.specs?.outputs || []);
+  // Use SVS/Custom Switch configuration if it's scalable, otherwise use specs
+  // Always ensure arrays have at least one element for scalable switches
+  let inputs = isScalableSwitch ? svsInputs : (data.specs?.inputs || []);
+  let outputs = isScalableSwitch ? svsOutputs : (data.specs?.outputs || []);
   
-  // Force arrays to have at least one element for SVS
-  if (isSVS) {
+  // Force arrays to have at least one element for scalable switches
+  if (isScalableSwitch) {
     if (inputs.length === 0) {
-      inputs = ['component'];
+      inputs = [defaultSignalType];
     }
     if (outputs.length === 0) {
-      outputs = ['component'];
+      outputs = [defaultSignalType];
     }
   }
   
   
-  // Initialize SVS configuration on first render if not present
+  // Initialize SVS/Custom Switch configuration on first render if not present
   useEffect(() => {
-    if (isSVS && onUpdate) {
+    if (isScalableSwitch && onUpdate) {
       const needsInit = (
         data.svsNumInputs === undefined || 
         !data.svsInputs || 
@@ -121,12 +129,12 @@ const CustomNode = ({ data, selected, id, connectedEdges, allNodes, areSignalsCo
         onUpdate(id, {
           svsNumInputs: svsNumInputs,
           svsNumOutputs: svsNumOutputs,
-          svsInputs: Array(svsNumInputs).fill('component'),
-          svsOutputs: Array(svsNumOutputs).fill('component')
+          svsInputs: Array(svsNumInputs).fill(defaultSignalType),
+          svsOutputs: Array(svsNumOutputs).fill(defaultSignalType)
         });
       }
     }
-  }, [isSVS, data.svsNumInputs, data.svsInputs, data.svsNumOutputs, data.svsOutputs, svsNumInputs, svsNumOutputs, onUpdate, id]);
+  }, [isScalableSwitch, data.svsNumInputs, data.svsInputs, data.svsNumOutputs, data.svsOutputs, svsNumInputs, svsNumOutputs, onUpdate, id]);
   
   // Filter edges to only those connected to this node (memoized for performance)
   const nodeEdges = useMemo(() => {
@@ -134,32 +142,38 @@ const CustomNode = ({ data, selected, id, connectedEdges, allNodes, areSignalsCo
     return connectedEdges.filter((e: any) => e.source === id || e.target === id);
   }, [connectedEdges, id]);
   
-  // For consoles, use selected output or first available
+  // For consoles and custom items (but not scalable switches), use selected output or first available
   const isConsole = data.category === 'console';
+  const isCustom = data.category === 'custom' && !isScalableSwitch; // Exclude scalable switches from custom console behavior
+  const isConsoleOrCustom = isConsole || isCustom;
   // Use data.selectedOutput directly - don't fallback to outputs[0] to ensure changes are visible
-  const selectedOutput = isConsole ? (data.selectedOutput || outputs[0] || null) : null;
+  const selectedOutput = isConsoleOrCustom ? (data.selectedOutput || outputs[0] || null) : null;
   
-  // Available SVS module types
+  // Available SVS module types (limited set)
   const svsModuleTypes = ['component', 'composite', 's-video', 'scart', 'vga'];
+  // Available Custom Switch module types (all types)
+  const customSwitchModuleTypes = ['rf', 'composite', 's-video', 'rgb', 'component', 'hdmi', 'scart', 'bnc', 'rca', 'vga'];
+  // Use appropriate module types based on switch type
+  const switchModuleTypes = isCustomSwitch ? customSwitchModuleTypes : svsModuleTypes;
   
-  // Update node internals when selectedOutput or SVS config changes
+  // Update node internals when selectedOutput or SVS/Custom Switch config changes
   useEffect(() => {
-    if (isConsole && selectedOutput) {
+    if (isConsoleOrCustom && selectedOutput) {
       updateNodeInternals(id);
     }
-    if (isSVS) {
+    if (isScalableSwitch) {
       updateNodeInternals(id);
     }
-  }, [isConsole, selectedOutput, isSVS, svsInputs, svsOutputs, id, updateNodeInternals]);
+  }, [isConsoleOrCustom, selectedOutput, isScalableSwitch, svsInputs, svsOutputs, id, updateNodeInternals]);
   
   // Handle SVS input count change
   const handleSVSInputCountChange = (newCount: number) => {
-    const currentInputs = data.svsInputs || Array(svsNumInputs).fill('component');
+    const currentInputs = data.svsInputs || Array(svsNumInputs).fill(defaultSignalType);
     let newInputs: string[];
     
     if (newCount > svsNumInputs) {
-      // Adding inputs - pad with 'component'
-      newInputs = [...currentInputs, ...Array(newCount - svsNumInputs).fill('component')];
+      // Adding inputs - pad with default signal type (hdmi for HDMI switch, component for others)
+      newInputs = [...currentInputs, ...Array(newCount - svsNumInputs).fill(defaultSignalType)];
     } else {
       // Removing inputs - truncate
       newInputs = currentInputs.slice(0, newCount);
@@ -175,12 +189,12 @@ const CustomNode = ({ data, selected, id, connectedEdges, allNodes, areSignalsCo
   
   // Handle SVS output count change
   const handleSVSOutputCountChange = (newCount: number) => {
-    const currentOutputs = data.svsOutputs || Array(svsNumOutputs).fill('component');
+    const currentOutputs = data.svsOutputs || Array(svsNumOutputs).fill(defaultSignalType);
     let newOutputs: string[];
     
     if (newCount > svsNumOutputs) {
-      // Adding outputs - pad with 'component'
-      newOutputs = [...currentOutputs, ...Array(newCount - svsNumOutputs).fill('component')];
+      // Adding outputs - pad with default signal type (hdmi for HDMI switch, component for others)
+      newOutputs = [...currentOutputs, ...Array(newCount - svsNumOutputs).fill(defaultSignalType)];
     } else {
       // Removing outputs - truncate
       newOutputs = currentOutputs.slice(0, newCount);
@@ -257,7 +271,7 @@ const CustomNode = ({ data, selected, id, connectedEdges, allNodes, areSignalsCo
     }
     
     // For consoles, use selected output color
-    if (isConsole && !isInput && selectedOutput) {
+    if (isConsoleOrCustom && !isInput && selectedOutput) {
       return getOutputColor(selectedOutput);
     }
     
@@ -292,7 +306,7 @@ const CustomNode = ({ data, selected, id, connectedEdges, allNodes, areSignalsCo
   const headerHeight = 32; // Approximate header height
   
   // Calculate minimum height for switchers and displays based on handle count
-  const isSwitcherOrDisplay = data.category === 'switcher' || data.category === 'display' || isSVS;
+  const isSwitcherOrDisplay = data.category === 'switch' || data.category === 'display' || isSVS;
   const maxHandles = isSwitcherOrDisplay ? Math.max(inputs.length, outputs.length) : 0;
   
   let minHeight: number | undefined = undefined;
@@ -335,15 +349,74 @@ const CustomNode = ({ data, selected, id, connectedEdges, allNodes, areSignalsCo
           <CategoryIcon category={data.category} className="w-4 h-4" />
         </div>
         <div className="flex-1 min-w-0">
-          <h3 className="font-display text-sm font-bold truncate leading-none text-foreground">
-            {data.label}
-          </h3>
-          {!isConsole && (
+          {/* Editable name for custom items (including Custom Switch and HDMI Switch) - only show input when selected */}
+          {(isCustom || isCustomSwitch || isHDMISwitch) && selected ? (
+            <div className="nodrag">
+              <Input
+                value={data.label || ''}
+                onChange={(e) => {
+                  if (onUpdate) {
+                    onUpdate(id, { label: e.target.value });
+                  }
+                }}
+                onMouseDown={(e) => e.stopPropagation()}
+                className="h-6 px-2 text-xs font-display font-bold border-primary/30 bg-primary/10 hover:bg-primary/20 focus-visible:ring-2 focus-visible:ring-primary"
+                placeholder="Enter name..."
+              />
+            </div>
+          ) : isConsole && data.variants && data.variants.length > 0 && selected ? (
+            /* Variant selector for consoles with variants - only show dropdown when selected */
+            <div className="nodrag">
+              <Select
+                value={data.variantIndex !== undefined ? data.variantIndex.toString() : '0'}
+                onValueChange={(value: string) => {
+                  const index = parseInt(value, 10);
+                  if (onUpdate && data.variants && data.variants[index]) {
+                    onUpdate(id, { 
+                      variantIndex: index,
+                      label: data.variants[index].name 
+                    });
+                  }
+                }}
+              >
+                <SelectTrigger 
+                  className="h-6 px-2 text-xs font-display font-bold border-primary/30 bg-primary/10 hover:bg-primary/20 w-full"
+                  onMouseDown={(e) => e.stopPropagation()}
+                >
+                  <SelectValue>
+                    {data.variants[data.variantIndex ?? 0]?.name || data.label}
+                  </SelectValue>
+                </SelectTrigger>
+                <SelectContent
+                  onPointerDownOutside={(e) => {
+                    const target = e.target as HTMLElement;
+                    if (target.closest('.react-flow')) {
+                      e.preventDefault();
+                    }
+                  }}
+                >
+                  {data.variants.map((variant: any, index: number) => (
+                    <SelectItem key={index} value={index.toString()}>
+                      <div className="flex flex-col">
+                        <span className="font-semibold">{variant.name}</span>
+                        <span className="text-xs text-muted-foreground">{variant.region}</span>
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          ) : (
+            <h3 className="font-display text-sm font-bold truncate leading-none text-foreground">
+              {data.label}
+            </h3>
+          )}
+          {!isConsoleOrCustom && (
             <div className="flex items-center gap-2 mt-0.5">
               <p className="text-[10px] text-muted-foreground uppercase tracking-wider">
-                {data.category === 'switcher' ? 'switch' : data.category}
+                {data.category === 'switch' ? 'switch' : data.category}
               </p>
-              {isSVS && (
+              {isScalableSwitch && (
                 <div className="flex items-center gap-1 nodrag">
                   <Select
                     value={svsNumInputs.toString()}
@@ -400,7 +473,7 @@ const CustomNode = ({ data, selected, id, connectedEdges, allNodes, areSignalsCo
               )}
             </div>
           )}
-          {isConsole && (
+          {isConsoleOrCustom && (
             <div className="mt-1.5 nodrag">
               <Select
                 value={selectedOutput || outputs[0] || ''}
@@ -432,7 +505,7 @@ const CustomNode = ({ data, selected, id, connectedEdges, allNodes, areSignalsCo
                     let isDisabled = false;
                     if (areSignalsCompatible && allNodes && nodeEdges && nodeEdges.length > 0) {
                       try {
-                        // Check all existing connections from this console
+                        // Check all existing connections from this console/custom item
                         for (const edge of nodeEdges) {
                           if (edge.source !== id) continue; // Only check outgoing edges
                           
@@ -484,8 +557,8 @@ const CustomNode = ({ data, selected, id, connectedEdges, allNodes, areSignalsCo
         </div>
       </div>
 
-      {/* SVS Input/Output Configuration (Inside box) */}
-      {isSVS && (
+      {/* SVS/Custom Switch Input/Output Configuration (Inside box) */}
+      {isScalableSwitch && (
         <div className="mt-2 space-y-2">
           {/* Inputs */}
           <div className="space-y-1.5">
@@ -496,31 +569,39 @@ const CustomNode = ({ data, selected, id, connectedEdges, allNodes, areSignalsCo
               
               return (
                 <div key={`input-${index}`} className="flex items-center gap-2">
-                  <Select
-                    value={input}
-                    onValueChange={(value) => handleSVSInputTypeChange(index, value)}
-                  >
-                    <SelectTrigger 
-                      className="h-6 px-2 text-[10px] font-mono border-border bg-background hover:bg-muted flex-1 nodrag"
-                      onMouseDown={(e) => e.stopPropagation()}
+                  {isHDMISwitch ? (
+                    // HDMI Switch: just show label, no dropdown
+                    <div className="h-6 px-2 text-[10px] font-mono border-border bg-background flex-1 flex items-center">
+                      {input.toUpperCase()}
+                    </div>
+                  ) : (
+                    // SVS/Custom Switch: show dropdown for type selection
+                    <Select
+                      value={input}
+                      onValueChange={(value) => handleSVSInputTypeChange(index, value)}
                     >
-                      <SelectValue>{input.toUpperCase()}</SelectValue>
-                    </SelectTrigger>
-                    <SelectContent
-                      onPointerDownOutside={(e) => {
-                        const target = e.target as HTMLElement;
-                        if (target.closest('.react-flow')) {
-                          e.preventDefault();
-                        }
-                      }}
-                    >
-                      {svsModuleTypes.map((type) => (
-                        <SelectItem key={type} value={type}>
-                          {type.toUpperCase()}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                      <SelectTrigger 
+                        className="h-6 px-2 text-[10px] font-mono border-border bg-background hover:bg-muted flex-1 nodrag"
+                        onMouseDown={(e) => e.stopPropagation()}
+                      >
+                        <SelectValue>{input.toUpperCase()}</SelectValue>
+                      </SelectTrigger>
+                      <SelectContent
+                        onPointerDownOutside={(e) => {
+                          const target = e.target as HTMLElement;
+                          if (target.closest('.react-flow')) {
+                            e.preventDefault();
+                          }
+                        }}
+                      >
+                        {switchModuleTypes.map((type) => (
+                          <SelectItem key={type} value={type}>
+                            {type.toUpperCase()}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
                 </div>
               );
             })}
@@ -535,31 +616,39 @@ const CustomNode = ({ data, selected, id, connectedEdges, allNodes, areSignalsCo
               
               return (
                 <div key={`output-${index}`} className="flex items-center gap-2">
-                  <Select
-                    value={output}
-                    onValueChange={(value) => handleSVSOutputTypeChange(index, value)}
-                  >
-                    <SelectTrigger 
-                      className="h-6 px-2 text-[10px] font-mono border-border bg-background hover:bg-muted flex-1 nodrag"
-                      onMouseDown={(e) => e.stopPropagation()}
+                  {isHDMISwitch ? (
+                    // HDMI Switch: just show label, no dropdown
+                    <div className="h-6 px-2 text-[10px] font-mono border-border bg-background flex-1 flex items-center">
+                      {output.toUpperCase()}
+                    </div>
+                  ) : (
+                    // SVS/Custom Switch: show dropdown for type selection
+                    <Select
+                      value={output}
+                      onValueChange={(value) => handleSVSOutputTypeChange(index, value)}
                     >
-                      <SelectValue>{output.toUpperCase()}</SelectValue>
-                    </SelectTrigger>
-                    <SelectContent
-                      onPointerDownOutside={(e) => {
-                        const target = e.target as HTMLElement;
-                        if (target.closest('.react-flow')) {
-                          e.preventDefault();
-                        }
-                      }}
-                    >
-                      {svsModuleTypes.map((type) => (
-                        <SelectItem key={type} value={type}>
-                          {type.toUpperCase()}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                      <SelectTrigger 
+                        className="h-6 px-2 text-[10px] font-mono border-border bg-background hover:bg-muted flex-1 nodrag"
+                        onMouseDown={(e) => e.stopPropagation()}
+                      >
+                        <SelectValue>{output.toUpperCase()}</SelectValue>
+                      </SelectTrigger>
+                      <SelectContent
+                        onPointerDownOutside={(e) => {
+                          const target = e.target as HTMLElement;
+                          if (target.closest('.react-flow')) {
+                            e.preventDefault();
+                          }
+                        }}
+                      >
+                        {switchModuleTypes.map((type) => (
+                          <SelectItem key={type} value={type}>
+                            {type.toUpperCase()}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
                 </div>
               );
             })}
@@ -567,8 +656,8 @@ const CustomNode = ({ data, selected, id, connectedEdges, allNodes, areSignalsCo
         </div>
       )}
 
-      {/* SVS Handles (Outside box, aligned with dropdowns) */}
-      {isSVS && (
+      {/* SVS/Custom Switch Handles (Outside box, aligned with dropdowns) */}
+      {isScalableSwitch && (
         <>
           {/* Input Handles (Left side) - aligned with dropdowns */}
           {inputs.map((input: string, index: number) => {
@@ -646,14 +735,14 @@ const CustomNode = ({ data, selected, id, connectedEdges, allNodes, areSignalsCo
         </>
       )}
 
-      {/* Inputs (Left side) - Non-SVS */}
-      {!isSVS && (
+      {/* Inputs (Left side) - Non-Scalable Switch */}
+      {!isScalableSwitch && (
         <div 
           className="absolute -left-14 flex flex-col gap-3 top-1/2 -translate-y-1/2"
         >
           {inputs.map((input: string, index: number) => {
             const handleId = `in-${index}`;
-            const label = data.category === 'switcher' ? getPortLabel(input, index, inputs) : input.toUpperCase();
+            const label = data.category === 'switch' ? getPortLabel(input, index, inputs) : input.toUpperCase();
             const handleColor = getHandleColor(handleId, input, true);
             
             return (
@@ -671,13 +760,13 @@ const CustomNode = ({ data, selected, id, connectedEdges, allNodes, areSignalsCo
         </div>
       )}
 
-      {/* Outputs (Right side) - Non-SVS */}
-      {!isSVS && (
+      {/* Outputs (Right side) - Non-Scalable Switch */}
+      {!isScalableSwitch && (
         <div 
           className="absolute -right-14 flex flex-col gap-3 top-1/2 -translate-y-1/2"
         >
-          {isConsole ? (
-            // Consoles: single output handle showing selected output
+          {isConsoleOrCustom ? (
+            // Consoles and custom items: single output handle showing selected output
             selectedOutput && (
               <HandleWithLabel
                 type="source"
