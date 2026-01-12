@@ -512,12 +512,14 @@ const CustomNode = ({ data, selected, id, connectedEdges, allNodes, areSignalsCo
                           const targetNode = allNodes.find((n: any) => n.id === edge.target);
                           if (!targetNode) continue;
                           
-                          // Check if target is SVS
-                          const targetIsSVS = targetNode.data.specs?.isSVS === true;
+                          // Check if target is a scalable switch (SVS, Custom Switch, or HDMI Switch)
+                          const targetIsScalableSwitch = targetNode.data.specs?.isSVS === true || 
+                                                         targetNode.data.specs?.isCustomSwitch === true || 
+                                                         targetNode.data.specs?.isHDMISwitch === true;
                           
                           // Get the input type from the target handle
-                          // For SVS nodes, use svsInputs; otherwise use specs.inputs
-                          const targetInputs = targetIsSVS
+                          // For scalable switch nodes, use svsInputs; otherwise use specs.inputs
+                          const targetInputs = targetIsScalableSwitch
                             ? (targetNode.data.svsInputs || [])
                             : (targetNode.data.specs?.inputs || []);
                           let inputType = '';

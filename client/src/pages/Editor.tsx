@@ -256,10 +256,15 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
   }, [setNodes, setEdges]);
 
   const handleUpdateNode = useCallback((nodeId: string, updates: any) => {
-    // If console or custom item output changed, validate all existing connections first
+    // If console or custom game machine (non-scalable) output changed, validate all existing connections first
     if (updates.selectedOutput) {
       const sourceNode = nodes.find(n => n.id === nodeId);
-      if (sourceNode?.data?.category === 'console' || sourceNode?.data?.category === 'custom') {
+      const sourceIsScalableSwitch = sourceNode?.data?.specs?.isSVS === true || 
+                                     sourceNode?.data?.specs?.isCustomSwitch === true || 
+                                     sourceNode?.data?.specs?.isHDMISwitch === true;
+      
+      // Only validate for consoles and custom game machines (not scalable switches)
+      if ((sourceNode?.data?.category === 'console' || sourceNode?.data?.category === 'custom') && !sourceIsScalableSwitch) {
         const newOutputType = updates.selectedOutput;
         
         // Check all existing connections from this console/custom item
@@ -269,8 +274,16 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
           const targetNode = nodes.find(n => n.id === edge.target);
           if (!targetNode) continue;
           
+          // Check if target is a scalable switch
+          const targetIsScalableSwitch = targetNode.data.specs?.isSVS === true || 
+                                        targetNode.data.specs?.isCustomSwitch === true || 
+                                        targetNode.data.specs?.isHDMISwitch === true;
+          
           // Get the input type from the target handle
-          const targetInputs = targetNode.data.specs?.inputs || [];
+          // For scalable switch nodes, use svsInputs; otherwise use specs.inputs
+          const targetInputs = targetIsScalableSwitch
+            ? (targetNode.data.svsInputs || [])
+            : (targetNode.data.specs?.inputs || []);
           let inputType = '';
           
           if (edge.targetHandle) {
@@ -315,8 +328,11 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
         return node;
       });
       
-      // If console or custom item output changed, update connected edges and target nodes
-      if (updates.selectedOutput && (sourceNode?.data?.category === 'console' || sourceNode?.data?.category === 'custom')) {
+      // If console or custom game machine (non-scalable) output changed, update connected edges and target nodes
+      const sourceIsScalableSwitch = sourceNode?.data?.specs?.isSVS === true || 
+                                     sourceNode?.data?.specs?.isCustomSwitch === true || 
+                                     sourceNode?.data?.specs?.isHDMISwitch === true;
+      if (updates.selectedOutput && (sourceNode?.data?.category === 'console' || sourceNode?.data?.category === 'custom') && !sourceIsScalableSwitch) {
         const newOutputType = updates.selectedOutput;
         const edgeColor = getOutputColor(newOutputType);
         
@@ -492,16 +508,20 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
     
     if (!sourceNode || !targetNode) return false;
     
-    // Check if nodes are SVS
-    const sourceIsSVS = sourceNode.data.specs?.isSVS === true;
-    const targetIsSVS = targetNode.data.specs?.isSVS === true;
+    // Check if nodes are scalable switches (SVS, Custom Switch, or HDMI Switch)
+    const sourceIsScalableSwitch = sourceNode.data.specs?.isSVS === true || 
+                                   sourceNode.data.specs?.isCustomSwitch === true || 
+                                   sourceNode.data.specs?.isHDMISwitch === true;
+    const targetIsScalableSwitch = targetNode.data.specs?.isSVS === true || 
+                                   targetNode.data.specs?.isCustomSwitch === true || 
+                                   targetNode.data.specs?.isHDMISwitch === true;
     
     // Get output and input types from the handles
-    // For SVS nodes, use svsOutputs/svsInputs; otherwise use specs.outputs/inputs
-    const sourceOutputs = sourceIsSVS 
+    // For scalable switch nodes, use svsOutputs/svsInputs; otherwise use specs.outputs/inputs
+    const sourceOutputs = sourceIsScalableSwitch 
       ? (sourceNode.data.svsOutputs || [])
       : (sourceNode.data.specs?.outputs || []);
-    const targetInputs = targetIsSVS
+    const targetInputs = targetIsScalableSwitch
       ? (targetNode.data.svsInputs || [])
       : (targetNode.data.specs?.inputs || []);
     
@@ -523,9 +543,12 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
       }
     }
     
-    // For consoles and custom items, use selected output or first available
+    // For consoles and custom game machines (non-scalable custom items), use selected output or first available
+    // For scalable switches, use indexed outputs
     let outputType = '';
-    if (sourceNode.data.category === 'console' || sourceNode.data.category === 'custom') {
+    if (sourceIsScalableSwitch) {
+      outputType = sourceOutputs[outputIndex] || '';
+    } else if (sourceNode.data.category === 'console' || sourceNode.data.category === 'custom') {
       outputType = sourceNode.data.selectedOutput || sourceOutputs[0] || '';
     } else {
       outputType = sourceOutputs[outputIndex] || '';
@@ -573,16 +596,20 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
     
     if (!sourceNode || !targetNode) return;
     
-    // Check if nodes are SVS
-    const sourceIsSVS = sourceNode.data.specs?.isSVS === true;
-    const targetIsSVS = targetNode.data.specs?.isSVS === true;
+    // Check if nodes are scalable switches (SVS, Custom Switch, or HDMI Switch)
+    const sourceIsScalableSwitch = sourceNode.data.specs?.isSVS === true || 
+                                   sourceNode.data.specs?.isCustomSwitch === true || 
+                                   sourceNode.data.specs?.isHDMISwitch === true;
+    const targetIsScalableSwitch = targetNode.data.specs?.isSVS === true || 
+                                   targetNode.data.specs?.isCustomSwitch === true || 
+                                   targetNode.data.specs?.isHDMISwitch === true;
     
     // Get output and input types from the handles that were actually connected
-    // For SVS nodes, use svsOutputs/svsInputs; otherwise use specs.outputs/inputs
-    const sourceOutputs = sourceIsSVS
+    // For scalable switch nodes, use svsOutputs/svsInputs; otherwise use specs.outputs/inputs
+    const sourceOutputs = sourceIsScalableSwitch
       ? (sourceNode.data.svsOutputs || [])
       : (sourceNode.data.specs?.outputs || []);
-    const targetInputs = targetIsSVS
+    const targetInputs = targetIsScalableSwitch
       ? (targetNode.data.svsInputs || [])
       : (targetNode.data.specs?.inputs || []);
     
@@ -604,9 +631,12 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
       }
     }
     
-    // For consoles and custom items, use selected output or first available
+    // For consoles and custom game machines (non-scalable custom items), use selected output or first available
+    // For scalable switches, use indexed outputs
     let outputType = '';
-    if (sourceNode.data.category === 'console' || sourceNode.data.category === 'custom') {
+    if (sourceIsScalableSwitch) {
+      outputType = sourceOutputs[outputIndex] || '';
+    } else if (sourceNode.data.category === 'console' || sourceNode.data.category === 'custom') {
       outputType = sourceNode.data.selectedOutput || sourceOutputs[0] || '';
     } else {
       outputType = sourceOutputs[outputIndex] || '';
@@ -620,11 +650,17 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
     // Remove existing connections and add new one in a single state update
     setEdges((eds) => {
       // Remove existing connection on source handle (especially for consoles and custom items)
-      // For consoles and custom items, remove any connection from the node regardless of sourceHandle
+      // For consoles and custom game machines (non-scalable), remove any connection from the node regardless of sourceHandle
+      // For scalable switches, only remove connection from the specific source handle
       let filtered = eds;
       
-      if (sourceNode.data.category === 'console' || sourceNode.data.category === 'custom') {
-        // Consoles and custom items can only have one output, so remove ALL connections from this node
+      if (sourceIsScalableSwitch) {
+        // For scalable switches, only remove connection from the specific source handle
+        filtered = filtered.filter(
+          (e) => !(e.source === params.source && e.sourceHandle === params.sourceHandle)
+        );
+      } else if (sourceNode.data.category === 'console' || sourceNode.data.category === 'custom') {
+        // Consoles and custom game machines can only have one output, so remove ALL connections from this node
         filtered = filtered.filter((e) => e.source !== params.source);
       } else {
         // For other nodes, only remove connection from the specific source handle
