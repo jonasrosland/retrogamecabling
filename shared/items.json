@@ -574,8 +574,8 @@
       "inputs": [],
       "outputs": [],
       "isCustomSwitch": true,
-      "maxInputs": 32,
-      "maxOutputs": 32
+      "maxInputs": 64,
+      "maxOutputs": 64
     },
     "imageUrl": null
   },
@@ -587,8 +587,8 @@
       "inputs": [],
       "outputs": [],
       "isHDMISwitch": true,
-      "maxInputs": 32,
-      "maxOutputs": 32
+      "maxInputs": 64,
+      "maxOutputs": 64
     },
     "imageUrl": null
   }

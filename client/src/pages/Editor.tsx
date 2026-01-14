@@ -1038,6 +1038,8 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
             edgeTypes={edgeTypes}
             isValidConnection={isValidConnection}
             fitView={shouldFitView}
+            minZoom={0.1}
+            maxZoom={2}
             className="bg-background"
             style={{ width: '100%', height: '100%' }}
             edgesUpdatable={true}

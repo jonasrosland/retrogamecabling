@@ -65,8 +65,8 @@ const CustomNode = ({ data, selected, id, connectedEdges, allNodes, areSignalsCo
   const isCustomSwitch = data.specs?.isCustomSwitch === true;
   const isHDMISwitch = data.specs?.isHDMISwitch === true;
   const isScalableSwitch = isSVS || isCustomSwitch || isHDMISwitch;
-  const maxInputs = data.specs?.maxInputs || 32;
-  const maxOutputs = data.specs?.maxOutputs || (isSVS ? 6 : 32);
+  const maxInputs = data.specs?.maxInputs || (isSVS ? 32 : 64);
+  const maxOutputs = data.specs?.maxOutputs || (isSVS ? 6 : 64);
   
   // SVS/Custom Switch/HDMI Switch configuration
   const svsNumInputs = data.svsNumInputs ?? 1;
@@ -418,57 +418,64 @@ const CustomNode = ({ data, selected, id, connectedEdges, allNodes, areSignalsCo
               </p>
               {isScalableSwitch && (
                 <div className="flex items-center gap-1 nodrag">
-                  <Select
-                    value={svsNumInputs.toString()}
-                    onValueChange={(value) => handleSVSInputCountChange(parseInt(value, 10))}
-                  >
-                    <SelectTrigger 
-                      className="h-4 px-1.5 text-[10px] font-mono border-primary/30 bg-primary/10 hover:bg-primary/20 w-auto min-w-[40px]"
-                      onMouseDown={(e) => e.stopPropagation()}
-                    >
-                      <SelectValue>{svsNumInputs} IN</SelectValue>
-                    </SelectTrigger>
-                    <SelectContent
-                      onPointerDownOutside={(e) => {
-                        const target = e.target as HTMLElement;
-                        if (target.closest('.react-flow')) {
-                          e.preventDefault();
+                  {selected ? (
+                    <Input
+                      type="number"
+                      min="1"
+                      max={maxInputs}
+                      value={svsNumInputs}
+                      onChange={(e) => {
+                        const value = parseInt(e.target.value, 10);
+                        if (!isNaN(value) && value >= 1 && value <= maxInputs) {
+                          handleSVSInputCountChange(value);
                         }
                       }}
-                    >
-                      {Array.from({ length: maxInputs }, (_, i) => i + 1).map((num) => (
-                        <SelectItem key={num} value={num.toString()}>
-                          {num} Input{num !== 1 ? 's' : ''}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <span className="text-[10px] text-muted-foreground">/</span>
-                  <Select
-                    value={svsNumOutputs.toString()}
-                    onValueChange={(value) => handleSVSOutputCountChange(parseInt(value, 10))}
-                  >
-                    <SelectTrigger 
-                      className="h-4 px-1.5 text-[10px] font-mono border-primary/30 bg-primary/10 hover:bg-primary/20 w-auto min-w-[40px]"
-                      onMouseDown={(e) => e.stopPropagation()}
-                    >
-                      <SelectValue>{svsNumOutputs} OUT</SelectValue>
-                    </SelectTrigger>
-                    <SelectContent
-                      onPointerDownOutside={(e) => {
-                        const target = e.target as HTMLElement;
-                        if (target.closest('.react-flow')) {
-                          e.preventDefault();
+                      onBlur={(e) => {
+                        const value = parseInt(e.target.value, 10);
+                        if (isNaN(value) || value < 1) {
+                          handleSVSInputCountChange(1);
+                        } else if (value > maxInputs) {
+                          handleSVSInputCountChange(maxInputs);
                         }
                       }}
-                    >
-                      {Array.from({ length: maxOutputs }, (_, i) => i + 1).map((num) => (
-                        <SelectItem key={num} value={num.toString()}>
-                          {num} Output{num !== 1 ? 's' : ''}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                      className="h-4 px-1.5 text-[10px] font-mono border-primary/30 bg-primary/10 hover:bg-primary/20 w-12 text-center"
+                      onMouseDown={(e) => e.stopPropagation()}
+                    />
+                  ) : (
+                    <span className="h-4 px-1.5 text-[10px] font-mono w-12 text-center inline-flex items-center justify-center">
+                      {svsNumInputs}
+                    </span>
+                  )}
+                  <span className="text-[10px] text-muted-foreground">IN /</span>
+                  {selected ? (
+                    <Input
+                      type="number"
+                      min="1"
+                      max={maxOutputs}
+                      value={svsNumOutputs}
+                      onChange={(e) => {
+                        const value = parseInt(e.target.value, 10);
+                        if (!isNaN(value) && value >= 1 && value <= maxOutputs) {
+                          handleSVSOutputCountChange(value);
+                        }
+                      }}
+                      onBlur={(e) => {
+                        const value = parseInt(e.target.value, 10);
+                        if (isNaN(value) || value < 1) {
+                          handleSVSOutputCountChange(1);
+                        } else if (value > maxOutputs) {
+                          handleSVSOutputCountChange(maxOutputs);
+                        }
+                      }}
+                      className="h-4 px-1.5 text-[10px] font-mono border-primary/30 bg-primary/10 hover:bg-primary/20 w-12 text-center"
+                      onMouseDown={(e) => e.stopPropagation()}
+                    />
+                  ) : (
+                    <span className="h-4 px-1.5 text-[10px] font-mono w-12 text-center inline-flex items-center justify-center">
+                      {svsNumOutputs}
+                    </span>
+                  )}
+                  <span className="text-[10px] text-muted-foreground">OUT</span>
                 </div>
               )}
             </div>
