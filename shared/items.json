@@ -28,7 +28,7 @@
       { "name": "Famicom", "region": "Japan" }
     ],
     "specs": {
-      "outputs": ["rf", "composite", "hdmi"],
+      "outputs": ["rf", "composite", "rgb (modded)", "hdmi (modded)"],
       "inputs": []
     },
     "imageUrl": null
@@ -81,7 +81,7 @@
       { "name": "Super Nintendo", "region": "Europe" }
     ],
     "specs": {
-      "outputs": ["rf", "composite", "s-video", "rgb", "component", "hdmi"],
+      "outputs": ["rf", "composite", "s-video", "rgb", "ypbpr (modded)", "hdmi (modded)"],
       "inputs": []
     },
     "imageUrl": null
@@ -91,7 +91,7 @@
     "name": "Neo Geo AES",
     "category": "console",
     "specs": {
-      "outputs": ["composite", "rgb", "component"],
+      "outputs": ["composite", "rgb", "ypbpr"],
       "inputs": []
     },
     "imageUrl": null
@@ -121,7 +121,7 @@
     "name": "Sega Saturn",
     "category": "console",
     "specs": {
-      "outputs": ["composite", "s-video", "rgb", "component"],
+      "outputs": ["composite", "s-video", "rgb", "ypbpr"],
       "inputs": []
     },
     "imageUrl": null
@@ -131,7 +131,7 @@
     "name": "PlayStation 1",
     "category": "console",
     "specs": {
-      "outputs": ["composite", "s-video", "rgb", "hdmi"],
+      "outputs": ["composite", "s-video", "rgb", "hdmi (modded)"],
       "inputs": []
     },
     "imageUrl": null
@@ -141,7 +141,7 @@
     "name": "N64",
     "category": "console",
     "specs": {
-      "outputs": ["composite", "s-video", "rgb", "hdmi"],
+      "outputs": ["composite", "s-video", "rgb (modded)", "hdmi (modded)"],
       "inputs": []
     },
     "imageUrl": null
@@ -151,7 +151,7 @@
     "name": "Sega Dreamcast",
     "category": "console",
     "specs": {
-      "outputs": ["composite", "s-video", "rgb", "component", "vga", "hdmi"],
+      "outputs": ["composite", "s-video", "rgb", "ypbpr", "vga", "hdmi (modded)"],
       "inputs": []
     },
     "imageUrl": null
@@ -161,7 +161,7 @@
     "name": "PlayStation 2",
     "category": "console",
     "specs": {
-      "outputs": ["composite", "s-video", "rgb", "component", "hdmi"],
+      "outputs": ["composite", "s-video", "rgb", "ypbpr", "hdmi (modded)"],
       "inputs": []
     },
     "imageUrl": null
@@ -171,7 +171,7 @@
     "name": "GameCube",
     "category": "console",
     "specs": {
-      "outputs": ["composite", "s-video", "rgb", "component", "hdmi"],
+      "outputs": ["composite", "s-video", "rgb (modded)", "ypbpr", "hdmi (modded)"],
       "inputs": []
     },
     "imageUrl": null
@@ -181,7 +181,7 @@
     "name": "Xbox",
     "category": "console",
     "specs": {
-      "outputs": ["composite", "component", "hdmi"],
+      "outputs": ["composite", "ypbpr", "hdmi (modded)"],
       "inputs": []
     },
     "imageUrl": null
@@ -191,7 +191,7 @@
     "name": "Xbox 360",
     "category": "console",
     "specs": {
-      "outputs": ["component", "hdmi"],
+      "outputs": ["ypbpr", "hdmi"],
       "inputs": []
     },
     "imageUrl": null
@@ -201,7 +201,7 @@
     "name": "PlayStation 3",
     "category": "console",
     "specs": {
-      "outputs": ["composite", "component", "hdmi"],
+      "outputs": ["composite", "ypbpr", "hdmi"],
       "inputs": []
     },
     "imageUrl": null
@@ -211,7 +211,7 @@
     "name": "Wii",
     "category": "console",
     "specs": {
-      "outputs": ["composite", "component", "rgb", "hdmi"],
+      "outputs": ["composite", "ypbpr", "rgb (modded)", "hdmi (modded)"],
       "inputs": []
     },
     "imageUrl": null
@@ -241,7 +241,7 @@
     "name": "Wii U",
     "category": "console",
     "specs": {
-      "outputs": ["component", "hdmi"],
+      "outputs": ["ypbpr", "hdmi"],
       "inputs": []
     },
     "imageUrl": null
@@ -318,11 +318,11 @@
   },
   {
     "id": 34,
-    "name": "3-Way Component Switch",
+    "name": "3-Way YPbPR Switch",
     "category": "switch",
     "specs": {
-      "inputs": ["component", "component", "component"],
-      "outputs": ["component"]
+      "inputs": ["ypbpr", "ypbpr", "ypbpr"],
+      "outputs": ["ypbpr"]
     },
     "imageUrl": null
   },
@@ -331,8 +331,8 @@
     "name": "gcomp Automatic 8:2",
     "category": "switch",
     "specs": {
-      "inputs": ["component", "component", "component", "component", "component", "component", "component", "component"],
-      "outputs": ["component", "component"]
+      "inputs": ["ypbpr", "ypbpr", "ypbpr", "ypbpr", "ypbpr", "ypbpr", "ypbpr", "ypbpr"],
+      "outputs": ["ypbpr", "ypbpr"]
     },
     "imageUrl": null
   },
@@ -364,7 +364,7 @@
     "name": "Sony PVM 14L5",
     "category": "display",
     "specs": {
-      "inputs": ["composite", "s-video", "rgb", "component"]
+      "inputs": ["composite", "s-video", "rgb", "ypbpr"]
     },
     "imageUrl": null
   },
@@ -392,7 +392,7 @@
     "category": "adapter",
     "specs": {
       "inputs": ["rgb"],
-      "outputs": ["component"]
+      "outputs": ["ypbpr"]
     },
     "imageUrl": null
   },
@@ -402,7 +402,7 @@
     "category": "adapter",
     "specs": {
       "inputs": ["scart"],
-      "outputs": ["component"]
+      "outputs": ["ypbpr"]
     },
     "imageUrl": null
   },
@@ -418,10 +418,10 @@
   },
   {
     "id": 40,
-    "name": "Component to HDMI Converter",
+    "name": "YPbPR to HDMI Converter",
     "category": "adapter",
     "specs": {
-      "inputs": ["component"],
+      "inputs": ["ypbpr"],
       "outputs": ["hdmi"]
     },
     "imageUrl": null
@@ -452,7 +452,7 @@
     "category": "adapter",
     "specs": {
       "inputs": ["rgb", "vga"],
-      "outputs": ["component"]
+      "outputs": ["ypbpr"]
     },
     "imageUrl": null
   },
@@ -461,7 +461,7 @@
     "name": "RetroTINK-2X",
     "category": "adapter",
     "specs": {
-      "inputs": ["composite", "s-video", "component"],
+      "inputs": ["composite", "s-video", "ypbpr"],
       "outputs": ["hdmi"]
     },
     "imageUrl": null
@@ -471,28 +471,28 @@
     "name": "OSSC (Open Source Scan Converter)",
     "category": "adapter",
     "specs": {
-      "inputs": ["scart", "component", "vga"],
+      "inputs": ["scart", "ypbpr", "vga"],
       "outputs": ["hdmi"]
     },
     "imageUrl": null
   },
   {
     "id": 46,
-    "name": "GARO (SCART to Component)",
+    "name": "GARO (SCART to YPbPR)",
     "category": "adapter",
     "specs": {
       "inputs": ["scart"],
-      "outputs": ["component"]
+      "outputs": ["ypbpr"]
     },
     "imageUrl": null
   },
   {
     "id": 47,
-    "name": "SCART to Component (Rondo)",
+    "name": "SCART to YPbPR (Rondo)",
     "category": "adapter",
     "specs": {
       "inputs": ["scart"],
-      "outputs": ["component"]
+      "outputs": ["ypbpr"]
     },
     "imageUrl": null
   },
@@ -501,7 +501,7 @@
     "name": "COMP2RGB",
     "category": "adapter",
     "specs": {
-      "inputs": ["component"],
+      "inputs": ["ypbpr"],
       "outputs": ["scart"]
     },
     "imageUrl": null
@@ -512,7 +512,7 @@
     "category": "adapter",
     "specs": {
       "inputs": ["scart"],
-      "outputs": ["component"]
+      "outputs": ["ypbpr"]
     },
     "imageUrl": null
   },
@@ -531,7 +531,7 @@
     "name": "RetroTINK-2X Pro",
     "category": "upscaler",
     "specs": {
-      "inputs": ["composite", "s-video", "component"],
+      "inputs": ["composite", "s-video", "ypbpr"],
       "outputs": ["hdmi"]
     },
     "imageUrl": null
@@ -541,7 +541,7 @@
     "name": "RetroTINK-5X Pro",
     "category": "upscaler",
     "specs": {
-      "inputs": ["composite", "s-video", "component", "scart", "vga"],
+      "inputs": ["composite", "s-video", "ypbpr", "scart", "vga"],
       "outputs": ["hdmi"]
     },
     "imageUrl": null
@@ -551,7 +551,7 @@
     "name": "RetroTINK-4K",
     "category": "upscaler",
     "specs": {
-      "inputs": ["composite", "s-video", "component", "scart", "vga", "hdmi"],
+      "inputs": ["composite", "s-video", "ypbpr", "scart", "vga", "hdmi"],
       "outputs": ["hdmi"]
     },
     "imageUrl": null
@@ -561,7 +561,7 @@
     "name": "Custom Game Machine",
     "category": "custom",
     "specs": {
-      "outputs": ["rf", "composite", "s-video", "rgb", "component", "hdmi", "scart", "bnc", "rca", "vga"],
+      "outputs": ["rf", "composite", "s-video", "rgb", "ypbpr", "hdmi", "scart", "bnc", "rca", "vga"],
       "inputs": []
     },
     "imageUrl": null

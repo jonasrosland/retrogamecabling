@@ -77,15 +77,15 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
   
   // Check if two signal types are compatible
   const areSignalsCompatible = useCallback((outputType: string, inputType: string): boolean => {
-    const output = outputType.toLowerCase();
-    const input = inputType.toLowerCase();
+    const output = normalizeSignalType(outputType).toLowerCase();
+    const input = normalizeSignalType(inputType).toLowerCase();
     
     // Same type is always compatible
     if (output === input) return true;
     
     // Digital signals (HDMI) cannot connect to analog
     const digitalSignals = ['hdmi'];
-    const analogSignals = ['scart', 'composite', 'rca', 's-video', 'component', 'rgb', 'rf', 'bnc', 'vga'];
+    const analogSignals = ['scart', 'composite', 'rca', 's-video', 'ypbpr', 'rgb', 'rf', 'bnc', 'vga'];
     
     if (digitalSignals.includes(output) && analogSignals.includes(input)) return false;
     if (analogSignals.includes(output) && digitalSignals.includes(input)) return false;
@@ -99,28 +99,28 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
       return output === 'rf';
     }
     
-    // Component cannot connect to Composite or S-Video
-    if (output === 'component') {
+    // YPbPR cannot connect to Composite or S-Video
+    if (output === 'ypbpr') {
       if (input === 'composite' || input === 'rca' || input === 's-video') return false;
     }
-    if (input === 'component') {
+    if (input === 'ypbpr') {
       if (output === 'composite' || output === 'rca' || output === 's-video') return false;
     }
     
-    // Composite cannot connect to Component
-    if ((output === 'composite' || output === 'rca') && input === 'component') return false;
-    if (output === 'component' && (input === 'composite' || input === 'rca')) return false;
+    // Composite cannot connect to YPbPR
+    if ((output === 'composite' || output === 'rca') && input === 'ypbpr') return false;
+    if (output === 'ypbpr' && (input === 'composite' || input === 'rca')) return false;
     
     // Composite cannot connect to S-Video (different signal formats)
     if ((output === 'composite' || output === 'rca') && input === 's-video') return false;
     if (output === 's-video' && (input === 'composite' || input === 'rca')) return false;
     
-    // RGB cannot connect to Component (needs converter, unless through upscaler)
+    // RGB cannot connect to YPbPR (needs converter, unless through upscaler)
     if (output === 'rgb') {
-      if (input === 'component') return false;
+      if (input === 'ypbpr') return false;
     }
     if (input === 'rgb') {
-      if (output === 'component') return false;
+      if (output === 'ypbpr') return false;
     }
     
     // All other analog-to-analog connections are potentially valid (may need converters)
@@ -217,7 +217,7 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
       hdmi: '#FFD700',      // Yellow/Gold
       scart: '#00FF00',     // Green
       rgb: '#FF0000',        // Red
-      component: '#FF6B00',  // Orange
+      ypbpr: '#FF6B00',  // Orange
       's-video': '#00BFFF',  // Deep Sky Blue
       composite: '#FF69B4',  // Hot Pink
       rf: '#9370DB',         // Medium Purple
@@ -234,7 +234,7 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
     setNodes((nds: Node[]) => nds.filter((n: Node) => n.id !== nodeId));
     setEdges((eds: Edge[]) => eds.filter((e: Edge) => e.source !== nodeId && e.target !== nodeId));
     toast({
-      title: "Component Removed",
+      title: "YPbPR Removed",
       description: "Node and connected edges deleted.",
       duration: 1500,
     });
@@ -297,11 +297,11 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
             inputType = targetInputs[0];
           }
           
-          // Validate compatibility
-          if (inputType && !areSignalsCompatible(newOutputType, inputType)) {
+          // Validate compatibility (normalize to strip "(modded)" for comparison)
+          if (inputType && !areSignalsCompatible(normalizeSignalType(newOutputType), normalizeSignalType(inputType))) {
             toast({
               title: "Invalid Output Change",
-              description: `Cannot change to ${newOutputType.toUpperCase()}: incompatible with ${targetNode.data.label}'s ${inputType.toUpperCase()} input.`,
+              description: `Cannot change to ${normalizeSignalType(newOutputType).toUpperCase()}: incompatible with ${targetNode.data.label}'s ${normalizeSignalType(inputType).toUpperCase()} input.`,
               variant: "destructive",
               duration: 3000,
             });
@@ -348,7 +348,7 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
               }
               return {
                 ...edge,
-                data: { ...edge.data, outputType: newOutputType },
+                data: { ...edge.data, outputType: normalizedOutputType },
                 style: { ...edge.style, stroke: edgeColor },
                 markerEnd: { ...edge.markerEnd, color: edgeColor },
               };
@@ -413,10 +413,11 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
         }
         
         if (outputType) {
-          const color = getOutputColor(outputType);
+          const normalizedOutputType = normalizeSignalType(outputType);
+          const color = getOutputColor(normalizedOutputType);
           return {
             ...edge,
-            data: { outputType, onDelete: handleDeleteEdge },
+            data: { outputType: normalizedOutputType, onDelete: handleDeleteEdge },
             style: { ...edge.style, stroke: color },
             markerEnd: { ...edge.markerEnd, color },
           };
@@ -556,7 +557,7 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
     
     const inputType = targetInputs[inputIndex] || '';
     
-    // Validate signal compatibility
+    // Validate signal compatibility (normalize to strip "(modded)" for comparison)
     if (!outputType || !inputType) return false;
     if (!areSignalsCompatible(outputType, inputType)) return false;
     
@@ -565,13 +566,15 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
 
   const handleConnectionConfirm = useCallback((connection: Connection, outputType: string, inputType: string, showToast: boolean = true) => {
     // Connections are already cleaned up in onConnect, so just add the new edge
-    const edgeColor = getOutputColor(outputType);
+    // Normalize output type to strip "(modded)" for consistency
+    const normalizedOutputType = normalizeSignalType(outputType);
+    const edgeColor = getOutputColor(normalizedOutputType);
     
     // Add neon styling to edges with color based on output type
     const styledEdge = {
       ...connection,
       animated: true,
-      data: { outputType, onDelete: handleDeleteEdge }, // Store output type and delete handler in edge data
+      data: { outputType: normalizedOutputType, onDelete: handleDeleteEdge }, // Store normalized output type and delete handler in edge data
       style: { stroke: edgeColor, strokeWidth: 2 },
       markerEnd: {
         type: MarkerType.ArrowClosed,
@@ -584,7 +587,7 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
     if (showToast) {
       toast({
         title: "Connected",
-        description: `Connected ${outputType.toUpperCase()} to ${inputType.toUpperCase()}`,
+        description: `Connected ${normalizedOutputType.toUpperCase()} to ${normalizeSignalType(inputType).toUpperCase()}`,
         duration: 2000,
       });
     }
@@ -645,7 +648,9 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
     const inputType = targetInputs[inputIndex] || '';
     
     // Only create connection if we have valid types
+    // Store normalized type in edge data for consistency
     if (!outputType || !inputType) return;
+    const normalizedOutputType = normalizeSignalType(outputType);
     
     // Remove existing connections and add new one in a single state update
     setEdges((eds) => {
@@ -675,11 +680,13 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
       );
       
       // Now add the new edge
-      const edgeColor = getOutputColor(outputType);
+      // Use normalized output type for edge data (strips "(modded)" for consistency)
+      const normalizedOutputType = normalizeSignalType(outputType);
+      const edgeColor = getOutputColor(normalizedOutputType);
       const styledEdge = {
         ...params,
         animated: true,
-        data: { outputType, onDelete: handleDeleteEdge },
+        data: { outputType: normalizedOutputType, onDelete: handleDeleteEdge },
         style: { stroke: edgeColor, strokeWidth: 2 },
         markerEnd: {
           type: MarkerType.ArrowClosed,
@@ -725,7 +732,7 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
         
         // Initialize SVS/Custom Switch/HDMI Switch configuration if it's scalable
         if (itemData.specs?.isSVS === true || itemData.specs?.isCustomSwitch === true || itemData.specs?.isHDMISwitch === true) {
-          const defaultSignalType = itemData.specs?.isHDMISwitch === true ? 'hdmi' : 'component';
+          const defaultSignalType = itemData.specs?.isHDMISwitch === true ? 'hdmi' : 'ypbpr';
           newNodeData.svsNumInputs = 1;
           newNodeData.svsNumOutputs = 1;
           newNodeData.svsInputs = [defaultSignalType];
@@ -741,7 +748,7 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
         return nds.concat(newNode);
       });
     toast({
-      title: "Added Component",
+      title: "Added YPbPR",
       description: `Added ${itemData.name} to the canvas.`,
       duration: 1500,
     });
@@ -794,7 +801,7 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
         
         // Initialize SVS/Custom Switch/HDMI Switch configuration if it's scalable
         if (itemData.specs?.isSVS === true || itemData.specs?.isCustomSwitch === true || itemData.specs?.isHDMISwitch === true) {
-          const defaultSignalType = itemData.specs?.isHDMISwitch === true ? 'hdmi' : 'component';
+          const defaultSignalType = itemData.specs?.isHDMISwitch === true ? 'hdmi' : 'ypbpr';
           newNodeData.svsNumInputs = 1;
           newNodeData.svsNumOutputs = 1;
           newNodeData.svsInputs = [defaultSignalType];
@@ -811,7 +818,7 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
       });
       
       toast({
-        title: "Added Component",
+        title: "Added YPbPR",
         description: `Added ${itemData.name} to the canvas.`,
         duration: 1500,
       });

@@ -1,7 +1,7 @@
 import { memo, useRef, useEffect, useState, useMemo } from 'react';
 import { Handle, Position, NodeProps, useUpdateNodeInternals } from 'reactflow';
 import { Gamepad2, Monitor, Route, Tv, X, Cable, Maximize2, Settings } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn, normalizeSignalType } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
@@ -73,7 +73,7 @@ const CustomNode = ({ data, selected, id, connectedEdges, allNodes, areSignalsCo
   const svsNumOutputs = data.svsNumOutputs ?? 1;
   
   // Determine default signal type based on switch type
-  const defaultSignalType = isHDMISwitch ? 'hdmi' : 'component';
+  const defaultSignalType = isHDMISwitch ? 'hdmi' : 'ypbpr';
   
   // Initialize SVS/Custom Switch/HDMI Switch arrays - ensure they always have the correct length
   let svsInputs: string[] = [];
@@ -150,9 +150,9 @@ const CustomNode = ({ data, selected, id, connectedEdges, allNodes, areSignalsCo
   const selectedOutput = isConsoleOrCustom ? (data.selectedOutput || outputs[0] || null) : null;
   
   // Available SVS module types (limited set)
-  const svsModuleTypes = ['component', 'composite', 's-video', 'scart', 'vga'];
+  const svsModuleTypes = ['ypbpr', 'composite', 's-video', 'scart', 'vga'];
   // Available Custom Switch module types (all types)
-  const customSwitchModuleTypes = ['rf', 'composite', 's-video', 'rgb', 'component', 'hdmi', 'scart', 'bnc', 'rca', 'vga'];
+  const customSwitchModuleTypes = ['rf', 'composite', 's-video', 'rgb', 'ypbpr', 'hdmi', 'scart', 'bnc', 'rca', 'vga'];
   // Use appropriate module types based on switch type
   const switchModuleTypes = isCustomSwitch ? customSwitchModuleTypes : svsModuleTypes;
   
@@ -172,7 +172,7 @@ const CustomNode = ({ data, selected, id, connectedEdges, allNodes, areSignalsCo
     let newInputs: string[];
     
     if (newCount > svsNumInputs) {
-      // Adding inputs - pad with default signal type (hdmi for HDMI switch, component for others)
+      // Adding inputs - pad with default signal type (hdmi for HDMI switch, ypbpr for others)
       newInputs = [...currentInputs, ...Array(newCount - svsNumInputs).fill(defaultSignalType)];
     } else {
       // Removing inputs - truncate
@@ -193,7 +193,7 @@ const CustomNode = ({ data, selected, id, connectedEdges, allNodes, areSignalsCo
     let newOutputs: string[];
     
     if (newCount > svsNumOutputs) {
-      // Adding outputs - pad with default signal type (hdmi for HDMI switch, component for others)
+      // Adding outputs - pad with default signal type (hdmi for HDMI switch, ypbpr for others)
       newOutputs = [...currentOutputs, ...Array(newCount - svsNumOutputs).fill(defaultSignalType)];
     } else {
       // Removing outputs - truncate
@@ -240,7 +240,7 @@ const CustomNode = ({ data, selected, id, connectedEdges, allNodes, areSignalsCo
       hdmi: '#FFD700',      // Yellow/Gold
       scart: '#00FF00',     // Green
       rgb: '#FF0000',        // Red
-      component: '#FF6B00',  // Orange
+      ypbpr: '#FF6B00',  // Orange
       's-video': '#00BFFF',  // Deep Sky Blue
       composite: '#FF69B4',  // Hot Pink
       rf: '#9370DB',         // Medium Purple
@@ -248,7 +248,7 @@ const CustomNode = ({ data, selected, id, connectedEdges, allNodes, areSignalsCo
       rca: '#FF69B4',        // Hot Pink (same as composite)
     };
     
-    const normalized = outputType.toLowerCase();
+    const normalized = normalizeSignalType(outputType).toLowerCase();
     return colorMap[normalized] || 'hsl(var(--muted-foreground))'; // Default to muted
   };
 
@@ -542,7 +542,7 @@ const CustomNode = ({ data, selected, id, connectedEdges, allNodes, areSignalsCo
                           }
                           
                           // If incompatible, disable this option
-                          if (inputType && !areSignalsCompatible(output, inputType)) {
+                          if (inputType && !areSignalsCompatible(normalizeSignalType(output), normalizeSignalType(inputType))) {
                             isDisabled = true;
                             break;
                           }
@@ -671,6 +671,7 @@ const CustomNode = ({ data, selected, id, connectedEdges, allNodes, areSignalsCo
           {/* Input Handles (Left side) - aligned with dropdowns */}
           {inputs.map((input: string, index: number) => {
             const handleId = `in-${index}`;
+            const normalizedInput = normalizeSignalType(input);
             const handleColor = getHandleColor(handleId, input, true);
             // Calculate position based on actual layout:
             // - Header: ~36px (icon + text + padding)
@@ -781,7 +782,7 @@ const CustomNode = ({ data, selected, id, connectedEdges, allNodes, areSignalsCo
                 type="source"
                 position={Position.Right}
                 id="out-0"
-                label={selectedOutput.toUpperCase()}
+                label={normalizeSignalType(selectedOutput).toUpperCase()}
                 backgroundColor={getHandleColor('out-0', selectedOutput, false)}
               />
             )
@@ -789,7 +790,8 @@ const CustomNode = ({ data, selected, id, connectedEdges, allNodes, areSignalsCo
             // Switches/Displays: show port numbers
             outputs.map((output: string, index: number) => {
               const handleId = `out-${index}`;
-              const label = getPortLabel(output, index, outputs);
+              const normalizedOutput = normalizeSignalType(output);
+              const label = getPortLabel(normalizedOutput, index, outputs.map(o => normalizeSignalType(o)));
               const handleColor = getHandleColor(handleId, output, false);
               
               return (
