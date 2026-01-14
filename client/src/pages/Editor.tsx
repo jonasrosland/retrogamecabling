@@ -26,6 +26,7 @@ import { Save, ArrowLeft, Download, Share2, Upload, FileText } from 'lucide-reac
 import { useToast } from '@/hooks/use-toast';
 import { Link } from 'wouter';
 import { saveFile, loadFile, loadFileFromRecent, type DiagramFile } from '@/lib/fileUtils';
+import { normalizeSignalType } from '@/lib/utils';
 import { useItems } from '@/hooks/use-items';
 import {
   DropdownMenu,
@@ -406,7 +407,22 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
         let outputType: string | undefined;
         
         if (sourceNode.data?.category === 'console') {
-          outputType = sourceNode.data.selectedOutput || sourceNode.data.specs?.outputs?.[0];
+          // For consoles, get combined outputs (base + addon outputs)
+          let combinedOutputs = [...(sourceNode.data.specs?.outputs || [])];
+          if (sourceNode.data.specs?.addons) {
+            const selectedAddons = sourceNode.data.selectedAddons || [];
+            selectedAddons.forEach((addonId: string) => {
+              const addon = sourceNode.data.specs.addons.find((a: any) => a.id === addonId);
+              if (addon && addon.outputs) {
+                addon.outputs.forEach((output: string) => {
+                  if (!combinedOutputs.includes(output)) {
+                    combinedOutputs.push(output);
+                  }
+                });
+              }
+            });
+          }
+          outputType = sourceNode.data.selectedOutput || combinedOutputs[0];
         } else if (edge.sourceHandle) {
           const handleIndex = parseInt(edge.sourceHandle.split('-')[1] || '0');
           outputType = sourceNode.data?.specs?.outputs?.[handleIndex];
@@ -519,9 +535,30 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
     
     // Get output and input types from the handles
     // For scalable switch nodes, use svsOutputs/svsInputs; otherwise use specs.outputs/inputs
-    const sourceOutputs = sourceIsScalableSwitch 
-      ? (sourceNode.data.svsOutputs || [])
-      : (sourceNode.data.specs?.outputs || []);
+    // For consoles with addons, combine base outputs with selected addon outputs
+    let sourceOutputs: string[] = [];
+    if (sourceIsScalableSwitch) {
+      sourceOutputs = sourceNode.data.svsOutputs || [];
+    } else {
+      const baseOutputs = sourceNode.data.specs?.outputs || [];
+      sourceOutputs = [...baseOutputs];
+      
+      // Add addon outputs if console has selected addons
+      if (sourceNode.data.category === 'console' && sourceNode.data.specs?.addons) {
+        const selectedAddons = sourceNode.data.selectedAddons || [];
+        selectedAddons.forEach((addonId: string) => {
+          const addon = sourceNode.data.specs?.addons?.find((a: any) => a.id === addonId);
+          if (addon && addon.outputs) {
+            addon.outputs.forEach((output: string) => {
+              if (!sourceOutputs.includes(output)) {
+                sourceOutputs.push(output);
+              }
+            });
+          }
+        });
+      }
+    }
+    
     const targetInputs = targetIsScalableSwitch
       ? (targetNode.data.svsInputs || [])
       : (targetNode.data.specs?.inputs || []);
@@ -550,7 +587,13 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
     if (sourceIsScalableSwitch) {
       outputType = sourceOutputs[outputIndex] || '';
     } else if (sourceNode.data.category === 'console' || sourceNode.data.category === 'custom') {
-      outputType = sourceNode.data.selectedOutput || sourceOutputs[0] || '';
+      // Use selectedOutput if it exists and is in the available outputs, otherwise use first available
+      const selectedOutput = sourceNode.data.selectedOutput;
+      if (selectedOutput && sourceOutputs.includes(selectedOutput)) {
+        outputType = selectedOutput;
+      } else {
+        outputType = sourceOutputs[0] || '';
+      }
     } else {
       outputType = sourceOutputs[outputIndex] || '';
     }
@@ -609,9 +652,30 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
     
     // Get output and input types from the handles that were actually connected
     // For scalable switch nodes, use svsOutputs/svsInputs; otherwise use specs.outputs/inputs
-    const sourceOutputs = sourceIsScalableSwitch
-      ? (sourceNode.data.svsOutputs || [])
-      : (sourceNode.data.specs?.outputs || []);
+    // For consoles with addons, combine base outputs with selected addon outputs
+    let sourceOutputs: string[] = [];
+    if (sourceIsScalableSwitch) {
+      sourceOutputs = sourceNode.data.svsOutputs || [];
+    } else {
+      const baseOutputs = sourceNode.data.specs?.outputs || [];
+      sourceOutputs = [...baseOutputs];
+      
+      // Add addon outputs if console has selected addons
+      if (sourceNode.data.category === 'console' && sourceNode.data.specs?.addons) {
+        const selectedAddons = sourceNode.data.selectedAddons || [];
+        selectedAddons.forEach((addonId: string) => {
+          const addon = sourceNode.data.specs?.addons?.find((a: any) => a.id === addonId);
+          if (addon && addon.outputs) {
+            addon.outputs.forEach((output: string) => {
+              if (!sourceOutputs.includes(output)) {
+                sourceOutputs.push(output);
+              }
+            });
+          }
+        });
+      }
+    }
+    
     const targetInputs = targetIsScalableSwitch
       ? (targetNode.data.svsInputs || [])
       : (targetNode.data.specs?.inputs || []);
@@ -640,7 +704,13 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
     if (sourceIsScalableSwitch) {
       outputType = sourceOutputs[outputIndex] || '';
     } else if (sourceNode.data.category === 'console' || sourceNode.data.category === 'custom') {
-      outputType = sourceNode.data.selectedOutput || sourceOutputs[0] || '';
+      // Use selectedOutput if it exists and is in the available outputs, otherwise use first available
+      const selectedOutput = sourceNode.data.selectedOutput;
+      if (selectedOutput && sourceOutputs.includes(selectedOutput)) {
+        outputType = selectedOutput;
+      } else {
+        outputType = sourceOutputs[0] || '';
+      }
     } else {
       outputType = sourceOutputs[outputIndex] || '';
     }
@@ -730,6 +800,16 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
           newNodeData.variantIndex = variantIndex;
         }
         
+        // Initialize selectedOutput for consoles and custom items (use first available output)
+        if ((itemData.category === 'console' || itemData.category === 'custom') && 
+            !itemData.specs?.isSVS && 
+            !itemData.specs?.isCustomSwitch && 
+            !itemData.specs?.isHDMISwitch &&
+            itemData.specs?.outputs && 
+            itemData.specs.outputs.length > 0) {
+          newNodeData.selectedOutput = itemData.specs.outputs[0];
+        }
+        
         // Initialize SVS/Custom Switch/HDMI Switch configuration if it's scalable
         if (itemData.specs?.isSVS === true || itemData.specs?.isCustomSwitch === true || itemData.specs?.isHDMISwitch === true) {
           const defaultSignalType = itemData.specs?.isHDMISwitch === true ? 'hdmi' : 'ypbpr';
@@ -797,6 +877,16 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
         if (itemData.variants && itemData.variants.length > 0) {
           newNodeData.variants = itemData.variants;
           newNodeData.variantIndex = variantIndex;
+        }
+        
+        // Initialize selectedOutput for consoles and custom items (use first available output)
+        if ((itemData.category === 'console' || itemData.category === 'custom') && 
+            !itemData.specs?.isSVS && 
+            !itemData.specs?.isCustomSwitch && 
+            !itemData.specs?.isHDMISwitch &&
+            itemData.specs?.outputs && 
+            itemData.specs.outputs.length > 0) {
+          newNodeData.selectedOutput = itemData.specs.outputs[0];
         }
         
         // Initialize SVS/Custom Switch/HDMI Switch configuration if it's scalable

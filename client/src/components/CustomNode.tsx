@@ -95,19 +95,44 @@ const CustomNode = ({ data, selected, id, connectedEdges, allNodes, areSignalsCo
     }
   }
   
+  // For consoles and custom items (but not scalable switches), use selected output or first available
+  const isConsole = data.category === 'console';
+  const isCustom = data.category === 'custom' && !isScalableSwitch; // Exclude scalable switches from custom console behavior
+  const isConsoleOrCustom = isConsole || isCustom;
+  
   // Use SVS/Custom Switch configuration if it's scalable, otherwise use specs
   // Always ensure arrays have at least one element for scalable switches
   let inputs = isScalableSwitch ? svsInputs : (data.specs?.inputs || []);
-  let outputs = isScalableSwitch ? svsOutputs : (data.specs?.outputs || []);
+  let baseOutputs = isScalableSwitch ? svsOutputs : (data.specs?.outputs || []);
   
   // Force arrays to have at least one element for scalable switches
   if (isScalableSwitch) {
     if (inputs.length === 0) {
       inputs = [defaultSignalType];
     }
-    if (outputs.length === 0) {
-      outputs = [defaultSignalType];
+    if (baseOutputs.length === 0) {
+      baseOutputs = [defaultSignalType];
     }
+  }
+  
+  // For consoles with addons, combine base outputs with selected addon outputs
+  const selectedAddons = data.selectedAddons || [];
+  const addons = data.specs?.addons || [];
+  let outputs = [...baseOutputs];
+  
+  if (isConsole && addons.length > 0 && selectedAddons.length > 0) {
+    // Add outputs from selected addons
+    selectedAddons.forEach((addonId: string) => {
+      const addon = addons.find((a: any) => a.id === addonId);
+      if (addon && addon.outputs) {
+        // Add addon outputs, avoiding duplicates
+        addon.outputs.forEach((output: string) => {
+          if (!outputs.includes(output)) {
+            outputs.push(output);
+          }
+        });
+      }
+    });
   }
   
   
@@ -142,10 +167,6 @@ const CustomNode = ({ data, selected, id, connectedEdges, allNodes, areSignalsCo
     return connectedEdges.filter((e: any) => e.source === id || e.target === id);
   }, [connectedEdges, id]);
   
-  // For consoles and custom items (but not scalable switches), use selected output or first available
-  const isConsole = data.category === 'console';
-  const isCustom = data.category === 'custom' && !isScalableSwitch; // Exclude scalable switches from custom console behavior
-  const isConsoleOrCustom = isConsole || isCustom;
   // Use data.selectedOutput directly - don't fallback to outputs[0] to ensure changes are visible
   const selectedOutput = isConsoleOrCustom ? (data.selectedOutput || outputs[0] || null) : null;
   
@@ -156,7 +177,7 @@ const CustomNode = ({ data, selected, id, connectedEdges, allNodes, areSignalsCo
   // Use appropriate module types based on switch type
   const switchModuleTypes = isCustomSwitch ? customSwitchModuleTypes : svsModuleTypes;
   
-  // Update node internals when selectedOutput or SVS/Custom Switch config changes
+  // Update node internals when selectedOutput, selectedAddons, or SVS/Custom Switch config changes
   useEffect(() => {
     if (isConsoleOrCustom && selectedOutput) {
       updateNodeInternals(id);
@@ -164,7 +185,10 @@ const CustomNode = ({ data, selected, id, connectedEdges, allNodes, areSignalsCo
     if (isScalableSwitch) {
       updateNodeInternals(id);
     }
-  }, [isConsoleOrCustom, selectedOutput, isScalableSwitch, svsInputs, svsOutputs, id, updateNodeInternals]);
+    if (isConsole && selectedAddons.length > 0) {
+      updateNodeInternals(id);
+    }
+  }, [isConsoleOrCustom, selectedOutput, isScalableSwitch, svsInputs, svsOutputs, isConsole, selectedAddons, id, updateNodeInternals]);
   
   // Handle SVS input count change
   const handleSVSInputCountChange = (newCount: number) => {
@@ -479,6 +503,62 @@ const CustomNode = ({ data, selected, id, connectedEdges, allNodes, areSignalsCo
                 </div>
               )}
             </div>
+          )}
+          {/* Addon Checkboxes - show selected addons always, show all checkboxes when console is selected */}
+          {isConsole && addons.length > 0 && (
+            <>
+              {selected ? (
+                // Show all addons as editable checkboxes when console is selected
+                <div className="mt-1.5 nodrag">
+                  <div className="text-[9px] text-muted-foreground mb-1">Addons:</div>
+                  <div className="flex flex-col gap-1">
+                    {addons.map((addon: any) => {
+                      const isSelected = selectedAddons.includes(addon.id);
+                      return (
+                        <label
+                          key={addon.id}
+                          className="flex items-center gap-1.5 cursor-pointer text-[10px]"
+                          onMouseDown={(e) => e.stopPropagation()}
+                        >
+                          <input
+                            type="checkbox"
+                            checked={isSelected}
+                            onChange={(e) => {
+                              if (onUpdate) {
+                                const newSelectedAddons = e.target.checked
+                                  ? [...selectedAddons, addon.id]
+                                  : selectedAddons.filter((id: string) => id !== addon.id);
+                                onUpdate(id, { selectedAddons: newSelectedAddons });
+                              }
+                            }}
+                            className="w-3 h-3 rounded border-primary/30 accent-primary"
+                            onMouseDown={(e) => e.stopPropagation()}
+                          />
+                          <span>{addon.name}</span>
+                        </label>
+                      );
+                    })}
+                  </div>
+                </div>
+              ) : (
+                // Show only selected addons as read-only when console is not selected
+                selectedAddons.length > 0 && (
+                  <div className="mt-1.5">
+                    <div className="text-[9px] text-muted-foreground mb-1">Addons:</div>
+                    <div className="flex flex-col gap-1">
+                      {addons
+                        .filter((addon: any) => selectedAddons.includes(addon.id))
+                        .map((addon: any) => (
+                          <div key={addon.id} className="flex items-center gap-1.5 text-[10px] text-muted-foreground">
+                            <span className="w-3 h-3 flex items-center justify-center">✓</span>
+                            <span>{addon.name}</span>
+                          </div>
+                        ))}
+                    </div>
+                  </div>
+                )
+              )}
+            </>
           )}
           {isConsoleOrCustom && (
             <div className="mt-1.5 nodrag">

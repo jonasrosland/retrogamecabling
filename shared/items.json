@@ -67,7 +67,19 @@
     ],
     "specs": {
       "outputs": ["rf", "composite", "rgb"],
-      "inputs": []
+      "inputs": [],
+      "addons": [
+        {
+          "id": "sega-cd",
+          "name": "Sega CD",
+          "outputs": ["composite", "rgb"]
+        },
+        {
+          "id": "sega-32x",
+          "name": "Sega 32X",
+          "outputs": ["composite", "rgb"]
+        }
+      ]
     },
     "imageUrl": null
   },
@@ -92,26 +104,6 @@
     "category": "console",
     "specs": {
       "outputs": ["composite", "rgb", "ypbpr"],
-      "inputs": []
-    },
-    "imageUrl": null
-  },
-  {
-    "id": 9,
-    "name": "Sega CD",
-    "category": "console",
-    "specs": {
-      "outputs": ["composite", "rgb"],
-      "inputs": []
-    },
-    "imageUrl": null
-  },
-  {
-    "id": 10,
-    "name": "Sega 32X",
-    "category": "console",
-    "specs": {
-      "outputs": ["composite", "rgb"],
       "inputs": []
     },
     "imageUrl": null
