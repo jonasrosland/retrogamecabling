@@ -9,6 +9,9 @@ services:
     environment:
       NODE_ENV: development
       PORT: 5000
+      VITE_HMR_HOST: retrogamecabling.com
+      VITE_HMR_PORT: 443
+      VITE_HMR_PROTOCOL: wss
     volumes:
       # Mount source code for hot reload
       - ./client:/app/client
