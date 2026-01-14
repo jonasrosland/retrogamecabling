@@ -22,11 +22,11 @@ export async function setupVite(server: Server, app: Express) {
   };
   
   // Only set client connection options if behind a reverse proxy
+  // In middleware mode, we only need to configure where the client connects to
   if (hmrHost) {
     hmrConfig.host = hmrHost;
   }
   if (hmrPort) {
-    hmrConfig.port = parseInt(hmrPort, 10);
     hmrConfig.clientPort = parseInt(hmrPort, 10);
   }
   if (hmrProtocol) {
