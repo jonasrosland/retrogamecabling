@@ -30,5 +30,6 @@ export const itemSchema = z.object({
   category: z.string(), // 'console', 'switch', 'display', 'cable'
   specs: itemSpecsSchema,
   variants: z.array(variantSchema).optional(),
+  maker: z.string().optional(), // Manufacturer/maker (e.g., 'Nintendo', 'Sony', 'Microsoft')
   imageUrl: z.string().nullable().optional(),
 });

@@ -575,7 +575,7 @@ const CustomNode = ({ data, selected, id, connectedEdges, allNodes, areSignalsCo
                   onMouseDown={(e) => e.stopPropagation()}
                 >
                   <SelectValue>
-                    {(selectedOutput || outputs[0] || '').toUpperCase()}
+                    {normalizeSignalType(selectedOutput || outputs[0] || '').toUpperCase()}
                   </SelectValue>
                 </SelectTrigger>
                 <SelectContent

@@ -5,7 +5,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-// Normalize signal type by stripping "(modded)" suffix for compatibility checks and handles
+// Normalize signal type by stripping anything in parentheses for compatibility checks and handles
 export function normalizeSignalType(signalType: string): string {
-  return signalType.replace(/\s*\(modded\)/gi, '').trim();
+  return signalType.replace(/\s*\([^)]*\)/g, '').trim();
 }

@@ -18,14 +18,48 @@ export function Sidebar({ onClose, onSelectItem, onDeselectAll }: { onClose?: ()
 
 
   const filteredItems = useMemo(() => {
-    if (!items) return { consoles: [], switches: [], displays: [], adapters: [], upscalers: [], custom: [] };
+    if (!items) return { 
+      consolesByMaker: {}, 
+      switches: [], 
+      displays: [], 
+      adapters: [], 
+      upscalers: [], 
+      custom: [] 
+    };
     
     const filtered = items.filter(item => 
       item.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
+    // Group consoles by maker
+    const consolesByMaker: Record<string, any[]> = {};
+    filtered
+      .filter(i => i.category === 'console')
+      .forEach(console => {
+        const maker = console.maker || 'Other';
+        if (!consolesByMaker[maker]) {
+          consolesByMaker[maker] = [];
+        }
+        consolesByMaker[maker].push(console);
+      });
+
+    // Sort makers alphabetically, but put "Other" last
+    const sortedMakers = Object.keys(consolesByMaker).sort((a, b) => {
+      if (a === 'Other') return 1;
+      if (b === 'Other') return -1;
+      return a.localeCompare(b);
+    });
+
+    // Create ordered object
+    const orderedConsolesByMaker: Record<string, any[]> = {};
+    sortedMakers.forEach(maker => {
+      orderedConsolesByMaker[maker] = consolesByMaker[maker].sort((a, b) => 
+        a.name.localeCompare(b.name)
+      );
+    });
+
     return {
-      consoles: filtered.filter(i => i.category === 'console'),
+      consolesByMaker: orderedConsolesByMaker,
       switches: filtered.filter(i => i.category === 'switch'),
       displays: filtered.filter(i => i.category === 'display'),
       adapters: filtered.filter(i => i.category === 'adapter'),
@@ -45,8 +79,29 @@ export function Sidebar({ onClose, onSelectItem, onDeselectAll }: { onClose?: ()
     );
   }
 
+  // Generate abbreviated name for consoles with variants
+  const getDisplayName = (item: any): string => {
+    if (!item.variants || item.variants.length === 0) {
+      return item.name;
+    }
+
+    // Special handling for specific consoles
+    if (item.name === 'Nintendo Switch') {
+      return 'Nintendo Switch 1/2';
+    }
+    
+    if (item.name === 'Xbox Series X') {
+      return 'Xbox Series S/X';
+    }
+
+    // Default: use the base name
+    return item.name;
+  };
+
   const DraggableItem = ({ item }: { item: any }) => {
     const isSelected = selectedId === item.id;
+    const displayName = getDisplayName(item);
+    
     return (
       <div
         className={`group flex items-center gap-3 p-3 rounded-lg border transition-all mb-2 cursor-grab active:cursor-grabbing ${
@@ -68,7 +123,7 @@ export function Sidebar({ onClose, onSelectItem, onDeselectAll }: { onClose?: ()
       >
         <GripVertical className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
         <div>
-          <div className="font-semibold text-sm">{item.name}</div>
+          <div className="font-semibold text-sm">{displayName}</div>
           <div className="text-[10px] text-muted-foreground font-mono flex gap-1">
             {item.specs.inputs && <span>IN:{item.specs.inputs.length}</span>}
             {item.specs.outputs && <span>OUT:{item.specs.outputs.length}</span>}
@@ -115,14 +170,34 @@ export function Sidebar({ onClose, onSelectItem, onDeselectAll }: { onClose?: ()
                 <Gamepad2 className="w-4 h-4" />
                 Consoles
                 <span className="ml-auto text-xs text-muted-foreground font-mono bg-background px-1.5 py-0.5 rounded border border-border group-hover:border-primary/30">
-                  {filteredItems.consoles.length}
+                  {Object.values(filteredItems.consolesByMaker).flat().length}
                 </span>
               </div>
             </AccordionTrigger>
             <AccordionContent className="pt-3 pb-0 px-1">
-              {filteredItems.consoles.map(item => (
-                <DraggableItem key={item.id} item={item} />
-              ))}
+              <Accordion 
+                type="multiple" 
+                defaultValue={Object.keys(filteredItems.consolesByMaker)}
+                className="w-full space-y-2"
+              >
+                {Object.entries(filteredItems.consolesByMaker).map(([maker, consoles]) => (
+                  <AccordionItem key={maker} value={maker} className="border-none">
+                    <AccordionTrigger className="hover:no-underline py-1.5 px-2 rounded-md hover:bg-muted/30 transition-colors group text-xs">
+                      <div className="flex items-center gap-2 font-semibold text-muted-foreground">
+                        {maker}
+                        <span className="ml-auto text-[10px] text-muted-foreground/70 font-mono bg-background/50 px-1 py-0.5 rounded border border-border/50 group-hover:border-primary/20">
+                          {consoles.length}
+                        </span>
+                      </div>
+                    </AccordionTrigger>
+                    <AccordionContent className="pt-2 pb-0 px-1">
+                      {consoles.map(item => (
+                        <DraggableItem key={item.id} item={item} />
+                      ))}
+                    </AccordionContent>
+                  </AccordionItem>
+                ))}
+              </Accordion>
             </AccordionContent>
           </AccordionItem>
 
