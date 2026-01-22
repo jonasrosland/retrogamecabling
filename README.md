@@ -1,4 +1,6 @@
 # RetroGameCabling
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fjonasrosland%2Fretrogamecabling.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fjonasrosland%2Fretrogamecabling?ref=badge_shield)
+
 
 RetroGameCabling is a visual diagramming tool designed for planning and visualizing retro gaming console setups. Create interactive diagrams to map out your console connections, switches, displays, adapters, and upscalers.
 
@@ -83,6 +85,9 @@ The application will be available at `http://localhost:5000`
 ## License
 
 MIT
+
+
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fjonasrosland%2Fretrogamecabling.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fjonasrosland%2Fretrogamecabling?ref=badge_large)
 
 ## Acknowledgments
 
