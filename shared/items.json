@@ -59,6 +59,22 @@
     "imageUrl": null
   },
   {
+    "id": 69,
+    "name": "Sega SG-1000",
+    "category": "console",
+    "maker": "Sega",
+    "variants": [
+      { "name": "SG-1000", "region": "Original" },
+      { "name": "SC-3000", "region": "Computer" },
+      { "name": "SG-1000 II", "region": "Revision" }
+    ],
+    "specs": {
+      "outputs": ["rf", "composite (modded)", "rgb (modded)"],
+      "inputs": []
+    },
+    "imageUrl": null
+  },
+  {
     "id": 4,
     "name": "Sega Master System",
     "category": "console",
