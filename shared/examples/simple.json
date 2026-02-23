@@ -5,7 +5,7 @@
       {
         "id": "dndnode_0",
         "type": "equipment",
-        "position": { "x": 100, "y": 200 },
+        "position": { "x": 80, "y": 200 },
         "data": {
           "label": "NES",
           "category": "console",
@@ -18,7 +18,7 @@
       {
         "id": "dndnode_1",
         "type": "equipment",
-        "position": { "x": 400, "y": 200 },
+        "position": { "x": 520, "y": 200 },
         "data": {
           "label": "Basic CRT",
           "category": "display",

@@ -66,10 +66,10 @@
           "label": "GameCube",
           "category": "console",
           "specs": {
-            "outputs": ["composite", "s-video", "component", "hdmi"],
+            "outputs": ["composite", "s-video", "ypbpr", "hdmi"],
             "inputs": []
           },
-          "selectedOutput": "component"
+          "selectedOutput": "ypbpr"
         }
       },
       {
@@ -94,10 +94,10 @@
           "label": "PlayStation 2",
           "category": "console",
           "specs": {
-            "outputs": ["composite", "s-video", "component", "hdmi"],
+            "outputs": ["composite", "s-video", "ypbpr", "hdmi"],
             "inputs": []
           },
-          "selectedOutput": "component"
+          "selectedOutput": "ypbpr"
         }
       },
       {
@@ -108,10 +108,10 @@
           "label": "Xbox",
           "category": "console",
           "specs": {
-            "outputs": ["composite", "s-video", "component", "hdmi"],
+            "outputs": ["composite", "s-video", "ypbpr", "hdmi"],
             "inputs": []
           },
-          "selectedOutput": "component"
+          "selectedOutput": "ypbpr"
         }
       },
       {
@@ -122,10 +122,10 @@
           "label": "PlayStation 3",
           "category": "console",
           "specs": {
-            "outputs": ["composite", "component", "hdmi"],
+            "outputs": ["composite", "ypbpr", "hdmi"],
             "inputs": []
           },
-          "selectedOutput": "component"
+          "selectedOutput": "ypbpr"
         }
       },
       {
@@ -136,10 +136,10 @@
           "label": "Xbox 360",
           "category": "console",
           "specs": {
-            "outputs": ["composite", "component", "hdmi"],
+            "outputs": ["composite", "ypbpr", "hdmi"],
             "inputs": []
           },
-          "selectedOutput": "component"
+          "selectedOutput": "ypbpr"
         }
       },
       {
@@ -150,10 +150,10 @@
           "label": "Wii",
           "category": "console",
           "specs": {
-            "outputs": ["composite", "s-video", "component"],
+            "outputs": ["composite", "s-video", "ypbpr"],
             "inputs": []
           },
-          "selectedOutput": "component"
+          "selectedOutput": "ypbpr"
         }
       },
       {
@@ -200,8 +200,8 @@
           },
           "svsNumInputs": 14,
           "svsNumOutputs": 3,
-          "svsInputs": ["composite", "composite", "rgb", "rgb", "component", "component", "rgb", "component", "component", "component", "component", "rgb", "s-video", "s-video"],
-          "svsOutputs": ["component", "rgb", "s-video"]
+          "svsInputs": ["composite", "composite", "rgb", "rgb", "ypbpr", "ypbpr", "rgb", "ypbpr", "ypbpr", "ypbpr", "ypbpr", "rgb", "s-video", "s-video"],
+          "svsOutputs": ["ypbpr", "rgb", "s-video"]
         }
       },
       {
@@ -212,7 +212,7 @@
           "label": "Basic CRT",
           "category": "display",
           "specs": {
-            "inputs": ["composite", "s-video", "rgb", "component"]
+            "inputs": ["composite", "s-video", "rgb", "ypbpr"]
           }
         }
       },
@@ -224,7 +224,7 @@
           "label": "Basic CRT",
           "category": "display",
           "specs": {
-            "inputs": ["rf", "composite", "s-video", "component"]
+            "inputs": ["rf", "composite", "s-video", "ypbpr"]
           }
         }
       }
@@ -293,7 +293,7 @@
         "sourceHandle": "out-0",
         "targetHandle": "in-4",
         "animated": true,
-        "data": { "outputType": "component" },
+        "data": { "outputType": "ypbpr" },
         "style": { "stroke": "#00BFFF", "strokeWidth": 2 },
         "markerEnd": {
           "type": "arrowclosed",
@@ -321,7 +321,7 @@
         "sourceHandle": "out-0",
         "targetHandle": "in-6",
         "animated": true,
-        "data": { "outputType": "component" },
+        "data": { "outputType": "ypbpr" },
         "style": { "stroke": "#00BFFF", "strokeWidth": 2 },
         "markerEnd": {
           "type": "arrowclosed",
@@ -335,7 +335,7 @@
         "sourceHandle": "out-0",
         "targetHandle": "in-7",
         "animated": true,
-        "data": { "outputType": "component" },
+        "data": { "outputType": "ypbpr" },
         "style": { "stroke": "#00BFFF", "strokeWidth": 2 },
         "markerEnd": {
           "type": "arrowclosed",
@@ -349,7 +349,7 @@
         "sourceHandle": "out-0",
         "targetHandle": "in-8",
         "animated": true,
-        "data": { "outputType": "component" },
+        "data": { "outputType": "ypbpr" },
         "style": { "stroke": "#00BFFF", "strokeWidth": 2 },
         "markerEnd": {
           "type": "arrowclosed",
@@ -363,7 +363,7 @@
         "sourceHandle": "out-0",
         "targetHandle": "in-9",
         "animated": true,
-        "data": { "outputType": "component" },
+        "data": { "outputType": "ypbpr" },
         "style": { "stroke": "#00BFFF", "strokeWidth": 2 },
         "markerEnd": {
           "type": "arrowclosed",
@@ -377,7 +377,7 @@
         "sourceHandle": "out-0",
         "targetHandle": "in-10",
         "animated": true,
-        "data": { "outputType": "component" },
+        "data": { "outputType": "ypbpr" },
         "style": { "stroke": "#00BFFF", "strokeWidth": 2 },
         "markerEnd": {
           "type": "arrowclosed",
@@ -433,7 +433,7 @@
         "sourceHandle": "out-0",
         "targetHandle": "in-3",
         "animated": true,
-        "data": { "outputType": "component" },
+        "data": { "outputType": "ypbpr" },
         "style": { "stroke": "#00BFFF", "strokeWidth": 2 },
         "markerEnd": {
           "type": "arrowclosed",
