@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { useItems } from '@/hooks/use-items';
 import { Gamepad2, Tv, Route, Search, GripVertical, Cable, Maximize2, Settings } from 'lucide-react';
+import { APP_VERSION } from '@/config';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Input } from '@/components/ui/input';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
@@ -93,7 +94,19 @@ export function Sidebar({ onClose, onSelectItem, onDeselectAll }: { onClose?: ()
     if (item.name === 'Xbox Series X') {
       return 'Xbox Series S/X';
     }
-
+    
+    if (item.name === 'Genesis Mini') {
+      return 'Genesis / Mega Drive Mini';
+    }
+    
+    if (item.name === 'TurboGrafx-16 Mini') {
+      return 'TG-16 / PC Engine Mini';
+    }
+    
+    if (item.name === 'MiSTer FPGA') {
+      return 'MiSTer / SuperStation';
+    }
+    
     // Default: use the base name
     return item.name;
   };
@@ -142,7 +155,7 @@ export function Sidebar({ onClose, onSelectItem, onDeselectAll }: { onClose?: ()
           </div>
           <div>
             <h1 className="font-display font-bold text-lg leading-none">RetroGameCabling</h1>
-            <span className="text-[10px] text-muted-foreground font-mono">v1.0.0</span>
+            <span className="text-[10px] text-muted-foreground font-mono">v{APP_VERSION}</span>
           </div>
         </div>
         

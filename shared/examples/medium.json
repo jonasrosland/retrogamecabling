@@ -59,7 +59,7 @@
         "type": "equipment",
         "position": { "x": 700, "y": 150 },
         "data": {
-          "label": "Sony PVM 14L5",
+          "label": "Basic CRT",
           "category": "display",
           "specs": {
             "inputs": ["composite", "s-video", "rgb", "component"]
@@ -71,7 +71,7 @@
         "type": "equipment",
         "position": { "x": 700, "y": 350 },
         "data": {
-          "label": "Consumer CRT",
+          "label": "Basic CRT",
           "category": "display",
           "specs": {
             "inputs": ["rf", "composite"]

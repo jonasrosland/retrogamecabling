@@ -5,62 +5,76 @@
       {
         "id": "dndnode_0",
         "type": "equipment",
-        "position": { "x": 50, "y": 80 },
+        "position": {"x": 50, "y": 80},
         "data": {
           "label": "SNES",
           "category": "console",
-          "specs": {
-            "outputs": ["rf", "composite", "s-video", "rgb", "hdmi"],
-            "inputs": []
-          }
+          "specs": {"outputs": ["rf", "composite", "s-video", "rgb", "hdmi"], "inputs": []},
+          "selectedOutput": "rgb"
         }
       },
       {
         "id": "dndnode_1",
         "type": "equipment",
-        "position": { "x": 50, "y": 200 },
+        "position": {"x": 50, "y": 200},
         "data": {
           "label": "N64",
           "category": "console",
-          "specs": {
-            "outputs": ["composite", "s-video", "rgb", "hdmi"],
-            "inputs": []
-          }
+          "specs": {"outputs": ["composite", "s-video", "rgb", "hdmi"], "inputs": []},
+          "selectedOutput": "rgb"
         }
       },
       {
         "id": "dndnode_2",
         "type": "equipment",
-        "position": { "x": 50, "y": 320 },
+        "position": {"x": 50, "y": 320},
         "data": {
           "label": "PlayStation 1",
           "category": "console",
-          "specs": {
-            "outputs": ["composite", "s-video", "rgb", "hdmi"],
-            "inputs": []
-          }
+          "specs": {"outputs": ["composite", "s-video", "rgb", "hdmi"], "inputs": []},
+          "selectedOutput": "rgb"
         }
       },
       {
         "id": "dndnode_3",
         "type": "equipment",
-        "position": { "x": 50, "y": 440 },
+        "position": {"x": 50, "y": 440},
         "data": {
-          "label": "NES",
+          "label": "PlayStation 2",
           "category": "console",
-          "specs": {
-            "outputs": ["rf", "composite", "hdmi"],
-            "inputs": []
-          }
+          "specs": {"outputs": ["composite", "s-video", "rgb", "ypbpr", "hdmi"], "inputs": []},
+          "selectedOutput": "ypbpr"
         }
       },
       {
         "id": "dndnode_4",
         "type": "equipment",
-        "position": { "x": 350, "y": 140 },
+        "position": {"x": 50, "y": 560},
+        "data": {
+          "label": "SNES Classic Mini",
+          "category": "console",
+          "specs": {"outputs": ["hdmi"], "inputs": []},
+          "selectedOutput": "hdmi"
+        }
+      },
+      {
+        "id": "dndnode_10",
+        "type": "equipment",
+        "position": {"x": 50, "y": 680},
+        "data": {
+          "label": "NES",
+          "category": "console",
+          "specs": {"outputs": ["rf", "composite", "hdmi"], "inputs": []},
+          "selectedOutput": "composite"
+        }
+      },
+      {
+        "id": "dndnode_5",
+        "type": "equipment",
+        "position": {"x": 450, "y": 140},
         "data": {
           "label": "Otaku SCART Switch",
-          "category": "switcher",
+          "category": "switch",
           "specs": {
             "inputs": ["scart", "scart", "scart", "scart", "scart", "scart"],
             "outputs": ["scart", "rca"]
@@ -68,162 +82,51 @@
         }
       },
       {
-        "id": "dndnode_5",
-        "type": "equipment",
-        "position": { "x": 350, "y": 380 },
-        "data": {
-          "label": "Extron Crosspoint",
-          "category": "switcher",
-          "specs": {
-            "inputs": ["bnc", "bnc", "bnc", "bnc"],
-            "outputs": ["bnc", "bnc"]
-          }
-        }
-      },
-      {
         "id": "dndnode_6",
         "type": "equipment",
-        "position": { "x": 750, "y": 80 },
+        "position": {"x": 450, "y": 380},
         "data": {
-          "label": "Sony PVM 14L5",
-          "category": "display",
+          "label": "Extron CrossPoint 42",
+          "category": "switch",
           "specs": {
-            "inputs": ["composite", "s-video", "rgb", "component"]
-          }
+            "switchVariants": [
+              {"name": "CrossPoint 42", "inputs": ["bnc", "bnc", "bnc", "bnc"], "outputs": ["bnc", "bnc"]}
+            ]
+          },
+          "switchVariantIndex": 0
         }
       },
       {
         "id": "dndnode_7",
         "type": "equipment",
-        "position": { "x": 750, "y": 240 },
+        "position": {"x": 850, "y": 80},
         "data": {
-          "label": "Consumer CRT",
+          "label": "Basic CRT",
           "category": "display",
-          "specs": {
-            "inputs": ["rf", "composite"]
-          }
+          "specs": {"inputs": ["composite", "s-video", "rgb", "ypbpr"]}
         }
       },
       {
-        "id": "dndnode_8",
+        "id": "dndnode_9",
         "type": "equipment",
-        "position": { "x": 750, "y": 400 },
+        "position": {"x": 850, "y": 420},
         "data": {
-          "label": "Modern OLED",
+          "label": "Basic Flatscreen",
           "category": "display",
-          "specs": {
-            "inputs": ["hdmi", "hdmi", "hdmi"]
-          }
+          "specs": {"inputs": ["hdmi", "hdmi", "hdmi"]}
         }
       }
     ],
     "edges": [
-      {
-        "id": "edge-0",
-        "source": "dndnode_0",
-        "target": "dndnode_4",
-        "sourceHandle": "out-3",
-        "targetHandle": "in-0",
-        "animated": true,
-        "style": { "stroke": "hsl(var(--primary))", "strokeWidth": 2 },
-        "markerEnd": {
-          "type": "arrowclosed",
-          "color": "hsl(var(--primary))"
-        }
-      },
-      {
-        "id": "edge-1",
-        "source": "dndnode_1",
-        "target": "dndnode_4",
-        "sourceHandle": "out-1",
-        "targetHandle": "in-1",
-        "animated": true,
-        "style": { "stroke": "hsl(var(--primary))", "strokeWidth": 2 },
-        "markerEnd": {
-          "type": "arrowclosed",
-          "color": "hsl(var(--primary))"
-        }
-      },
-      {
-        "id": "edge-2",
-        "source": "dndnode_2",
-        "target": "dndnode_4",
-        "sourceHandle": "out-2",
-        "targetHandle": "in-2",
-        "animated": true,
-        "style": { "stroke": "hsl(var(--primary))", "strokeWidth": 2 },
-        "markerEnd": {
-          "type": "arrowclosed",
-          "color": "hsl(var(--primary))"
-        }
-      },
-      {
-        "id": "edge-3",
-        "source": "dndnode_3",
-        "target": "dndnode_5",
-        "sourceHandle": "out-1",
-        "targetHandle": "in-0",
-        "animated": true,
-        "style": { "stroke": "hsl(var(--primary))", "strokeWidth": 2 },
-        "markerEnd": {
-          "type": "arrowclosed",
-          "color": "hsl(var(--primary))"
-        }
-      },
-      {
-        "id": "edge-4",
-        "source": "dndnode_4",
-        "target": "dndnode_6",
-        "sourceHandle": "out-0",
-        "targetHandle": "in-2",
-        "animated": true,
-        "style": { "stroke": "hsl(var(--primary))", "strokeWidth": 2 },
-        "markerEnd": {
-          "type": "arrowclosed",
-          "color": "hsl(var(--primary))"
-        }
-      },
-      {
-        "id": "edge-5",
-        "source": "dndnode_4",
-        "target": "dndnode_7",
-        "sourceHandle": "out-1",
-        "targetHandle": "in-1",
-        "animated": true,
-        "style": { "stroke": "hsl(var(--primary))", "strokeWidth": 2 },
-        "markerEnd": {
-          "type": "arrowclosed",
-          "color": "hsl(var(--primary))"
-        }
-      },
-      {
-        "id": "edge-6",
-        "source": "dndnode_5",
-        "target": "dndnode_8",
-        "sourceHandle": "out-0",
-        "targetHandle": "in-0",
-        "animated": true,
-        "style": { "stroke": "hsl(var(--primary))", "strokeWidth": 2 },
-        "markerEnd": {
-          "type": "arrowclosed",
-          "color": "hsl(var(--primary))"
-        }
-      },
-      {
-        "id": "edge-7",
-        "source": "dndnode_5",
-        "target": "dndnode_6",
-        "sourceHandle": "out-1",
-        "targetHandle": "in-3",
-        "animated": true,
-        "style": { "stroke": "hsl(var(--primary))", "strokeWidth": 2 },
-        "markerEnd": {
-          "type": "arrowclosed",
-          "color": "hsl(var(--primary))"
-        }
-      }
+      {"id": "edge-0", "source": "dndnode_0", "target": "dndnode_5", "sourceHandle": "out-0", "targetHandle": "in-0", "animated": true, "data": {"outputType": "rgb"}, "style": {"stroke": "#FF0000", "strokeWidth": 2}, "markerEnd": {"type": "arrowclosed", "color": "#FF0000"}},
+      {"id": "edge-1", "source": "dndnode_1", "target": "dndnode_5", "sourceHandle": "out-0", "targetHandle": "in-1", "animated": true, "data": {"outputType": "rgb"}, "style": {"stroke": "#FF0000", "strokeWidth": 2}, "markerEnd": {"type": "arrowclosed", "color": "#FF0000"}},
+      {"id": "edge-2", "source": "dndnode_2", "target": "dndnode_5", "sourceHandle": "out-0", "targetHandle": "in-2", "animated": true, "data": {"outputType": "rgb"}, "style": {"stroke": "#FF0000", "strokeWidth": 2}, "markerEnd": {"type": "arrowclosed", "color": "#FF0000"}},
+      {"id": "edge-3", "source": "dndnode_3", "target": "dndnode_6", "sourceHandle": "out-0", "targetHandle": "in-0", "animated": true, "data": {"outputType": "ypbpr"}, "style": {"stroke": "#FF6B00", "strokeWidth": 2}, "markerEnd": {"type": "arrowclosed", "color": "#FF6B00"}},
+      {"id": "edge-4", "source": "dndnode_5", "target": "dndnode_7", "sourceHandle": "out-0", "targetHandle": "in-2", "animated": true, "data": {"outputType": "rgb"}, "style": {"stroke": "#FF0000", "strokeWidth": 2}, "markerEnd": {"type": "arrowclosed", "color": "#FF0000"}},
+      {"id": "edge-6", "source": "dndnode_6", "target": "dndnode_7", "sourceHandle": "out-0", "targetHandle": "in-3", "animated": true, "data": {"outputType": "ypbpr"}, "style": {"stroke": "#FF6B00", "strokeWidth": 2}, "markerEnd": {"type": "arrowclosed", "color": "#FF6B00"}},
+      {"id": "edge-7", "source": "dndnode_4", "target": "dndnode_9", "sourceHandle": "out-0", "targetHandle": "in-0", "animated": true, "data": {"outputType": "hdmi"}, "style": {"stroke": "#FFD700", "strokeWidth": 2}, "markerEnd": {"type": "arrowclosed", "color": "#FFD700"}},
+      {"id": "edge-8", "source": "dndnode_10", "target": "dndnode_7", "sourceHandle": "out-0", "targetHandle": "in-0", "animated": true, "data": {"outputType": "composite"}, "style": {"stroke": "#FF69B4", "strokeWidth": 2}, "markerEnd": {"type": "arrowclosed", "color": "#FF69B4"}}
     ],
-    "viewport": { "x": 0, "y": 0, "zoom": 1.0 }
+    "viewport": {"x": 0, "y": 0, "zoom": 1}
   }
 }
-

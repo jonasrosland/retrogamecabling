@@ -450,6 +450,106 @@
     "imageUrl": null
   },
   {
+    "id": 71,
+    "name": "NES Classic Mini",
+    "category": "console",
+    "maker": "Other",
+    "specs": {
+      "outputs": ["hdmi"],
+      "inputs": []
+    },
+    "imageUrl": null
+  },
+  {
+    "id": 76,
+    "name": "SNES Classic Mini",
+    "category": "console",
+    "maker": "Other",
+    "specs": {
+      "outputs": ["hdmi"],
+      "inputs": []
+    },
+    "imageUrl": null
+  },
+  {
+    "id": 72,
+    "name": "PlayStation Classic",
+    "category": "console",
+    "maker": "Other",
+    "specs": {
+      "outputs": ["hdmi"],
+      "inputs": []
+    },
+    "imageUrl": null
+  },
+  {
+    "id": 73,
+    "name": "Genesis Mini",
+    "category": "console",
+    "maker": "Other",
+    "variants": [
+      { "name": "Genesis Mini", "region": "North America" },
+      { "name": "Mega Drive Mini", "region": "Europe/Japan" }
+    ],
+    "specs": {
+      "outputs": ["hdmi"],
+      "inputs": []
+    },
+    "imageUrl": null
+  },
+  {
+    "id": 74,
+    "name": "TurboGrafx-16 Mini",
+    "category": "console",
+    "maker": "Other",
+    "variants": [
+      { "name": "TurboGrafx-16 Mini", "region": "North America" },
+      { "name": "PC Engine Mini", "region": "Japan" }
+    ],
+    "specs": {
+      "outputs": ["hdmi"],
+      "inputs": []
+    },
+    "imageUrl": null
+  },
+  {
+    "id": 75,
+    "name": "MiSTer FPGA",
+    "category": "console",
+    "maker": "Other",
+    "variants": [
+      { "name": "MiSTer FPGA", "region": "Base (HDMI + IO Board)" },
+      { "name": "SuperStation One", "region": "All-in-one" }
+    ],
+    "specs": {
+      "outputs": ["hdmi", "vga"],
+      "variantOutputs": [
+        ["hdmi", "vga"],
+        ["hdmi", "vga", "ypbpr", "composite", "rgb"]
+      ],
+      "simultaneousOutputs": true,
+      "inputs": []
+    },
+    "imageUrl": null
+  },
+  {
+    "id": 77,
+    "name": "Custom Gaming PC",
+    "category": "console",
+    "maker": "Other",
+    "specs": {
+      "isCustomSwitch": true,
+      "maxInputs": 16,
+      "maxOutputs": 16,
+      "minInputs": 0,
+      "initialInputs": [],
+      "initialOutputs": ["hdmi"],
+      "editableName": true,
+      "compactWhenUnselected": true
+    },
+    "imageUrl": null
+  },
+  {
     "id": 27,
     "name": "Otaku SCART Switch",
     "category": "switch",
@@ -464,8 +564,15 @@
     "name": "Extron Crosspoint",
     "category": "switch",
     "specs": {
-      "inputs": ["bnc", "bnc", "bnc", "bnc"],
-      "outputs": ["bnc", "bnc"]
+      "switchVariants": [
+        { "name": "CrossPoint 42", "inputs": ["bnc", "bnc", "bnc", "bnc"], "outputs": ["bnc", "bnc"] },
+        { "name": "CrossPoint 84", "inputs": ["bnc", "bnc", "bnc", "bnc", "bnc", "bnc", "bnc", "bnc"], "outputs": ["bnc", "bnc", "bnc", "bnc"] },
+        { "name": "CrossPoint 88", "inputs": ["bnc", "bnc", "bnc", "bnc", "bnc", "bnc", "bnc", "bnc"], "outputs": ["bnc", "bnc", "bnc", "bnc", "bnc", "bnc", "bnc", "bnc"] },
+        { "name": "CrossPoint 124", "inputs": ["bnc", "bnc", "bnc", "bnc", "bnc", "bnc", "bnc", "bnc", "bnc", "bnc", "bnc", "bnc"], "outputs": ["bnc", "bnc", "bnc", "bnc"] },
+        { "name": "CrossPoint 128", "inputs": ["bnc", "bnc", "bnc", "bnc", "bnc", "bnc", "bnc", "bnc", "bnc", "bnc", "bnc", "bnc"], "outputs": ["bnc", "bnc", "bnc", "bnc", "bnc", "bnc", "bnc", "bnc"] },
+        { "name": "CrossPoint 168", "inputs": ["bnc", "bnc", "bnc", "bnc", "bnc", "bnc", "bnc", "bnc", "bnc", "bnc", "bnc", "bnc", "bnc", "bnc", "bnc", "bnc"], "outputs": ["bnc", "bnc", "bnc", "bnc", "bnc", "bnc", "bnc", "bnc"] },
+        { "name": "CrossPoint 1616", "inputs": ["bnc", "bnc", "bnc", "bnc", "bnc", "bnc", "bnc", "bnc", "bnc", "bnc", "bnc", "bnc", "bnc", "bnc", "bnc", "bnc"], "outputs": ["bnc", "bnc", "bnc", "bnc", "bnc", "bnc", "bnc", "bnc", "bnc", "bnc", "bnc", "bnc", "bnc", "bnc", "bnc", "bnc"] }
+      ]
     },
     "imageUrl": null
   },
@@ -533,17 +640,8 @@
     "imageUrl": null
   },
   {
-    "id": 29,
-    "name": "Sony PVM 14L5",
-    "category": "display",
-    "specs": {
-      "inputs": ["composite", "s-video", "rgb", "ypbpr"]
-    },
-    "imageUrl": null
-  },
-  {
     "id": 30,
-    "name": "Consumer CRT",
+    "name": "Basic CRT",
     "category": "display",
     "specs": {
       "inputs": ["rf", "composite"]
@@ -552,10 +650,22 @@
   },
   {
     "id": 31,
-    "name": "Modern OLED",
+    "name": "Basic Flatscreen",
     "category": "display",
     "specs": {
       "inputs": ["hdmi", "hdmi", "hdmi"]
+    },
+    "imageUrl": null
+  },
+  {
+    "id": 70,
+    "name": "Custom TV",
+    "category": "display",
+    "specs": {
+      "inputs": ["rf", "composite", "composite", "rgb", "ypbpr"],
+      "editableName": true,
+      "customizableInputs": true,
+      "maxInputs": 16
     },
     "imageUrl": null
   },
@@ -565,16 +675,6 @@
     "category": "adapter",
     "specs": {
       "inputs": ["rgb"],
-      "outputs": ["ypbpr"]
-    },
-    "imageUrl": null
-  },
-  {
-    "id": 38,
-    "name": "SCART to YPbPr Converter",
-    "category": "adapter",
-    "specs": {
-      "inputs": ["scart"],
       "outputs": ["ypbpr"]
     },
     "imageUrl": null
@@ -632,7 +732,7 @@
   {
     "id": 44,
     "name": "RetroTINK-2X",
-    "category": "adapter",
+    "category": "upscaler",
     "specs": {
       "inputs": ["composite", "s-video", "ypbpr"],
       "outputs": ["hdmi"]
@@ -642,7 +742,7 @@
   {
     "id": 45,
     "name": "OSSC (Open Source Scan Converter)",
-    "category": "adapter",
+    "category": "upscaler",
     "specs": {
       "inputs": ["scart", "ypbpr", "vga"],
       "outputs": ["hdmi"]

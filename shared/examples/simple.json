@@ -20,7 +20,7 @@
         "type": "equipment",
         "position": { "x": 400, "y": 200 },
         "data": {
-          "label": "Consumer CRT",
+          "label": "Basic CRT",
           "category": "display",
           "specs": {
             "inputs": ["rf", "composite"]
