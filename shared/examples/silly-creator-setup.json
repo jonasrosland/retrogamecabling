@@ -1,0 +1,1757 @@
+{
+  "name": "Silly creator setup",
+  "data": {
+    "nodes": [
+      {
+        "id": "dndnode_0",
+        "type": "equipment",
+        "position": {
+          "x": 50,
+          "y": 360
+        },
+        "data": {
+          "label": "Xbox",
+          "category": "console",
+          "specs": {
+            "inputs": [],
+            "outputs": [
+              "rf",
+              "composite",
+              "s-video",
+              "rgb",
+              "ypbpr",
+              "hdmi (modded)"
+            ]
+          },
+          "selectedOutput": "ypbpr"
+        },
+        "width": 180,
+        "height": 71,
+        "positionAbsolute": {
+          "x": 50,
+          "y": 360
+        }
+      },
+      {
+        "id": "dndnode_1",
+        "type": "equipment",
+        "position": {
+          "x": 48.74346886188346,
+          "y": 941.4731854170188
+        },
+        "data": {
+          "label": "Xbox 360",
+          "category": "console",
+          "specs": {
+            "inputs": [],
+            "outputs": [
+              "composite",
+              "ypbpr",
+              "hdmi"
+            ]
+          },
+          "selectedOutput": "hdmi"
+        },
+        "width": 180,
+        "height": 71,
+        "selected": false,
+        "dragging": false,
+        "positionAbsolute": {
+          "x": 48.74346886188346,
+          "y": 941.4731854170188
+        }
+      },
+      {
+        "id": "dndnode_2",
+        "type": "equipment",
+        "position": {
+          "x": 46.60296391417296,
+          "y": 1261.4530042636868
+        },
+        "data": {
+          "label": "Xbox Series X",
+          "category": "console",
+          "specs": {
+            "inputs": [],
+            "outputs": [
+              "hdmi"
+            ]
+          },
+          "variants": [
+            {
+              "name": "Xbox Series X",
+              "region": "Standard with disc drive"
+            },
+            {
+              "name": "Xbox Series S",
+              "region": "Digital only"
+            }
+          ],
+          "variantIndex": 0,
+          "selectedOutput": "hdmi"
+        },
+        "width": 180,
+        "height": 71,
+        "selected": false,
+        "dragging": false,
+        "positionAbsolute": {
+          "x": 46.60296391417296,
+          "y": 1261.4530042636868
+        }
+      },
+      {
+        "id": "dndnode_3",
+        "type": "equipment",
+        "position": {
+          "x": 50,
+          "y": 270
+        },
+        "data": {
+          "label": "GameCube",
+          "category": "console",
+          "specs": {
+            "inputs": [],
+            "outputs": [
+              "composite",
+              "s-video",
+              "rgb",
+              "ypbpr",
+              "d-terminal",
+              "hdmi (modded)"
+            ]
+          },
+          "selectedOutput": "ypbpr"
+        },
+        "width": 180,
+        "height": 71,
+        "positionAbsolute": {
+          "x": 50,
+          "y": 270
+        }
+      },
+      {
+        "id": "dndnode_4",
+        "type": "equipment",
+        "position": {
+          "x": 50,
+          "y": 630
+        },
+        "data": {
+          "label": "N64",
+          "category": "console",
+          "specs": {
+            "inputs": [],
+            "outputs": [
+              "rf",
+              "composite",
+              "s-video",
+              "rgb (modded)",
+              "hdmi (modded)"
+            ]
+          },
+          "selectedOutput": "rgb (modded)"
+        },
+        "width": 180,
+        "height": 71,
+        "positionAbsolute": {
+          "x": 50,
+          "y": 630
+        }
+      },
+      {
+        "id": "dndnode_5",
+        "type": "equipment",
+        "position": {
+          "x": 46.60296391417273,
+          "y": 1440.1964731255696
+        },
+        "data": {
+          "label": "Nintendo Switch 2",
+          "category": "console",
+          "specs": {
+            "inputs": [],
+            "outputs": [
+              "hdmi"
+            ]
+          },
+          "variants": [
+            {
+              "name": "Nintendo Switch",
+              "region": "Original"
+            },
+            {
+              "name": "Nintendo Switch 2",
+              "region": "Successor"
+            }
+          ],
+          "variantIndex": 1,
+          "selectedOutput": "hdmi"
+        },
+        "width": 197,
+        "height": 71,
+        "selected": false,
+        "positionAbsolute": {
+          "x": 46.60296391417273,
+          "y": 1440.1964731255696
+        },
+        "dragging": false
+      },
+      {
+        "id": "dndnode_6",
+        "type": "equipment",
+        "position": {
+          "x": 50,
+          "y": 180
+        },
+        "data": {
+          "label": "Famicom",
+          "category": "console",
+          "specs": {
+            "inputs": [],
+            "outputs": [
+              "rf",
+              "composite",
+              "composite (modded Famicom)",
+              "rgb (modded)",
+              "s-video (modded)",
+              "hdmi (modded)"
+            ]
+          },
+          "variants": [
+            {
+              "name": "NES",
+              "region": "North America"
+            },
+            {
+              "name": "Famicom",
+              "region": "Japan"
+            }
+          ],
+          "variantIndex": 1,
+          "selectedOutput": "composite"
+        },
+        "width": 180,
+        "height": 71,
+        "positionAbsolute": {
+          "x": 50,
+          "y": 180
+        }
+      },
+      {
+        "id": "dndnode_7",
+        "type": "equipment",
+        "position": {
+          "x": 50,
+          "y": 0
+        },
+        "data": {
+          "label": "Wii",
+          "category": "console",
+          "specs": {
+            "inputs": [],
+            "outputs": [
+              "composite",
+              "ypbpr",
+              "rgb (PAL)",
+              "hdmi (modded)"
+            ]
+          },
+          "selectedOutput": "ypbpr"
+        },
+        "width": 180,
+        "height": 71,
+        "positionAbsolute": {
+          "x": 50,
+          "y": 0
+        }
+      },
+      {
+        "id": "dndnode_8",
+        "type": "equipment",
+        "position": {
+          "x": 48.74346886188346,
+          "y": 1031.4731854170188
+        },
+        "data": {
+          "label": "Wii U",
+          "category": "console",
+          "specs": {
+            "inputs": [],
+            "outputs": [
+              "composite",
+              "ypbpr",
+              "rgb",
+              "d-terminal",
+              "hdmi"
+            ]
+          },
+          "selectedOutput": "hdmi"
+        },
+        "width": 180,
+        "height": 71,
+        "selected": false,
+        "dragging": false,
+        "positionAbsolute": {
+          "x": 48.74346886188346,
+          "y": 1031.4731854170188
+        }
+      },
+      {
+        "id": "dndnode_9",
+        "type": "equipment",
+        "position": {
+          "x": 50,
+          "y": 540
+        },
+        "data": {
+          "label": "Sega Dreamcast",
+          "category": "console",
+          "specs": {
+            "inputs": [],
+            "outputs": [
+              "composite",
+              "s-video",
+              "rgb",
+              "ypbpr (special cable",
+              "vga",
+              "hdmi (modded)"
+            ]
+          },
+          "selectedOutput": "rgb"
+        },
+        "width": 181,
+        "height": 71,
+        "positionAbsolute": {
+          "x": 50,
+          "y": 540
+        }
+      },
+      {
+        "id": "dndnode_10",
+        "type": "equipment",
+        "position": {
+          "x": 50,
+          "y": 450
+        },
+        "data": {
+          "label": "Sega Saturn",
+          "category": "console",
+          "specs": {
+            "inputs": [],
+            "outputs": [
+              "rf",
+              "composite",
+              "s-video",
+              "rgb"
+            ]
+          },
+          "selectedOutput": "rgb"
+        },
+        "width": 180,
+        "height": 71,
+        "positionAbsolute": {
+          "x": 50,
+          "y": 450
+        }
+      },
+      {
+        "id": "dndnode_11",
+        "type": "equipment",
+        "position": {
+          "x": 50,
+          "y": 720
+        },
+        "data": {
+          "label": "Neo Geo AES",
+          "category": "console",
+          "specs": {
+            "inputs": [],
+            "outputs": [
+              "composite",
+              "rgb"
+            ]
+          },
+          "variants": [
+            {
+              "name": "Neo Geo AES",
+              "region": "AES"
+            },
+            {
+              "name": "Neo Geo CD Top Loader",
+              "region": "Top Loader"
+            },
+            {
+              "name": "Neo Geo CD Front Loader",
+              "region": "Front Loader"
+            },
+            {
+              "name": "Neo Geo CDZ",
+              "region": "CDZ"
+            },
+            {
+              "name": "Neo Geo MVS",
+              "region": "Consolized"
+            }
+          ],
+          "variantIndex": 0,
+          "selectedOutput": "rgb"
+        },
+        "width": 180,
+        "height": 71,
+        "positionAbsolute": {
+          "x": 50,
+          "y": 720
+        }
+      },
+      {
+        "id": "dndnode_12",
+        "type": "equipment",
+        "position": {
+          "x": 50,
+          "y": 90
+        },
+        "data": {
+          "label": "PlayStation 2",
+          "category": "console",
+          "specs": {
+            "inputs": [],
+            "outputs": [
+              "rf (external modulator)",
+              "composite",
+              "s-video",
+              "rgb",
+              "ypbpr",
+              "hdmi (modded)"
+            ]
+          },
+          "selectedOutput": "ypbpr"
+        },
+        "width": 180,
+        "height": 71,
+        "positionAbsolute": {
+          "x": 50,
+          "y": 90
+        }
+      },
+      {
+        "id": "dndnode_13",
+        "type": "equipment",
+        "position": {
+          "x": 48.74346886188346,
+          "y": 851.4731854170188
+        },
+        "data": {
+          "label": "PlayStation 3",
+          "category": "console",
+          "specs": {
+            "inputs": [],
+            "outputs": [
+              "composite",
+              "s-video",
+              "ypbpr",
+              "hdmi",
+              "d-terminal"
+            ]
+          },
+          "selectedOutput": "hdmi"
+        },
+        "width": 180,
+        "height": 71,
+        "selected": false,
+        "dragging": false,
+        "positionAbsolute": {
+          "x": 48.74346886188346,
+          "y": 851.4731854170188
+        }
+      },
+      {
+        "id": "dndnode_14",
+        "type": "equipment",
+        "position": {
+          "x": 46.60296391417296,
+          "y": 1171.4530042636868
+        },
+        "data": {
+          "label": "PlayStation 5",
+          "category": "console",
+          "specs": {
+            "inputs": [],
+            "outputs": [
+              "hdmi"
+            ]
+          },
+          "selectedOutput": "hdmi"
+        },
+        "width": 180,
+        "height": 71,
+        "selected": false,
+        "dragging": false,
+        "positionAbsolute": {
+          "x": 46.60296391417296,
+          "y": 1171.4530042636868
+        }
+      },
+      {
+        "id": "dndnode_15",
+        "type": "equipment",
+        "position": {
+          "x": 46.60296391417296,
+          "y": 1531.4530042636868
+        },
+        "data": {
+          "label": "Genesis Mini",
+          "category": "console",
+          "specs": {
+            "inputs": [],
+            "outputs": [
+              "hdmi"
+            ]
+          },
+          "variants": [
+            {
+              "name": "Genesis Mini",
+              "region": "North America"
+            },
+            {
+              "name": "Mega Drive Mini",
+              "region": "Europe/Japan"
+            }
+          ],
+          "variantIndex": 0,
+          "selectedOutput": "hdmi"
+        },
+        "width": 180,
+        "height": 71,
+        "selected": false,
+        "dragging": false,
+        "positionAbsolute": {
+          "x": 46.60296391417296,
+          "y": 1531.4530042636868
+        }
+      },
+      {
+        "id": "dndnode_16",
+        "type": "equipment",
+        "position": {
+          "x": 46.60296391417296,
+          "y": 1801.4530042636868
+        },
+        "data": {
+          "label": "MiSTer FPGA",
+          "category": "console",
+          "specs": {
+            "inputs": [],
+            "outputs": [
+              "hdmi",
+              "vga"
+            ],
+            "variantOutputs": [
+              [
+                "hdmi",
+                "vga"
+              ],
+              [
+                "hdmi",
+                "vga",
+                "ypbpr",
+                "composite",
+                "rgb"
+              ]
+            ],
+            "simultaneousOutputs": true
+          },
+          "variants": [
+            {
+              "name": "MiSTer FPGA",
+              "region": "Base (HDMI + IO Board)"
+            },
+            {
+              "name": "SuperStation One",
+              "region": "All-in-one"
+            }
+          ],
+          "variantIndex": 0,
+          "selectedOutput": "hdmi"
+        },
+        "width": 180,
+        "height": 55,
+        "selected": false,
+        "dragging": false,
+        "positionAbsolute": {
+          "x": 46.60296391417296,
+          "y": 1801.4530042636868
+        }
+      },
+      {
+        "id": "dndnode_17",
+        "type": "equipment",
+        "position": {
+          "x": 46.60296391417296,
+          "y": 1621.4530042636868
+        },
+        "data": {
+          "label": "PlayStation Classic",
+          "category": "console",
+          "specs": {
+            "inputs": [],
+            "outputs": [
+              "hdmi"
+            ]
+          },
+          "selectedOutput": "hdmi"
+        },
+        "width": 207,
+        "height": 71,
+        "selected": false,
+        "dragging": false,
+        "positionAbsolute": {
+          "x": 46.60296391417296,
+          "y": 1621.4530042636868
+        }
+      },
+      {
+        "id": "dndnode_18",
+        "type": "equipment",
+        "position": {
+          "x": 46.60296391417296,
+          "y": 1711.4530042636868
+        },
+        "data": {
+          "label": "TurboGrafx-16 Mini",
+          "category": "console",
+          "specs": {
+            "inputs": [],
+            "outputs": [
+              "hdmi"
+            ]
+          },
+          "variants": [
+            {
+              "name": "TurboGrafx-16 Mini",
+              "region": "North America"
+            },
+            {
+              "name": "PC Engine Mini",
+              "region": "Japan"
+            }
+          ],
+          "variantIndex": 0,
+          "selectedOutput": "hdmi"
+        },
+        "width": 204,
+        "height": 71,
+        "selected": false,
+        "dragging": false,
+        "positionAbsolute": {
+          "x": 46.60296391417296,
+          "y": 1711.4530042636868
+        }
+      },
+      {
+        "id": "dndnode_19",
+        "type": "equipment",
+        "position": {
+          "x": 380,
+          "y": 600
+        },
+        "data": {
+          "label": "Otaku SCART Switch",
+          "category": "switch",
+          "specs": {
+            "inputs": [
+              "scart",
+              "scart",
+              "scart",
+              "scart",
+              "scart",
+              "scart"
+            ],
+            "outputs": [
+              "scart",
+              "rca"
+            ]
+          }
+        },
+        "width": 207,
+        "height": 104,
+        "positionAbsolute": {
+          "x": 380,
+          "y": 600
+        }
+      },
+      {
+        "id": "dndnode_20",
+        "type": "equipment",
+        "position": {
+          "x": 850,
+          "y": 550
+        },
+        "data": {
+          "label": "CrossPoint 84",
+          "category": "switch",
+          "specs": {
+            "switchVariants": [
+              {
+                "name": "CrossPoint 42",
+                "inputs": [
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc"
+                ],
+                "outputs": [
+                  "bnc",
+                  "bnc"
+                ]
+              },
+              {
+                "name": "CrossPoint 84",
+                "inputs": [
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc"
+                ],
+                "outputs": [
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc"
+                ]
+              },
+              {
+                "name": "CrossPoint 88",
+                "inputs": [
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc"
+                ],
+                "outputs": [
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc"
+                ]
+              },
+              {
+                "name": "CrossPoint 124",
+                "inputs": [
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc"
+                ],
+                "outputs": [
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc"
+                ]
+              },
+              {
+                "name": "CrossPoint 128",
+                "inputs": [
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc"
+                ],
+                "outputs": [
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc"
+                ]
+              },
+              {
+                "name": "CrossPoint 168",
+                "inputs": [
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc"
+                ],
+                "outputs": [
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc"
+                ]
+              },
+              {
+                "name": "CrossPoint 1616",
+                "inputs": [
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc"
+                ],
+                "outputs": [
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc",
+                  "bnc"
+                ]
+              }
+            ]
+          },
+          "switchVariantIndex": 1
+        },
+        "width": 180,
+        "height": 128,
+        "positionAbsolute": {
+          "x": 850,
+          "y": 550
+        }
+      },
+      {
+        "id": "dndnode_21",
+        "type": "equipment",
+        "position": {
+          "x": 1814.0253446134252,
+          "y": 439.5913421962627
+        },
+        "data": {
+          "label": "Panasonic Tau 27\"",
+          "category": "display",
+          "specs": {
+            "inputs": [
+              "rf",
+              "composite",
+              "composite",
+              "rgb",
+              "ypbpr"
+            ],
+            "maxInputs": 16,
+            "editableName": true,
+            "customizableInputs": true
+          },
+          "customInputs": [
+            "rf",
+            "composite",
+            "composite",
+            "ypbpr"
+          ],
+          "_updated": 1771901055797
+        },
+        "width": 192,
+        "height": 80,
+        "selected": false,
+        "positionAbsolute": {
+          "x": 1814.0253446134252,
+          "y": 439.5913421962627
+        },
+        "dragging": false
+      },
+      {
+        "id": "dndnode_22",
+        "type": "equipment",
+        "position": {
+          "x": 1814.7943818930426,
+          "y": 622.7461457216507
+        },
+        "data": {
+          "label": "Basic Flatscreen",
+          "category": "display",
+          "specs": {
+            "inputs": [
+              "hdmi",
+              "hdmi",
+              "hdmi"
+            ]
+          }
+        },
+        "width": 187,
+        "height": 68,
+        "selected": false,
+        "positionAbsolute": {
+          "x": 1814.7943818930426,
+          "y": 622.7461457216507
+        },
+        "dragging": false
+      },
+      {
+        "id": "dndnode_24",
+        "type": "equipment",
+        "position": {
+          "x": 1421.3610293479826,
+          "y": 641.7267730825141
+        },
+        "data": {
+          "label": "RetroTINK-4K",
+          "category": "upscaler",
+          "specs": {
+            "inputs": [
+              "composite",
+              "s-video",
+              "ypbpr",
+              "scart",
+              "vga",
+              "hdmi"
+            ],
+            "outputs": [
+              "hdmi"
+            ]
+          }
+        },
+        "width": 180,
+        "height": 58,
+        "selected": false,
+        "positionAbsolute": {
+          "x": 1421.3610293479826,
+          "y": 641.7267730825141
+        },
+        "dragging": false
+      },
+      {
+        "id": "dndnode_25",
+        "type": "equipment",
+        "position": {
+          "x": 478.0950244777814,
+          "y": 771.9955900347866
+        },
+        "data": {
+          "label": "RGBS to YPbPr Converter",
+          "category": "adapter",
+          "specs": {
+            "inputs": [
+              "rgb"
+            ],
+            "outputs": [
+              "ypbpr"
+            ]
+          }
+        },
+        "width": 246,
+        "height": 58,
+        "selected": false,
+        "positionAbsolute": {
+          "x": 478.0950244777814,
+          "y": 771.9955900347866
+        },
+        "dragging": false
+      },
+      {
+        "id": "dndnode_26",
+        "type": "equipment",
+        "position": {
+          "x": 1096.602963914173,
+          "y": 1411.4530042636868
+        },
+        "data": {
+          "label": "Custom HDMI Switch",
+          "category": "custom",
+          "specs": {
+            "inputs": [],
+            "outputs": [],
+            "isHDMISwitch": true,
+            "maxInputs": 64,
+            "maxOutputs": 64
+          },
+          "svsNumInputs": 4,
+          "svsNumOutputs": 1,
+          "svsInputs": [
+            "hdmi",
+            "hdmi",
+            "hdmi",
+            "hdmi"
+          ],
+          "svsOutputs": [
+            "hdmi"
+          ]
+        },
+        "width": 211,
+        "height": 269,
+        "selected": false,
+        "dragging": false,
+        "positionAbsolute": {
+          "x": 1096.602963914173,
+          "y": 1411.4530042636868
+        }
+      },
+      {
+        "id": "dndnode_27",
+        "type": "equipment",
+        "position": {
+          "x": 1096.602963914173,
+          "y": 1111.4530042636868
+        },
+        "data": {
+          "label": "Custom HDMI Switch",
+          "category": "custom",
+          "specs": {
+            "inputs": [],
+            "outputs": [],
+            "isHDMISwitch": true,
+            "maxInputs": 64,
+            "maxOutputs": 64
+          },
+          "svsNumInputs": 4,
+          "svsNumOutputs": 1,
+          "svsInputs": [
+            "hdmi",
+            "hdmi",
+            "hdmi",
+            "hdmi"
+          ],
+          "svsOutputs": [
+            "hdmi"
+          ]
+        },
+        "width": 211,
+        "height": 269,
+        "selected": false,
+        "dragging": false,
+        "positionAbsolute": {
+          "x": 1096.602963914173,
+          "y": 1111.4530042636868
+        }
+      },
+      {
+        "id": "dndnode_28",
+        "type": "equipment",
+        "position": {
+          "x": 1464.7676191056003,
+          "y": 863.3222415324982
+        },
+        "data": {
+          "label": "Custom HDMI Switch",
+          "category": "custom",
+          "specs": {
+            "inputs": [],
+            "outputs": [],
+            "isHDMISwitch": true,
+            "maxInputs": 64,
+            "maxOutputs": 64
+          },
+          "svsNumInputs": 4,
+          "svsNumOutputs": 1,
+          "svsInputs": [
+            "hdmi",
+            "hdmi",
+            "hdmi",
+            "hdmi"
+          ],
+          "svsOutputs": [
+            "hdmi"
+          ]
+        },
+        "width": 211,
+        "height": 269,
+        "selected": false,
+        "positionAbsolute": {
+          "x": 1464.7676191056003,
+          "y": 863.3222415324982
+        },
+        "dragging": false
+      },
+      {
+        "id": "dndnode_29",
+        "type": "equipment",
+        "position": {
+          "x": 1098.7434688618835,
+          "y": 821.4731854170188
+        },
+        "data": {
+          "label": "Custom HDMI Switch",
+          "category": "custom",
+          "specs": {
+            "inputs": [],
+            "outputs": [],
+            "isHDMISwitch": true,
+            "maxInputs": 64,
+            "maxOutputs": 64
+          },
+          "svsNumInputs": 4,
+          "svsNumOutputs": 1,
+          "svsInputs": [
+            "hdmi",
+            "hdmi",
+            "hdmi",
+            "hdmi"
+          ],
+          "svsOutputs": [
+            "hdmi"
+          ]
+        },
+        "width": 211,
+        "height": 269,
+        "selected": false,
+        "dragging": false,
+        "positionAbsolute": {
+          "x": 1098.7434688618835,
+          "y": 821.4731854170188
+        }
+      },
+      {
+        "id": "dndnode_30",
+        "type": "equipment",
+        "position": {
+          "x": 46.60296391417296,
+          "y": 1351.4530042636868
+        },
+        "data": {
+          "label": "Custom Gaming PC",
+          "category": "console",
+          "specs": {
+            "isCustomSwitch": true,
+            "maxInputs": 16,
+            "maxOutputs": 16,
+            "minInputs": 0,
+            "initialInputs": [],
+            "initialOutputs": [
+              "hdmi"
+            ],
+            "editableName": true,
+            "compactWhenUnselected": true
+          },
+          "svsNumInputs": 0,
+          "svsNumOutputs": 1,
+          "svsInputs": [],
+          "svsOutputs": [
+            "hdmi"
+          ]
+        },
+        "width": 195,
+        "height": 71,
+        "selected": false,
+        "dragging": false,
+        "positionAbsolute": {
+          "x": 46.60296391417296,
+          "y": 1351.4530042636868
+        }
+      }
+    ],
+    "edges": [
+      {
+        "id": "reactflow__edge-dndnode_7out-0-dndnode_20in-0",
+        "source": "dndnode_7",
+        "target": "dndnode_20",
+        "sourceHandle": "out-0",
+        "targetHandle": "in-0",
+        "animated": true,
+        "data": {
+          "outputType": "ypbpr"
+        },
+        "style": {
+          "stroke": "#FF6B00",
+          "strokeWidth": 2
+        },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "color": "#FF6B00"
+        }
+      },
+      {
+        "id": "reactflow__edge-dndnode_12out-0-dndnode_20in-1",
+        "source": "dndnode_12",
+        "target": "dndnode_20",
+        "sourceHandle": "out-0",
+        "targetHandle": "in-1",
+        "animated": true,
+        "data": {
+          "outputType": "ypbpr"
+        },
+        "style": {
+          "stroke": "#FF6B00",
+          "strokeWidth": 2
+        },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "color": "#FF6B00"
+        }
+      },
+      {
+        "id": "reactflow__edge-dndnode_3out-0-dndnode_20in-3",
+        "source": "dndnode_3",
+        "target": "dndnode_20",
+        "sourceHandle": "out-0",
+        "targetHandle": "in-3",
+        "animated": true,
+        "data": {
+          "outputType": "ypbpr"
+        },
+        "style": {
+          "stroke": "#FF6B00",
+          "strokeWidth": 2
+        },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "color": "#FF6B00"
+        }
+      },
+      {
+        "id": "reactflow__edge-dndnode_0out-0-dndnode_20in-4",
+        "source": "dndnode_0",
+        "target": "dndnode_20",
+        "sourceHandle": "out-0",
+        "targetHandle": "in-4",
+        "animated": true,
+        "data": {
+          "outputType": "ypbpr"
+        },
+        "style": {
+          "stroke": "#FF6B00",
+          "strokeWidth": 2
+        },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "color": "#FF6B00"
+        }
+      },
+      {
+        "id": "reactflow__edge-dndnode_10out-0-dndnode_19in-1",
+        "source": "dndnode_10",
+        "target": "dndnode_19",
+        "sourceHandle": "out-0",
+        "targetHandle": "in-1",
+        "animated": true,
+        "data": {
+          "outputType": "rgb"
+        },
+        "style": {
+          "stroke": "#FF0000",
+          "strokeWidth": 2
+        },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "color": "#FF0000"
+        }
+      },
+      {
+        "id": "reactflow__edge-dndnode_19out-0-dndnode_25in-0",
+        "source": "dndnode_19",
+        "target": "dndnode_25",
+        "sourceHandle": "out-0",
+        "targetHandle": "in-0",
+        "animated": true,
+        "data": {
+          "outputType": "scart"
+        },
+        "style": {
+          "stroke": "#00FF00",
+          "strokeWidth": 2
+        },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "color": "#00FF00"
+        }
+      },
+      {
+        "id": "reactflow__edge-dndnode_25out-0-dndnode_20in-5",
+        "source": "dndnode_25",
+        "target": "dndnode_20",
+        "sourceHandle": "out-0",
+        "targetHandle": "in-5",
+        "animated": true,
+        "data": {
+          "outputType": "ypbpr"
+        },
+        "style": {
+          "stroke": "#FF6B00",
+          "strokeWidth": 2
+        },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "color": "#FF6B00"
+        }
+      },
+      {
+        "id": "reactflow__edge-dndnode_20out-0-dndnode_24in-2",
+        "source": "dndnode_20",
+        "target": "dndnode_24",
+        "sourceHandle": "out-0",
+        "targetHandle": "in-2",
+        "animated": true,
+        "data": {
+          "outputType": "ypbpr"
+        },
+        "style": {
+          "stroke": "#FF6B00",
+          "strokeWidth": 2
+        },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "color": "#FF6B00"
+        }
+      },
+      {
+        "id": "reactflow__edge-dndnode_15out-0-dndnode_26in-0",
+        "source": "dndnode_15",
+        "target": "dndnode_26",
+        "sourceHandle": "out-0",
+        "targetHandle": "in-0",
+        "animated": true,
+        "data": {
+          "outputType": "hdmi"
+        },
+        "style": {
+          "stroke": "#FFD700",
+          "strokeWidth": 2
+        },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "color": "#FFD700"
+        }
+      },
+      {
+        "id": "reactflow__edge-dndnode_17out-0-dndnode_26in-1",
+        "source": "dndnode_17",
+        "target": "dndnode_26",
+        "sourceHandle": "out-0",
+        "targetHandle": "in-1",
+        "animated": true,
+        "data": {
+          "outputType": "hdmi"
+        },
+        "style": {
+          "stroke": "#FFD700",
+          "strokeWidth": 2
+        },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "color": "#FFD700"
+        }
+      },
+      {
+        "id": "reactflow__edge-dndnode_18out-0-dndnode_26in-2",
+        "source": "dndnode_18",
+        "target": "dndnode_26",
+        "sourceHandle": "out-0",
+        "targetHandle": "in-2",
+        "animated": true,
+        "data": {
+          "outputType": "hdmi"
+        },
+        "style": {
+          "stroke": "#FFD700",
+          "strokeWidth": 2
+        },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "color": "#FFD700"
+        }
+      },
+      {
+        "id": "reactflow__edge-dndnode_16out-0-dndnode_26in-3",
+        "source": "dndnode_16",
+        "target": "dndnode_26",
+        "sourceHandle": "out-0",
+        "targetHandle": "in-3",
+        "animated": true,
+        "data": {
+          "outputType": "hdmi"
+        },
+        "style": {
+          "stroke": "#FFD700",
+          "strokeWidth": 2
+        },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "color": "#FFD700"
+        }
+      },
+      {
+        "id": "reactflow__edge-dndnode_2out-0-dndnode_27in-1",
+        "source": "dndnode_2",
+        "target": "dndnode_27",
+        "sourceHandle": "out-0",
+        "targetHandle": "in-1",
+        "animated": true,
+        "data": {
+          "outputType": "hdmi"
+        },
+        "style": {
+          "stroke": "#FFD700",
+          "strokeWidth": 2
+        },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "color": "#FFD700"
+        }
+      },
+      {
+        "id": "reactflow__edge-dndnode_14out-0-dndnode_27in-0",
+        "source": "dndnode_14",
+        "target": "dndnode_27",
+        "sourceHandle": "out-0",
+        "targetHandle": "in-0",
+        "animated": true,
+        "data": {
+          "outputType": "hdmi"
+        },
+        "style": {
+          "stroke": "#FFD700",
+          "strokeWidth": 2
+        },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "color": "#FFD700"
+        }
+      },
+      {
+        "id": "reactflow__edge-dndnode_28out-0-dndnode_22in-0",
+        "source": "dndnode_28",
+        "target": "dndnode_22",
+        "sourceHandle": "out-0",
+        "targetHandle": "in-0",
+        "animated": true,
+        "data": {
+          "outputType": "hdmi"
+        },
+        "style": {
+          "stroke": "#FFD700",
+          "strokeWidth": 2
+        },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "color": "#FFD700"
+        }
+      },
+      {
+        "id": "reactflow__edge-dndnode_20out-1-dndnode_21in-3",
+        "source": "dndnode_20",
+        "target": "dndnode_21",
+        "sourceHandle": "out-1",
+        "targetHandle": "in-3",
+        "animated": true,
+        "data": {
+          "outputType": "ypbpr"
+        },
+        "style": {
+          "stroke": "#FF6B00",
+          "strokeWidth": 2
+        },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "color": "#FF6B00"
+        }
+      },
+      {
+        "id": "reactflow__edge-dndnode_13out-0-dndnode_29in-0",
+        "source": "dndnode_13",
+        "target": "dndnode_29",
+        "sourceHandle": "out-0",
+        "targetHandle": "in-0",
+        "animated": true,
+        "data": {
+          "outputType": "hdmi"
+        },
+        "style": {
+          "stroke": "#FFD700",
+          "strokeWidth": 2
+        },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "color": "#FFD700"
+        }
+      },
+      {
+        "id": "reactflow__edge-dndnode_1out-0-dndnode_29in-1",
+        "source": "dndnode_1",
+        "target": "dndnode_29",
+        "sourceHandle": "out-0",
+        "targetHandle": "in-1",
+        "animated": true,
+        "data": {
+          "outputType": "hdmi"
+        },
+        "style": {
+          "stroke": "#FFD700",
+          "strokeWidth": 2
+        },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "color": "#FFD700"
+        }
+      },
+      {
+        "id": "reactflow__edge-dndnode_8out-0-dndnode_29in-2",
+        "source": "dndnode_8",
+        "target": "dndnode_29",
+        "sourceHandle": "out-0",
+        "targetHandle": "in-2",
+        "animated": true,
+        "data": {
+          "outputType": "hdmi"
+        },
+        "style": {
+          "stroke": "#FFD700",
+          "strokeWidth": 2
+        },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "color": "#FFD700"
+        }
+      },
+      {
+        "id": "reactflow__edge-dndnode_29out-0-dndnode_24in-5",
+        "source": "dndnode_29",
+        "target": "dndnode_24",
+        "sourceHandle": "out-0",
+        "targetHandle": "in-5",
+        "animated": true,
+        "data": {
+          "outputType": "hdmi"
+        },
+        "style": {
+          "stroke": "#FFD700",
+          "strokeWidth": 2
+        },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "color": "#FFD700"
+        }
+      },
+      {
+        "id": "reactflow__edge-dndnode_30out-0-dndnode_27in-2",
+        "source": "dndnode_30",
+        "target": "dndnode_27",
+        "sourceHandle": "out-0",
+        "targetHandle": "in-2",
+        "animated": true,
+        "data": {
+          "outputType": "hdmi"
+        },
+        "style": {
+          "stroke": "#FFD700",
+          "strokeWidth": 2
+        },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "color": "#FFD700"
+        }
+      },
+      {
+        "id": "reactflow__edge-dndnode_5out-0-dndnode_27in-3",
+        "source": "dndnode_5",
+        "target": "dndnode_27",
+        "sourceHandle": "out-0",
+        "targetHandle": "in-3",
+        "animated": true,
+        "data": {
+          "outputType": "hdmi"
+        },
+        "style": {
+          "stroke": "#FFD700",
+          "strokeWidth": 2
+        },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "color": "#FFD700"
+        }
+      },
+      {
+        "id": "reactflow__edge-dndnode_6out-0-dndnode_20in-2",
+        "source": "dndnode_6",
+        "target": "dndnode_20",
+        "sourceHandle": "out-0",
+        "targetHandle": "in-2",
+        "animated": true,
+        "data": {
+          "outputType": "composite"
+        },
+        "style": {
+          "stroke": "#FF69B4",
+          "strokeWidth": 2
+        },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "color": "#FF69B4"
+        }
+      },
+      {
+        "id": "reactflow__edge-dndnode_4out-0-dndnode_19in-3",
+        "source": "dndnode_4",
+        "target": "dndnode_19",
+        "sourceHandle": "out-0",
+        "targetHandle": "in-3",
+        "animated": true,
+        "data": {
+          "outputType": "rgb"
+        },
+        "style": {
+          "stroke": "#FF0000",
+          "strokeWidth": 2
+        },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "color": "#FF0000"
+        }
+      },
+      {
+        "id": "reactflow__edge-dndnode_9out-0-dndnode_19in-2",
+        "source": "dndnode_9",
+        "target": "dndnode_19",
+        "sourceHandle": "out-0",
+        "targetHandle": "in-2",
+        "animated": true,
+        "data": {
+          "outputType": "rgb"
+        },
+        "style": {
+          "stroke": "#FF0000",
+          "strokeWidth": 2
+        },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "color": "#FF0000"
+        }
+      },
+      {
+        "id": "reactflow__edge-dndnode_11out-0-dndnode_19in-4",
+        "source": "dndnode_11",
+        "target": "dndnode_19",
+        "sourceHandle": "out-0",
+        "targetHandle": "in-4",
+        "animated": true,
+        "data": {
+          "outputType": "rgb"
+        },
+        "style": {
+          "stroke": "#FF0000",
+          "strokeWidth": 2
+        },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "color": "#FF0000"
+        }
+      },
+      {
+        "source": "dndnode_24",
+        "sourceHandle": "out-0",
+        "target": "dndnode_28",
+        "targetHandle": "in-0",
+        "animated": true,
+        "data": {
+          "outputType": "hdmi"
+        },
+        "style": {
+          "stroke": "#FFD700",
+          "strokeWidth": 2
+        },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "color": "#FFD700"
+        },
+        "id": "reactflow__edge-dndnode_24out-0-dndnode_28in-0"
+      },
+      {
+        "source": "dndnode_27",
+        "sourceHandle": "out-0",
+        "target": "dndnode_28",
+        "targetHandle": "in-1",
+        "animated": true,
+        "data": {
+          "outputType": "hdmi"
+        },
+        "style": {
+          "stroke": "#FFD700",
+          "strokeWidth": 2
+        },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "color": "#FFD700"
+        },
+        "id": "reactflow__edge-dndnode_27out-0-dndnode_28in-1"
+      },
+      {
+        "source": "dndnode_26",
+        "sourceHandle": "out-0",
+        "target": "dndnode_28",
+        "targetHandle": "in-2",
+        "animated": true,
+        "data": {
+          "outputType": "hdmi"
+        },
+        "style": {
+          "stroke": "#FFD700",
+          "strokeWidth": 2
+        },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "color": "#FFD700"
+        },
+        "id": "reactflow__edge-dndnode_26out-0-dndnode_28in-2"
+      }
+    ],
+    "viewport": {
+      "x": -1003.491210567515,
+      "y": -52.45892999220996,
+      "zoom": 0.9822377681006643
+    }
+  }
+}

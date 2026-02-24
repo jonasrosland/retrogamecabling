@@ -1192,6 +1192,12 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
                     <span className="text-xs text-muted-foreground">Scalable Video Switch with multiple consoles</span>
                   </div>
                 </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => handleLoadExample('silly-creator-setup')}>
+                  <div className="flex flex-col">
+                    <span className="font-semibold">Silly creator setup</span>
+                    <span className="text-xs text-muted-foreground">Large multi-path setup with analog and HDMI routing</span>
+                  </div>
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
             <Button 
