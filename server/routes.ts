@@ -58,7 +58,7 @@ export async function registerRoutes(
         { name: "medium", label: "Medium Setup", description: "Multiple consoles through a switcher" },
         { name: "advanced", label: "Advanced Setup", description: "Complex multi-switcher routing system" },
         { name: "svs", label: "SVS Setup", description: "Scalable Video Switch with multiple consoles" },
-        { name: "silly-creator-setup", label: "Silly creator setup", description: "Large multi-path setup with analog and HDMI routing" }
+        { name: "silly-creator-setup", label: "Silly creator setup", description: "retrogamecabling's creator's setup, multi-path setup with analog and HDMI routing" }
       ]);
     } catch (err) {
       res.status(500).json({ message: "Failed to list examples" });
