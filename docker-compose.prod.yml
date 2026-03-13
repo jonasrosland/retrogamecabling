@@ -1,0 +1,14 @@
+# Production deployment - static build + Node API (no Vite dev server)
+# Usage: docker compose -f docker-compose.prod.yml up -d
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    container_name: retro-game-cabling-app
+    ports:
+      - "5000:5000"
+    environment:
+      NODE_ENV: production
+      PORT: 5000
+    restart: unless-stopped

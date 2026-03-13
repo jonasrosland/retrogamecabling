@@ -1,19 +1,11 @@
 import type { Express } from "express";
 import type { Server } from "http";
 import { readFileSync } from "fs";
-import { join, dirname, resolve } from "path";
-import { fileURLToPath } from "url";
+import { join, resolve } from "path";
 import { api } from "@shared/routes";
 
-// Handle both ESM (development) and CJS (production bundle) environments
+// Both dev (tsx) and prod (bundled) run with cwd at project root
 function getSharedPath() {
-  if (typeof import.meta !== "undefined" && import.meta.url) {
-    // Development: server files are in server/, shared is at root
-    const __filename = fileURLToPath(import.meta.url);
-    const __dirname = dirname(__filename);
-    return resolve(__dirname, "..", "shared");
-  }
-  // Production: server runs from project root, shared is at root
   return resolve(process.cwd(), "shared");
 }
 
