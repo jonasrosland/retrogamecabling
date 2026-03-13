@@ -22,7 +22,7 @@ import CustomEdge from '@/components/CustomEdge';
 import { useLocation, useRoute } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Save, ArrowLeft, Download, Share2, Upload, FileText } from 'lucide-react';
+import { Save, ArrowLeft, Download, Share2, Upload, FileText, Grid3X3 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Link } from 'wouter';
 import { saveFile, loadFile, loadFileFromRecent, type DiagramFile } from '@/lib/fileUtils';
@@ -205,6 +205,7 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
   }, [edges, onEdgesChange, setEdges]);
   const [reactFlowInstance, setReactFlowInstance] = useState<any>(null);
   const [diagramName, setDiagramName] = useState(initialDiagramName || 'Untitled Setup');
+  const [snapToGridEnabled, setSnapToGridEnabled] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [shouldFitView, setShouldFitView] = useState(true);
   const needsFitViewAfterLoadRef = useRef(false);
@@ -1153,6 +1154,15 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
           </div>
 
           <div className="flex gap-1 md:gap-2 pointer-events-auto">
+            <Button
+              variant={snapToGridEnabled ? 'default' : 'outline'}
+              size="sm"
+              onClick={() => setSnapToGridEnabled((v) => !v)}
+              className={snapToGridEnabled ? 'bg-primary text-primary-foreground' : 'bg-card/90 backdrop-blur-md border-border hover:bg-muted'}
+              title={snapToGridEnabled ? 'Disable snap to grid' : 'Enable snap to grid'}
+            >
+              <Grid3X3 className="w-4 h-4" />
+            </Button>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button 
@@ -1242,9 +1252,17 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
             style={{ width: '100%', height: '100%' }}
             edgesUpdatable={true}
             edgesFocusable={true}
+            snapToGrid={snapToGridEnabled}
+            snapGrid={[20, 20]}
+            nodeDragThreshold={25}
           >
           <Controls className="bg-card border border-border shadow-xl !m-4" />
-          <Background color="hsl(var(--muted)/0.2)" gap={20} size={1} variant={BackgroundVariant.Dots} />
+          <Background
+            color="hsl(var(--muted)/0.2)"
+            gap={20}
+            size={1}
+            variant={snapToGridEnabled ? BackgroundVariant.Lines : BackgroundVariant.Dots}
+          />
           
           <Panel position="bottom-right" className="bg-card/90 backdrop-blur border border-border p-2 md:p-3 rounded-lg shadow-xl mb-4 md:mb-6 mr-4 md:mr-6 max-w-xs text-[10px] md:text-[11px]">
             <h4 className="text-[10px] md:text-sm font-bold uppercase text-muted-foreground mb-2">Instructions</h4>
@@ -1252,6 +1270,7 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
               <li>Drag components from the sidebar</li>
               <li>Connect inputs (left) to outputs (right)</li>
               <li>Scroll to zoom, drag to pan</li>
+              {snapToGridEnabled && <li>Grid snap: nodes align to grid when dragging</li>}
             </ul>
           </Panel>
         </ReactFlow>
