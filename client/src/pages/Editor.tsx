@@ -22,7 +22,7 @@ import CustomEdge from '@/components/CustomEdge';
 import { useLocation, useRoute } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Save, ArrowLeft, Download, Share2, Upload, FileText } from 'lucide-react';
+import { Save, ArrowLeft, Download, Share2, Upload, FileText, Grid3X3 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Link } from 'wouter';
 import { saveFile, loadFile, loadFileFromRecent, type DiagramFile } from '@/lib/fileUtils';
@@ -205,8 +205,10 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
   }, [edges, onEdgesChange, setEdges]);
   const [reactFlowInstance, setReactFlowInstance] = useState<any>(null);
   const [diagramName, setDiagramName] = useState(initialDiagramName || 'Untitled Setup');
+  const [snapToGridEnabled, setSnapToGridEnabled] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [shouldFitView, setShouldFitView] = useState(true);
+  const needsFitViewAfterLoadRef = useRef(false);
 
   const { toast } = useToast();
   const [, setLocation] = useLocation();
@@ -275,16 +277,21 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
           const targetNode = nodes.find(n => n.id === edge.target);
           if (!targetNode) continue;
           
-          // Check if target is a scalable switch
+          // Check if target is a scalable switch, custom display, or switch with variants
           const targetIsScalableSwitch = targetNode.data.specs?.isSVS === true || 
                                         targetNode.data.specs?.isCustomSwitch === true || 
                                         targetNode.data.specs?.isHDMISwitch === true;
+          const targetIsCustomDisplay = targetNode.data.category === 'display' && targetNode.data.specs?.customizableInputs === true;
+          const targetHasSwitchVariants = targetNode.data.category === 'switch' && targetNode.data.specs?.switchVariants?.length > 0;
           
           // Get the input type from the target handle
-          // For scalable switch nodes, use svsInputs; otherwise use specs.inputs
           const targetInputs = targetIsScalableSwitch
             ? (targetNode.data.svsInputs || [])
-            : (targetNode.data.specs?.inputs || []);
+            : targetIsCustomDisplay
+              ? (targetNode.data.customInputs || targetNode.data.specs?.inputs || [])
+              : targetHasSwitchVariants
+                ? (targetNode.data.specs?.switchVariants?.[targetNode.data.switchVariantIndex ?? 0]?.inputs || targetNode.data.specs?.inputs || [])
+                : (targetNode.data.specs?.inputs || []);
           let inputType = '';
           
           if (edge.targetHandle) {
@@ -335,7 +342,8 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
                                      sourceNode?.data?.specs?.isHDMISwitch === true;
       if (updates.selectedOutput && (sourceNode?.data?.category === 'console' || sourceNode?.data?.category === 'custom') && !sourceIsScalableSwitch) {
         const newOutputType = updates.selectedOutput;
-        const edgeColor = getOutputColor(newOutputType);
+        const normalizedOutputType = normalizeSignalType(newOutputType);
+        const edgeColor = getOutputColor(normalizedOutputType);
         
         // Find target nodes and update edges
         const targetNodeIds: string[] = [];
@@ -390,12 +398,26 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
   // Process edges to restore colors based on output type
   const processEdgesWithColors = useCallback((edges: any[], nodes: any[]): any[] => {
     return edges.map((edge: any) => {
-      // If edge already has outputType in data, use it
+      // If edge already has outputType in data, use it (but prefer target input for BNC/RCA)
       if (edge.data?.outputType) {
-        const color = getOutputColor(edge.data.outputType);
+        let displayType = normalizeSignalType(edge.data.outputType);
+        if (['bnc', 'rca'].includes(displayType.toLowerCase())) {
+          const targetNode = nodes.find((n: any) => n.id === edge.target);
+          if (targetNode && edge.targetHandle) {
+            const targetIsScalableSwitch = targetNode.data?.specs?.isSVS === true || targetNode.data?.specs?.isCustomSwitch === true || targetNode.data?.specs?.isHDMISwitch === true;
+            const targetIsCustomDisplay = targetNode.data?.category === 'display' && targetNode.data?.specs?.customizableInputs === true;
+            const targetHasSwitchVariants = targetNode.data?.category === 'switch' && targetNode.data?.specs?.switchVariants?.length > 0;
+            const targetInputs = targetIsScalableSwitch ? (targetNode.data?.svsInputs || []) : targetIsCustomDisplay ? (targetNode.data?.customInputs || targetNode.data?.specs?.inputs || []) : targetHasSwitchVariants ? (targetNode.data?.specs?.switchVariants?.[targetNode.data?.switchVariantIndex ?? 0]?.inputs || targetNode.data?.specs?.inputs || []) : (targetNode.data?.specs?.inputs || []);
+            const inputMatch = edge.targetHandle.match(/in-(\d+)/);
+            const inputIndex = inputMatch ? parseInt(inputMatch[1], 10) : 0;
+            const inputType = targetInputs[inputIndex];
+            if (inputType) displayType = normalizeSignalType(inputType);
+          }
+        }
+        const color = getOutputColor(displayType);
         return {
           ...edge,
-          data: { ...edge.data, onDelete: handleDeleteEdge }, // Ensure onDelete is present
+          data: { ...edge.data, outputType: displayType, onDelete: handleDeleteEdge },
           style: { ...edge.style, stroke: color },
           markerEnd: { ...edge.markerEnd, color },
         };
@@ -403,8 +425,11 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
       
       // Otherwise, try to infer from source node
       const sourceNode = nodes.find((n: any) => n.id === edge.source);
+      const targetNode = nodes.find((n: any) => n.id === edge.target);
       if (sourceNode) {
         let outputType: string | undefined;
+        const sourceIsScalableSwitch = sourceNode.data?.specs?.isSVS === true || sourceNode.data?.specs?.isCustomSwitch === true || sourceNode.data?.specs?.isHDMISwitch === true;
+        const sourceHasSwitchVariants = sourceNode.data?.category === 'switch' && sourceNode.data?.specs?.switchVariants?.length > 0;
         
         if (sourceNode.data?.category === 'console') {
           // For consoles, get combined outputs (base + addon outputs)
@@ -423,6 +448,14 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
             });
           }
           outputType = sourceNode.data.selectedOutput || combinedOutputs[0];
+        } else if (sourceIsScalableSwitch && edge.sourceHandle) {
+          const handleIndex = parseInt(edge.sourceHandle.split('-')[1] || '0');
+          outputType = sourceNode.data?.svsOutputs?.[handleIndex];
+        } else if (sourceHasSwitchVariants && edge.sourceHandle) {
+          const variantIndex = sourceNode.data?.switchVariantIndex ?? 0;
+          const variant = sourceNode.data?.specs?.switchVariants?.[variantIndex];
+          const handleIndex = parseInt(edge.sourceHandle.split('-')[1] || '0');
+          outputType = variant?.outputs?.[handleIndex];
         } else if (edge.sourceHandle) {
           const handleIndex = parseInt(edge.sourceHandle.split('-')[1] || '0');
           outputType = sourceNode.data?.specs?.outputs?.[handleIndex];
@@ -430,10 +463,22 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
         
         if (outputType) {
           const normalizedOutputType = normalizeSignalType(outputType);
-          const color = getOutputColor(normalizedOutputType);
+          let displayType = normalizedOutputType;
+          // For BNC/RCA connector types, use target input for color (actual signal type)
+          if (['bnc', 'rca'].includes(normalizedOutputType.toLowerCase()) && targetNode) {
+            const targetIsScalableSwitch = targetNode.data?.specs?.isSVS === true || targetNode.data?.specs?.isCustomSwitch === true || targetNode.data?.specs?.isHDMISwitch === true;
+            const targetIsCustomDisplay = targetNode.data?.category === 'display' && targetNode.data?.specs?.customizableInputs === true;
+            const targetHasSwitchVariants = targetNode.data?.category === 'switch' && targetNode.data?.specs?.switchVariants?.length > 0;
+            const targetInputs = targetIsScalableSwitch ? (targetNode.data?.svsInputs || []) : targetIsCustomDisplay ? (targetNode.data?.customInputs || targetNode.data?.specs?.inputs || []) : targetHasSwitchVariants ? (targetNode.data?.specs?.switchVariants?.[targetNode.data?.switchVariantIndex ?? 0]?.inputs || targetNode.data?.specs?.inputs || []) : (targetNode.data?.specs?.inputs || []);
+            const inputMatch = edge.targetHandle?.match(/in-(\d+)/);
+            const inputIndex = inputMatch ? parseInt(inputMatch[1], 10) : 0;
+            const inputType = targetInputs[inputIndex];
+            if (inputType) displayType = normalizeSignalType(inputType);
+          }
+          const color = getOutputColor(displayType);
           return {
             ...edge,
-            data: { outputType: normalizedOutputType, onDelete: handleDeleteEdge },
+            data: { outputType: displayType, onDelete: handleDeleteEdge },
             style: { ...edge.style, stroke: color },
             markerEnd: { ...edge.markerEnd, color },
           };
@@ -447,7 +492,17 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
     });
   }, [getOutputColor, handleDeleteEdge]);
 
-  // Load diagram data if provided
+  // Call fitView after load when instance is ready - use method with explicit nodes and delay for DOM to update
+  useEffect(() => {
+    if (!reactFlowInstance || !needsFitViewAfterLoadRef.current || nodes.length === 0) return;
+    needsFitViewAfterLoadRef.current = false;
+    const timer = setTimeout(() => {
+      reactFlowInstance.fitView({ padding: 0.2, duration: 200, nodes });
+    }, 150);
+    return () => clearTimeout(timer);
+  }, [reactFlowInstance, nodes]);
+
+  // Load diagram data if provided (from recent files when navigating to /editor/:name)
   useEffect(() => {
     if (initialDiagramName) {
       const diagram = loadFileFromRecent(initialDiagramName);
@@ -462,6 +517,7 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
           setNodes(nodesWithDelete);
           const processedEdges = processEdgesWithColors(flow.edges || [], nodesWithDelete);
           setEdges(processedEdges);
+          needsFitViewAfterLoadRef.current = true;
         }
       }
     }
@@ -525,22 +581,36 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
     
     if (!sourceNode || !targetNode) return false;
     
-    // Check if nodes are scalable switches (SVS, Custom Switch, or HDMI Switch)
+    // Check if nodes are scalable switches (SVS, Custom Switch, or HDMI Switch) or custom display
     const sourceIsScalableSwitch = sourceNode.data.specs?.isSVS === true || 
                                    sourceNode.data.specs?.isCustomSwitch === true || 
                                    sourceNode.data.specs?.isHDMISwitch === true;
     const targetIsScalableSwitch = targetNode.data.specs?.isSVS === true || 
                                    targetNode.data.specs?.isCustomSwitch === true || 
                                    targetNode.data.specs?.isHDMISwitch === true;
+    const targetIsCustomDisplay = targetNode.data.category === 'display' && targetNode.data.specs?.customizableInputs === true;
     
     // Get output and input types from the handles
-    // For scalable switch nodes, use svsOutputs/svsInputs; otherwise use specs.outputs/inputs
+    // For scalable switch nodes, use svsOutputs/svsInputs; for Custom TV, use customInputs; for switch variants (Extron), use variant; otherwise use specs
     // For consoles with addons, combine base outputs with selected addon outputs
+    const sourceHasSwitchVariants = sourceNode.data.category === 'switch' && sourceNode.data.specs?.switchVariants?.length > 0;
+    const targetHasSwitchVariants = targetNode.data.category === 'switch' && targetNode.data.specs?.switchVariants?.length > 0;
+    const sourceHasSimultaneousOutputs = sourceNode.data.specs?.simultaneousOutputs === true;
+    
     let sourceOutputs: string[] = [];
     if (sourceIsScalableSwitch) {
       sourceOutputs = sourceNode.data.svsOutputs || [];
+    } else if (sourceHasSwitchVariants) {
+      const variantIndex = sourceNode.data.switchVariantIndex ?? 0;
+      const variant = sourceNode.data.specs?.switchVariants?.[variantIndex];
+      sourceOutputs = variant?.outputs || [];
     } else {
-      const baseOutputs = sourceNode.data.specs?.outputs || [];
+      // For consoles with variant-specific outputs (e.g. MiSTer vs SuperStation)
+      const variantOutputs = sourceNode.data.specs?.variantOutputs;
+      const hasVariantOutputs = variantOutputs && Array.isArray(variantOutputs) && sourceNode.data.variants?.length > 0;
+      const baseOutputs = hasVariantOutputs
+        ? (variantOutputs[sourceNode.data.variantIndex ?? 0] || sourceNode.data.specs?.outputs || [])
+        : (sourceNode.data.specs?.outputs || []);
       sourceOutputs = [...baseOutputs];
       
       // Add addon outputs if console has selected addons
@@ -561,7 +631,15 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
     
     const targetInputs = targetIsScalableSwitch
       ? (targetNode.data.svsInputs || [])
-      : (targetNode.data.specs?.inputs || []);
+      : targetIsCustomDisplay
+        ? (targetNode.data.customInputs || targetNode.data.specs?.inputs || [])
+        : targetHasSwitchVariants
+          ? (() => {
+              const variantIndex = targetNode.data.switchVariantIndex ?? 0;
+              const variant = targetNode.data.specs?.switchVariants?.[variantIndex];
+              return variant?.inputs || targetNode.data.specs?.inputs || [];
+            })()
+          : (targetNode.data.specs?.inputs || []);
     
     // Extract indices from handle IDs
     let outputIndex = 0;
@@ -582,9 +660,9 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
     }
     
     // For consoles and custom game machines (non-scalable custom items), use selected output or first available
-    // For scalable switches, use indexed outputs
+    // For scalable switches and simultaneous-output consoles (MiSTer), use indexed outputs
     let outputType = '';
-    if (sourceIsScalableSwitch) {
+    if (sourceIsScalableSwitch || sourceHasSimultaneousOutputs) {
       outputType = sourceOutputs[outputIndex] || '';
     } else if (sourceNode.data.category === 'console' || sourceNode.data.category === 'custom') {
       // Use selectedOutput if it exists and is in the available outputs, otherwise use first available
@@ -642,22 +720,33 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
     
     if (!sourceNode || !targetNode) return;
     
-    // Check if nodes are scalable switches (SVS, Custom Switch, or HDMI Switch)
+    // Check if nodes are scalable switches (SVS, Custom Switch, or HDMI Switch) or custom display
     const sourceIsScalableSwitch = sourceNode.data.specs?.isSVS === true || 
                                    sourceNode.data.specs?.isCustomSwitch === true || 
                                    sourceNode.data.specs?.isHDMISwitch === true;
     const targetIsScalableSwitch = targetNode.data.specs?.isSVS === true || 
                                    targetNode.data.specs?.isCustomSwitch === true || 
                                    targetNode.data.specs?.isHDMISwitch === true;
+    const targetIsCustomDisplay = targetNode.data.category === 'display' && targetNode.data.specs?.customizableInputs === true;
+    const sourceHasSwitchVariants = sourceNode.data.category === 'switch' && sourceNode.data.specs?.switchVariants?.length > 0;
+    const targetHasSwitchVariants = targetNode.data.category === 'switch' && targetNode.data.specs?.switchVariants?.length > 0;
+    const sourceHasSimultaneousOutputs = sourceNode.data.specs?.simultaneousOutputs === true;
     
     // Get output and input types from the handles that were actually connected
-    // For scalable switch nodes, use svsOutputs/svsInputs; otherwise use specs.outputs/inputs
-    // For consoles with addons, combine base outputs with selected addon outputs
     let sourceOutputs: string[] = [];
     if (sourceIsScalableSwitch) {
       sourceOutputs = sourceNode.data.svsOutputs || [];
+    } else if (sourceHasSwitchVariants) {
+      const variantIndex = sourceNode.data.switchVariantIndex ?? 0;
+      const variant = sourceNode.data.specs?.switchVariants?.[variantIndex];
+      sourceOutputs = variant?.outputs || [];
     } else {
-      const baseOutputs = sourceNode.data.specs?.outputs || [];
+      // For consoles with variant-specific outputs (e.g. MiSTer vs SuperStation)
+      const variantOutputs = sourceNode.data.specs?.variantOutputs;
+      const hasVariantOutputs = variantOutputs && Array.isArray(variantOutputs) && sourceNode.data.variants?.length > 0;
+      const baseOutputs = hasVariantOutputs
+        ? (variantOutputs[sourceNode.data.variantIndex ?? 0] || sourceNode.data.specs?.outputs || [])
+        : (sourceNode.data.specs?.outputs || []);
       sourceOutputs = [...baseOutputs];
       
       // Add addon outputs if console has selected addons
@@ -678,7 +767,11 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
     
     const targetInputs = targetIsScalableSwitch
       ? (targetNode.data.svsInputs || [])
-      : (targetNode.data.specs?.inputs || []);
+      : targetIsCustomDisplay
+        ? (targetNode.data.customInputs || targetNode.data.specs?.inputs || [])
+        : targetHasSwitchVariants
+          ? (targetNode.data.specs?.switchVariants?.[targetNode.data.switchVariantIndex ?? 0]?.inputs || targetNode.data.specs?.inputs || [])
+          : (targetNode.data.specs?.inputs || []);
     
     // Extract indices from handle IDs
     let outputIndex = 0;
@@ -699,9 +792,9 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
     }
     
     // For consoles and custom game machines (non-scalable custom items), use selected output or first available
-    // For scalable switches, use indexed outputs
+    // For scalable switches and simultaneous-output consoles (MiSTer), use indexed outputs
     let outputType = '';
-    if (sourceIsScalableSwitch) {
+    if (sourceIsScalableSwitch || sourceHasSimultaneousOutputs) {
       outputType = sourceOutputs[outputIndex] || '';
     } else if (sourceNode.data.category === 'console' || sourceNode.data.category === 'custom') {
       // Use selectedOutput if it exists and is in the available outputs, otherwise use first available
@@ -721,6 +814,9 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
     // Store normalized type in edge data for consistency
     if (!outputType || !inputType) return;
     const normalizedOutputType = normalizeSignalType(outputType);
+    const normalizedInputType = normalizeSignalType(inputType);
+    // For connector-only types (BNC, RCA), use target input type for color - it represents the actual signal (e.g. YPbPR)
+    const displayType = ['bnc', 'rca'].includes(normalizedOutputType.toLowerCase()) ? normalizedInputType : normalizedOutputType;
     
     // Remove existing connections and add new one in a single state update
     setEdges((eds) => {
@@ -729,8 +825,8 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
       // For scalable switches, only remove connection from the specific source handle
       let filtered = eds;
       
-      if (sourceIsScalableSwitch) {
-        // For scalable switches, only remove connection from the specific source handle
+      if (sourceIsScalableSwitch || sourceHasSimultaneousOutputs) {
+        // For scalable switches and simultaneous-output consoles, only remove connection from the specific source handle
         filtered = filtered.filter(
           (e) => !(e.source === params.source && e.sourceHandle === params.sourceHandle)
         );
@@ -750,13 +846,12 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
       );
       
       // Now add the new edge
-      // Use normalized output type for edge data (strips "(modded)" for consistency)
-      const normalizedOutputType = normalizeSignalType(outputType);
-      const edgeColor = getOutputColor(normalizedOutputType);
+      // Use displayType for edge color (target input when source is BNC/RCA connector)
+      const edgeColor = getOutputColor(displayType);
       const styledEdge = {
         ...params,
         animated: true,
-        data: { outputType: normalizedOutputType, onDelete: handleDeleteEdge },
+        data: { outputType: displayType, onDelete: handleDeleteEdge },
         style: { stroke: edgeColor, strokeWidth: 2 },
         markerEnd: {
           type: MarkerType.ArrowClosed,
@@ -813,10 +908,24 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
         // Initialize SVS/Custom Switch/HDMI Switch configuration if it's scalable
         if (itemData.specs?.isSVS === true || itemData.specs?.isCustomSwitch === true || itemData.specs?.isHDMISwitch === true) {
           const defaultSignalType = itemData.specs?.isHDMISwitch === true ? 'hdmi' : 'ypbpr';
-          newNodeData.svsNumInputs = 1;
-          newNodeData.svsNumOutputs = 1;
-          newNodeData.svsInputs = [defaultSignalType];
-          newNodeData.svsOutputs = [defaultSignalType];
+          const initialInputs = itemData.specs?.initialInputs;
+          const initialOutputs = itemData.specs?.initialOutputs;
+          newNodeData.svsNumInputs = Array.isArray(initialInputs) ? initialInputs.length : 1;
+          newNodeData.svsNumOutputs = Array.isArray(initialOutputs) ? initialOutputs.length : 1;
+          newNodeData.svsInputs = Array.isArray(initialInputs) ? [...initialInputs] : [defaultSignalType];
+          newNodeData.svsOutputs = Array.isArray(initialOutputs) ? [...initialOutputs] : [defaultSignalType];
+        }
+        
+        // Initialize customizable inputs for Custom TV (display with customizableInputs)
+        if (itemData.category === 'display' && itemData.specs?.customizableInputs === true) {
+          newNodeData.customInputs = [...(itemData.specs?.inputs || ['composite'])];
+        }
+        
+        // Initialize switch variant for switches with switchVariants (e.g. Extron Crosspoint)
+        if (itemData.category === 'switch' && itemData.specs?.switchVariants?.length > 0) {
+          const firstVariant = itemData.specs.switchVariants[0];
+          newNodeData.switchVariantIndex = 0;
+          newNodeData.label = firstVariant.name;
         }
         
         const newNode = {
@@ -892,10 +1001,24 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
         // Initialize SVS/Custom Switch/HDMI Switch configuration if it's scalable
         if (itemData.specs?.isSVS === true || itemData.specs?.isCustomSwitch === true || itemData.specs?.isHDMISwitch === true) {
           const defaultSignalType = itemData.specs?.isHDMISwitch === true ? 'hdmi' : 'ypbpr';
-          newNodeData.svsNumInputs = 1;
-          newNodeData.svsNumOutputs = 1;
-          newNodeData.svsInputs = [defaultSignalType];
-          newNodeData.svsOutputs = [defaultSignalType];
+          const initialInputs = itemData.specs?.initialInputs;
+          const initialOutputs = itemData.specs?.initialOutputs;
+          newNodeData.svsNumInputs = Array.isArray(initialInputs) ? initialInputs.length : 1;
+          newNodeData.svsNumOutputs = Array.isArray(initialOutputs) ? initialOutputs.length : 1;
+          newNodeData.svsInputs = Array.isArray(initialInputs) ? [...initialInputs] : [defaultSignalType];
+          newNodeData.svsOutputs = Array.isArray(initialOutputs) ? [...initialOutputs] : [defaultSignalType];
+        }
+        
+        // Initialize customizable inputs for Custom TV (display with customizableInputs)
+        if (itemData.category === 'display' && itemData.specs?.customizableInputs === true) {
+          newNodeData.customInputs = [...(itemData.specs?.inputs || ['composite'])];
+        }
+        
+        // Initialize switch variant for switches with switchVariants (e.g. Extron Crosspoint)
+        if (itemData.category === 'switch' && itemData.specs?.switchVariants?.length > 0) {
+          const firstVariant = itemData.specs.switchVariants[0];
+          newNodeData.switchVariantIndex = 0;
+          newNodeData.label = firstVariant.name;
         }
         
         const newNode = {
@@ -952,20 +1075,7 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
           setNodes(nodesWithDelete);
           const processedEdges = processEdgesWithColors(flow.edges || [], nodesWithDelete);
           setEdges(processedEdges);
-          
-          // Disable fitView if viewport is saved
-          if (flow.viewport) {
-            setShouldFitView(false);
-            if (reactFlowInstance) {
-              setTimeout(() => {
-                if (reactFlowInstance) {
-                  reactFlowInstance.setViewport(flow.viewport);
-                }
-              }, 100);
-            }
-          } else {
-            setShouldFitView(true);
-          }
+          needsFitViewAfterLoadRef.current = true;
         }
         toast({ title: "Loaded!", description: `Opened ${diagram.name}` });
         setLocation('/editor');
@@ -998,21 +1108,7 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
         setNodes(nodesWithDelete);
         const processedEdges = processEdgesWithColors(flow.edges || [], nodesWithDelete);
         setEdges(processedEdges);
-        
-        // Disable fitView if viewport is saved in the example
-        if (flow.viewport) {
-          setShouldFitView(false);
-          // Set viewport if available (use setTimeout to ensure ReactFlow is ready)
-          if (reactFlowInstance) {
-            setTimeout(() => {
-              if (reactFlowInstance) {
-                reactFlowInstance.setViewport(flow.viewport);
-              }
-            }, 100);
-          }
-        } else {
-          setShouldFitView(true);
-        }
+        needsFitViewAfterLoadRef.current = true;
       }
       toast({ title: "Example Loaded!", description: `Opened ${diagram.name}` });
       setLocation('/editor');
@@ -1058,6 +1154,15 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
           </div>
 
           <div className="flex gap-1 md:gap-2 pointer-events-auto">
+            <Button
+              variant={snapToGridEnabled ? 'default' : 'outline'}
+              size="sm"
+              onClick={() => setSnapToGridEnabled((v) => !v)}
+              className={snapToGridEnabled ? 'bg-primary text-primary-foreground' : 'bg-card/90 backdrop-blur-md border-border hover:bg-muted'}
+              title={snapToGridEnabled ? 'Disable snap to grid' : 'Enable snap to grid'}
+            >
+              <Grid3X3 className="w-4 h-4" />
+            </Button>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button 
@@ -1095,6 +1200,12 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
                   <div className="flex flex-col">
                     <span className="font-semibold">SVS Setup</span>
                     <span className="text-xs text-muted-foreground">Scalable Video Switch with multiple consoles</span>
+                  </div>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => handleLoadExample('silly-creator-setup')}>
+                  <div className="flex flex-col">
+                    <span className="font-semibold">Silly creator setup</span>
+                    <span className="text-xs text-muted-foreground">retrogamecabling's creator's setup, multi-path setup with analog and HDMI routing</span>
                   </div>
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -1141,9 +1252,17 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
             style={{ width: '100%', height: '100%' }}
             edgesUpdatable={true}
             edgesFocusable={true}
+            snapToGrid={snapToGridEnabled}
+            snapGrid={[20, 20]}
+            nodeDragThreshold={25}
           >
           <Controls className="bg-card border border-border shadow-xl !m-4" />
-          <Background color="hsl(var(--muted)/0.2)" gap={20} size={1} variant={BackgroundVariant.Dots} />
+          <Background
+            color="hsl(var(--muted)/0.2)"
+            gap={20}
+            size={1}
+            variant={snapToGridEnabled ? BackgroundVariant.Lines : BackgroundVariant.Dots}
+          />
           
           <Panel position="bottom-right" className="bg-card/90 backdrop-blur border border-border p-2 md:p-3 rounded-lg shadow-xl mb-4 md:mb-6 mr-4 md:mr-6 max-w-xs text-[10px] md:text-[11px]">
             <h4 className="text-[10px] md:text-sm font-bold uppercase text-muted-foreground mb-2">Instructions</h4>
@@ -1151,6 +1270,7 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
               <li>Drag components from the sidebar</li>
               <li>Connect inputs (left) to outputs (right)</li>
               <li>Scroll to zoom, drag to pan</li>
+              {snapToGridEnabled && <li>Grid snap: nodes align to grid when dragging</li>}
             </ul>
           </Panel>
         </ReactFlow>

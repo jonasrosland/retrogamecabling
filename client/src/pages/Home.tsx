@@ -1,5 +1,6 @@
 import { Link, useLocation } from "wouter";
 import { Plus, Trash2, Calendar, FileText, Cpu } from "lucide-react";
+import { APP_VERSION } from "@/config";
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
 import { useToast } from "@/hooks/use-toast";
@@ -23,7 +24,12 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground font-sans selection:bg-primary/30">
+    <div className="min-h-screen bg-background text-foreground font-sans selection:bg-primary/30 relative">
+      {/* Version badge */}
+      <div className="absolute top-4 right-4 text-xs text-muted-foreground font-mono z-20">
+        v{APP_VERSION}
+      </div>
+
       {/* Hero Section */}
       <div className="relative overflow-hidden border-b border-border bg-card/30">
         <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:32px]" />

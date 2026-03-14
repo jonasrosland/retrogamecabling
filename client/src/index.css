@@ -152,6 +152,13 @@
     font-family: var(--font-sans);
   }
 
+  /* Input/textarea use native selection - global ::selection doesn't apply in most browsers */
+  input::selection,
+  textarea::selection {
+    background-color: hsl(var(--primary) / 0.3);
+    color: hsl(var(--primary-foreground));
+  }
+
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
     @apply font-bold tracking-tight uppercase;

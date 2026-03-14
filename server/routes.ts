@@ -1,19 +1,11 @@
 import type { Express } from "express";
 import type { Server } from "http";
 import { readFileSync } from "fs";
-import { join, dirname, resolve } from "path";
-import { fileURLToPath } from "url";
+import { join, resolve } from "path";
 import { api } from "@shared/routes";
 
-// Handle both ESM (development) and CJS (production bundle) environments
+// Both dev (tsx) and prod (bundled) run with cwd at project root
 function getSharedPath() {
-  if (typeof import.meta !== "undefined" && import.meta.url) {
-    // Development: server files are in server/, shared is at root
-    const __filename = fileURLToPath(import.meta.url);
-    const __dirname = dirname(__filename);
-    return resolve(__dirname, "..", "shared");
-  }
-  // Production: server runs from project root, shared is at root
   return resolve(process.cwd(), "shared");
 }
 
@@ -57,7 +49,8 @@ export async function registerRoutes(
         { name: "simple", label: "Simple Setup", description: "Basic console to display connection" },
         { name: "medium", label: "Medium Setup", description: "Multiple consoles through a switcher" },
         { name: "advanced", label: "Advanced Setup", description: "Complex multi-switcher routing system" },
-        { name: "svs", label: "SVS Setup", description: "Scalable Video Switch with multiple consoles" }
+        { name: "svs", label: "SVS Setup", description: "Scalable Video Switch with multiple consoles" },
+        { name: "silly-creator-setup", label: "Silly creator setup", description: "retrogamecabling's creator's setup, multi-path setup with analog and HDMI routing" }
       ]);
     } catch (err) {
       res.status(500).json({ message: "Failed to list examples" });
