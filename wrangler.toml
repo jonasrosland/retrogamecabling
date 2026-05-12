@@ -1,0 +1,9 @@
+# Run `npm run build` before deploy so ./dist/public exists (Vite client output).
+name = "retrogamecabling"
+main = "worker/index.ts"
+compatibility_date = "2025-05-01"
+
+[assets]
+directory = "./dist/public"
+binding = "ASSETS"
+not_found_handling = "single-page-application"

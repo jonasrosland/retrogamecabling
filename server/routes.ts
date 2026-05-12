@@ -3,6 +3,7 @@ import type { Server } from "http";
 import { readFileSync } from "fs";
 import { join, resolve } from "path";
 import { api } from "@shared/routes";
+import { exampleCatalog } from "@shared/example-catalog";
 
 // Both dev (tsx) and prod (bundled) run with cwd at project root
 function getSharedPath() {
@@ -43,15 +44,9 @@ export async function registerRoutes(
   });
 
   // List available examples
-  app.get("/api/examples", async (req, res) => {
+  app.get("/api/examples", async (_req, res) => {
     try {
-      res.json([
-        { name: "simple", label: "Simple Setup", description: "Basic console to display connection" },
-        { name: "medium", label: "Medium Setup", description: "Multiple consoles through a switcher" },
-        { name: "advanced", label: "Advanced Setup", description: "Complex multi-switcher routing system" },
-        { name: "svs", label: "SVS Setup", description: "Scalable Video Switch with multiple consoles" },
-        { name: "silly-creator-setup", label: "Silly creator setup", description: "retrogamecabling's creator's setup, multi-path setup with analog and HDMI routing" }
-      ]);
+      res.json([...exampleCatalog]);
     } catch (err) {
       res.status(500).json({ message: "Failed to list examples" });
     }
