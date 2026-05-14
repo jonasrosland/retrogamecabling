@@ -22,10 +22,12 @@ import CustomEdge from '@/components/CustomEdge';
 import { useLocation, useRoute } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Save, ArrowLeft, Download, Share2, Upload, FileText, Grid3X3 } from 'lucide-react';
+import { Save, ArrowLeft, Share2, Upload, FileText, Grid3X3, Copy, Link2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Link } from 'wouter';
 import { saveFile, loadFile, loadFileFromRecent, type DiagramFile } from '@/lib/fileUtils';
+import { encodeDiagramShareCode, decodeDiagramShareCode, SHARE_CODE_PREFIX } from '@/lib/shareCode';
+import { buildSeedDataFromCatalogItem } from '@/lib/catalogNodeDefaults';
 import { normalizeSignalType } from '@/lib/utils';
 import { useItems } from '@/hooks/use-items';
 import {
@@ -36,6 +38,14 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 
 // Register custom node types with edges access
 // Pass all edges - CustomNode will filter them internally for better memoization
@@ -206,6 +216,10 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
   const [reactFlowInstance, setReactFlowInstance] = useState<any>(null);
   const [diagramName, setDiagramName] = useState(initialDiagramName || 'Untitled Setup');
   const [snapToGridEnabled, setSnapToGridEnabled] = useState(false);
+  const [shareDialogOpen, setShareDialogOpen] = useState(false);
+  const [shareExportText, setShareExportText] = useState('');
+  const [shareExportBusy, setShareExportBusy] = useState(false);
+  const [shareImportText, setShareImportText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [shouldFitView, setShouldFitView] = useState(true);
   const needsFitViewAfterLoadRef = useRef(false);
@@ -492,6 +506,24 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
     });
   }, [getOutputColor, handleDeleteEdge]);
 
+  const applyDiagram = useCallback(
+    (diagram: DiagramFile) => {
+      setDiagramName(diagram.name);
+      const flow = diagram.data;
+      if (flow) {
+        const nodesWithDelete = (flow.nodes || []).map((node: any) => ({
+          ...node,
+          data: { ...node.data, onDelete: handleDeleteNode, onUpdate: handleUpdateNode },
+        }));
+        setNodes(nodesWithDelete);
+        const processedEdges = processEdgesWithColors(flow.edges || [], nodesWithDelete);
+        setEdges(processedEdges);
+        needsFitViewAfterLoadRef.current = true;
+      }
+    },
+    [setNodes, setEdges, handleDeleteNode, handleUpdateNode, processEdgesWithColors],
+  );
+
   // Call fitView after load when instance is ready - use method with explicit nodes and delay for DOM to update
   useEffect(() => {
     if (!reactFlowInstance || !needsFitViewAfterLoadRef.current || nodes.length === 0) return;
@@ -507,21 +539,42 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
     if (initialDiagramName) {
       const diagram = loadFileFromRecent(initialDiagramName);
       if (diagram) {
-        setDiagramName(diagram.name);
-        const flow = diagram.data;
-        if (flow) {
-          const nodesWithDelete = (flow.nodes || []).map((node: any) => ({
-            ...node,
-            data: { ...node.data, onDelete: handleDeleteNode, onUpdate: handleUpdateNode },
-          }));
-          setNodes(nodesWithDelete);
-          const processedEdges = processEdgesWithColors(flow.edges || [], nodesWithDelete);
-          setEdges(processedEdges);
-          needsFitViewAfterLoadRef.current = true;
-        }
+        applyDiagram(diagram);
       }
     }
-  }, [initialDiagramName, setNodes, setEdges, handleDeleteNode, handleUpdateNode, processEdgesWithColors]);
+  }, [initialDiagramName, applyDiagram]);
+
+  const shareFromHashDoneRef = useRef(false);
+  useEffect(() => {
+    if (shareFromHashDoneRef.current) return;
+    const raw = window.location.hash.replace(/^#/, '');
+    if (!raw.startsWith(SHARE_CODE_PREFIX)) return;
+    if (items == null) return;
+    shareFromHashDoneRef.current = true;
+    let cancelled = false;
+    void (async () => {
+      try {
+        const diagram = await decodeDiagramShareCode(raw, items);
+        if (cancelled) return;
+        applyDiagram(diagram);
+        window.history.replaceState(null, '', window.location.pathname + window.location.search);
+        toast({
+          title: 'Loaded from link',
+          description: `Opened ${diagram.name}`,
+        });
+      } catch {
+        shareFromHashDoneRef.current = false;
+        toast({
+          title: 'Invalid share link',
+          description: 'The URL fragment could not be decoded as a setup.',
+          variant: 'destructive',
+        });
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [applyDiagram, toast, items]);
 
   // Handle keyboard delete for nodes and edges
   useEffect(() => {
@@ -873,61 +926,11 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
     if (!reactFlowInstance) return;
     const position = reactFlowInstance.screenToFlowPosition({ x, y });
       setNodes((nds) => {
-        // Determine initial label: use first variant if available, otherwise use base name
-        let initialLabel = itemData.name;
-        let variantIndex = 0;
-        if (itemData.variants && itemData.variants.length > 0) {
-          initialLabel = itemData.variants[0].name;
-          variantIndex = 0;
-        }
-        
-        const newNodeData: any = { 
-          label: initialLabel, 
-          category: itemData.category,
-          specs: itemData.specs,
+        const newNodeData: any = {
+          ...buildSeedDataFromCatalogItem(itemData),
           onDelete: handleDeleteNode,
           onUpdate: handleUpdateNode,
         };
-        
-        // Store variants data if available
-        if (itemData.variants && itemData.variants.length > 0) {
-          newNodeData.variants = itemData.variants;
-          newNodeData.variantIndex = variantIndex;
-        }
-        
-        // Initialize selectedOutput for consoles and custom items (use first available output)
-        if ((itemData.category === 'console' || itemData.category === 'custom') && 
-            !itemData.specs?.isSVS && 
-            !itemData.specs?.isCustomSwitch && 
-            !itemData.specs?.isHDMISwitch &&
-            itemData.specs?.outputs && 
-            itemData.specs.outputs.length > 0) {
-          newNodeData.selectedOutput = itemData.specs.outputs[0];
-        }
-        
-        // Initialize SVS/Custom Switch/HDMI Switch configuration if it's scalable
-        if (itemData.specs?.isSVS === true || itemData.specs?.isCustomSwitch === true || itemData.specs?.isHDMISwitch === true) {
-          const defaultSignalType = itemData.specs?.isHDMISwitch === true ? 'hdmi' : 'ypbpr';
-          const initialInputs = itemData.specs?.initialInputs;
-          const initialOutputs = itemData.specs?.initialOutputs;
-          newNodeData.svsNumInputs = Array.isArray(initialInputs) ? initialInputs.length : 1;
-          newNodeData.svsNumOutputs = Array.isArray(initialOutputs) ? initialOutputs.length : 1;
-          newNodeData.svsInputs = Array.isArray(initialInputs) ? [...initialInputs] : [defaultSignalType];
-          newNodeData.svsOutputs = Array.isArray(initialOutputs) ? [...initialOutputs] : [defaultSignalType];
-        }
-        
-        // Initialize customizable inputs for Custom TV (display with customizableInputs)
-        if (itemData.category === 'display' && itemData.specs?.customizableInputs === true) {
-          newNodeData.customInputs = [...(itemData.specs?.inputs || ['composite'])];
-        }
-        
-        // Initialize switch variant for switches with switchVariants (e.g. Extron Crosspoint)
-        if (itemData.category === 'switch' && itemData.specs?.switchVariants?.length > 0) {
-          const firstVariant = itemData.specs.switchVariants[0];
-          newNodeData.switchVariantIndex = 0;
-          newNodeData.label = firstVariant.name;
-        }
-        
         const newNode = {
           id: getNextNodeId(nds),
           type: 'equipment',
@@ -941,7 +944,7 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
       description: `Added ${itemData.name} to the canvas.`,
       duration: 1500,
     });
-  }, [reactFlowInstance, setNodes, toast, handleDeleteNode]);
+  }, [reactFlowInstance, setNodes, toast, handleDeleteNode, handleUpdateNode]);
 
 
   const onDrop = useCallback(
@@ -966,61 +969,11 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
       });
 
       setNodes((nds) => {
-        // Determine initial label: use first variant if available, otherwise use base name
-        let initialLabel = itemData.name;
-        let variantIndex = 0;
-        if (itemData.variants && itemData.variants.length > 0) {
-          initialLabel = itemData.variants[0].name;
-          variantIndex = 0;
-        }
-        
-        const newNodeData: any = { 
-          label: initialLabel, 
-          category: itemData.category,
-          specs: itemData.specs,
+        const newNodeData: any = {
+          ...buildSeedDataFromCatalogItem(itemData),
           onDelete: handleDeleteNode,
           onUpdate: handleUpdateNode,
         };
-        
-        // Store variants data if available
-        if (itemData.variants && itemData.variants.length > 0) {
-          newNodeData.variants = itemData.variants;
-          newNodeData.variantIndex = variantIndex;
-        }
-        
-        // Initialize selectedOutput for consoles and custom items (use first available output)
-        if ((itemData.category === 'console' || itemData.category === 'custom') && 
-            !itemData.specs?.isSVS && 
-            !itemData.specs?.isCustomSwitch && 
-            !itemData.specs?.isHDMISwitch &&
-            itemData.specs?.outputs && 
-            itemData.specs.outputs.length > 0) {
-          newNodeData.selectedOutput = itemData.specs.outputs[0];
-        }
-        
-        // Initialize SVS/Custom Switch/HDMI Switch configuration if it's scalable
-        if (itemData.specs?.isSVS === true || itemData.specs?.isCustomSwitch === true || itemData.specs?.isHDMISwitch === true) {
-          const defaultSignalType = itemData.specs?.isHDMISwitch === true ? 'hdmi' : 'ypbpr';
-          const initialInputs = itemData.specs?.initialInputs;
-          const initialOutputs = itemData.specs?.initialOutputs;
-          newNodeData.svsNumInputs = Array.isArray(initialInputs) ? initialInputs.length : 1;
-          newNodeData.svsNumOutputs = Array.isArray(initialOutputs) ? initialOutputs.length : 1;
-          newNodeData.svsInputs = Array.isArray(initialInputs) ? [...initialInputs] : [defaultSignalType];
-          newNodeData.svsOutputs = Array.isArray(initialOutputs) ? [...initialOutputs] : [defaultSignalType];
-        }
-        
-        // Initialize customizable inputs for Custom TV (display with customizableInputs)
-        if (itemData.category === 'display' && itemData.specs?.customizableInputs === true) {
-          newNodeData.customInputs = [...(itemData.specs?.inputs || ['composite'])];
-        }
-        
-        // Initialize switch variant for switches with switchVariants (e.g. Extron Crosspoint)
-        if (itemData.category === 'switch' && itemData.specs?.switchVariants?.length > 0) {
-          const firstVariant = itemData.specs.switchVariants[0];
-          newNodeData.switchVariantIndex = 0;
-          newNodeData.label = firstVariant.name;
-        }
-        
         const newNode = {
           id: getNextNodeId(nds),
           type,
@@ -1065,18 +1018,7 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
       setIsLoading(true);
       const diagram = await loadFile();
       if (diagram) {
-        setDiagramName(diagram.name);
-        const flow = diagram.data;
-        if (flow) {
-          const nodesWithDelete = (flow.nodes || []).map((node: any) => ({
-            ...node,
-            data: { ...node.data, onDelete: handleDeleteNode, onUpdate: handleUpdateNode },
-          }));
-          setNodes(nodesWithDelete);
-          const processedEdges = processEdgesWithColors(flow.edges || [], nodesWithDelete);
-          setEdges(processedEdges);
-          needsFitViewAfterLoadRef.current = true;
-        }
+        applyDiagram(diagram);
         toast({ title: "Loaded!", description: `Opened ${diagram.name}` });
         setLocation('/editor');
       }
@@ -1098,18 +1040,7 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
       if (!res.ok) throw new Error("Failed to load example");
       const diagram: DiagramFile = await res.json();
       
-      setDiagramName(diagram.name);
-      const flow = diagram.data;
-      if (flow) {
-        const nodesWithDelete = (flow.nodes || []).map((node: any) => ({
-          ...node,
-          data: { ...node.data, onDelete: handleDeleteNode, onUpdate: handleUpdateNode },
-        }));
-        setNodes(nodesWithDelete);
-        const processedEdges = processEdgesWithColors(flow.edges || [], nodesWithDelete);
-        setEdges(processedEdges);
-        needsFitViewAfterLoadRef.current = true;
-      }
+      applyDiagram(diagram);
       toast({ title: "Example Loaded!", description: `Opened ${diagram.name}` });
       setLocation('/editor');
     } catch (error) {
@@ -1120,6 +1051,87 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
       });
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (!shareDialogOpen || !reactFlowInstance) return;
+    setShareExportBusy(true);
+    setShareExportText('');
+    let cancelled = false;
+    void (async () => {
+      try {
+        const flow = reactFlowInstance.toObject();
+        const diagramData: DiagramFile = { name: diagramName, data: flow };
+        const code = await encodeDiagramShareCode(diagramData, items ?? []);
+        if (!cancelled) setShareExportText(code);
+      } catch (e: unknown) {
+        if (!cancelled) {
+          setShareExportText('');
+          toast({
+            variant: 'destructive',
+            title: 'Could not create share code',
+            description: e instanceof Error ? e.message : 'Unknown error',
+          });
+        }
+      } finally {
+        if (!cancelled) setShareExportBusy(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [shareDialogOpen, reactFlowInstance, diagramName, toast, items]);
+
+  const shareExportUrl = useMemo(() => {
+    if (!shareExportText || shareExportBusy || typeof window === 'undefined') return '';
+    const base = (import.meta.env.BASE_URL || '/').replace(/\/$/, '');
+    const path = base ? `${base}/editor` : '/editor';
+    return `${window.location.origin}${path}#${shareExportText}`;
+  }, [shareExportText, shareExportBusy]);
+
+  const handleImportFromShareCode = async () => {
+    try {
+      const diagram = await decodeDiagramShareCode(shareImportText, items ?? []);
+      applyDiagram(diagram);
+      setShareDialogOpen(false);
+      setShareImportText('');
+      setLocation('/editor');
+      toast({ title: 'Setup loaded', description: diagram.name });
+    } catch (e: unknown) {
+      toast({
+        variant: 'destructive',
+        title: 'Invalid setup code',
+        description: e instanceof Error ? e.message : 'Decode failed',
+      });
+    }
+  };
+
+  const handleCopyShareCode = async () => {
+    if (!shareExportText) return;
+    try {
+      await navigator.clipboard.writeText(shareExportText);
+      toast({ title: 'Copied', description: 'Setup code is on the clipboard.' });
+    } catch {
+      toast({
+        variant: 'destructive',
+        title: 'Copy failed',
+        description: 'Select the code and copy manually, or check site permissions.',
+      });
+    }
+  };
+
+  const handleCopyShareUrl = async () => {
+    if (!shareExportUrl) return;
+    try {
+      await navigator.clipboard.writeText(shareExportUrl);
+      toast({ title: 'Copied', description: 'Share link is on the clipboard.' });
+    } catch {
+      toast({
+        variant: 'destructive',
+        title: 'Copy failed',
+        description: 'Select the link and copy manually, or check site permissions.',
+      });
     }
   };
 
@@ -1210,6 +1222,18 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
+            <Button
+              type="button"
+              onClick={() => setShareDialogOpen(true)}
+              disabled={isLoading || !reactFlowInstance}
+              variant="outline"
+              size="sm"
+              className="bg-card/90 backdrop-blur-md border-border hover:bg-muted"
+              title="Copy or paste a compact setup code"
+            >
+              <Share2 className="w-4 h-4 md:mr-2" />
+              <span className="hidden md:inline">Share</span>
+            </Button>
             <Button 
               onClick={handleLoad}
               disabled={isLoading}
@@ -1277,7 +1301,82 @@ function EditorContent({ diagramName: initialDiagramName }: { diagramName?: stri
         </div>
       </div>
 
-
+      <Dialog
+        open={shareDialogOpen}
+        onOpenChange={(open) => {
+          setShareDialogOpen(open);
+          if (!open) setShareImportText('');
+        }}
+      >
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto ring-1 ring-border/40">
+          <DialogHeader>
+            <DialogTitle className="font-display uppercase tracking-wide">Share setup</DialogTitle>
+            <DialogDescription>
+              Paste the code or use the link (opens the editor with the setup in the URL hash).
+              Very long links may be truncated in some chat apps—use the raw code if that happens.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <p className="text-sm font-medium">Your code</p>
+              <textarea
+                readOnly
+                value={shareExportBusy ? 'Generating…' : shareExportText}
+                rows={5}
+                className="w-full resize-y rounded-md border border-border bg-muted/25 px-3 py-2 font-mono text-[11px] leading-relaxed text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              />
+              <p className="text-sm font-medium">Share link</p>
+              <textarea
+                readOnly
+                value={shareExportBusy ? 'Generating…' : shareExportUrl}
+                rows={3}
+                className="w-full resize-y rounded-md border border-border bg-muted/25 px-3 py-2 font-mono text-[11px] leading-relaxed text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              />
+              <div className="flex flex-wrap gap-2">
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="secondary"
+                  onClick={handleCopyShareCode}
+                  disabled={shareExportBusy || !shareExportText}
+                >
+                  <Copy className="mr-2 h-4 w-4" />
+                  Copy code
+                </Button>
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="secondary"
+                  onClick={handleCopyShareUrl}
+                  disabled={shareExportBusy || !shareExportUrl}
+                >
+                  <Link2 className="mr-2 h-4 w-4" />
+                  Copy link
+                </Button>
+              </div>
+            </div>
+            <div className="h-px bg-border" />
+            <div className="space-y-2">
+              <p className="text-sm font-medium">Import from code</p>
+              <textarea
+                value={shareImportText}
+                onChange={(e) => setShareImportText(e.target.value)}
+                placeholder={`Paste a setup code (starts with ${SHARE_CODE_PREFIX}…)`}
+                rows={5}
+                className="w-full resize-y rounded-md border border-border bg-muted/25 px-3 py-2 font-mono text-[11px] leading-relaxed text-foreground placeholder:text-muted-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button type="button" variant="outline" onClick={() => setShareDialogOpen(false)}>
+              Close
+            </Button>
+            <Button type="button" onClick={handleImportFromShareCode} disabled={!shareImportText.trim()}>
+              Load from code
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
