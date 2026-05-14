@@ -2,6 +2,19 @@
 
 All notable changes to RetroGameCabling are documented in this file.
 
+## [1.2.0]
+
+### Added
+
+- **Share setup** – Editor dialog to export a self-contained **`ccc2`** code (MessagePack, gzip, base64). Catalog nodes encode as **item id + delta** when smaller than a full embed. **Copy code**, **copy link** (`/editor#…`, respects Vite `BASE_URL`), and import from pasted code. Opening a share URL loads the diagram from the hash after the item catalog is available.
+- **`@msgpack/msgpack`** for the share wire payload.
+- **`buildSeedDataFromCatalogItem`** – Single source for default node data from the catalog (used on drag-drop and when decoding ref nodes).
+- **FAQ** route and related navigation updates.
+
+### Changed
+
+- **Sidebar drops** – New nodes store **`itemId`** so shares can resolve catalog defaults on import.
+
 ## [1.1.0]
 
 ### Added

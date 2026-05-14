@@ -28,3 +28,16 @@ services:
       - /app/node_modules
     command: npm run dev
 
+  # caddy:
+  #   image: caddy:latest
+  #   restart: unless-stopped
+  #   ports:
+  #     - "80:80"
+  #     - "443:443"
+  #     - "443:443/udp"
+  #   volumes:
+  #     - ./caddy/conf:/etc/caddy
+  #     - ./caddy/site:/srv
+  #     - ./caddy/caddy_data:/data
+  #     - ./caddy/caddy_config:/config
+

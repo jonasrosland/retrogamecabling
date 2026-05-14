@@ -1,5 +1,5 @@
 import { Link, useLocation } from "wouter";
-import { Plus, Trash2, Calendar, FileText, Cpu } from "lucide-react";
+import { Plus, Trash2, Calendar, FileText, Cpu, HelpCircle } from "lucide-react";
 import { APP_VERSION } from "@/config";
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
@@ -54,6 +54,15 @@ export default function Home() {
               >
                 <Plus className="mr-2 h-5 w-5" />
                 New Diagram
+              </Button>
+              <Button 
+                size="lg" 
+                onClick={() => setLocation('/faq')}
+                variant="outline"
+                className="border-border bg-background/50 hover:bg-muted text-lg px-8 py-6 h-auto shadow-[0_0_20px_rgba(6,182,212,0.3)] hover:shadow-[0_0_30px_rgba(6,182,212,0.4)] transition-all"
+              >
+                <HelpCircle className="mr-2 h-5 w-5" />
+                FAQ
               </Button>
               <Button 
                 size="lg" 
