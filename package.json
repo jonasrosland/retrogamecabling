@@ -92,7 +92,7 @@
     "tsx": "^4.23.13",
     "typescript": "7.0.2",
     "vite": "^7.3.6",
-    "wrangler": "^4.130.0"
+    "wrangler": "^4.146.0"
   },
   "optionalDependencies": {
     "bufferutil": "^4.0.8"
